@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
+
+namespace JamesPetBoarding.Models
+{
+    public class PaymentModel
+    {
+
+        [Key]
+        public Guid PaymentId { get; set; }
+
+        public PaymentModel()
+        {
+            PaymentId = Guid.NewGuid();
+        }
+
+        [Required]
+        public Guid InvoiceId { get; set; }
+
+        [ForeignKey("InvoiceId")]
+        public InvoiceModel Invoice { get; set; }
+
+        [Required]
+        public DateTime PaymentDateTime { get; set; }
+
+        [Required, MaxLength(50)]
+        public string PaymentMethod { get; set; }
+
+        [Required]
+        [Range(0, 999999999.99)]
+        public decimal Amount { get; set; }
+
+        [MaxLength(200)]
+        public string TransactionReference { get; set; }
+
+        [MaxLength(2000)]
+        public string Notes { get; set; }   
+
+    }
+}

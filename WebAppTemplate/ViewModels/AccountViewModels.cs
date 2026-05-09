@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebAppTemplate.Models
+namespace JamesPetBoarding.Models
 {
     public class ExternalLoginConfirmationViewModel
     {

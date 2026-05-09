@@ -172,22 +172,80 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202604240354192_InitialCreate.cs" />
-    <Compile Include="Migrations\202604240354192_InitialCreate.Designer.cs">
-      <DependentUpon>202604240354192_InitialCreate.cs</DependentUpon>
+    <Compile Include="Migrations\202605052221240_InitialCreate.cs" />
+    <Compile Include="Migrations\202605052221240_InitialCreate.Designer.cs">
+      <DependentUpon>202605052221240_InitialCreate.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202605040508485_AddToDos.cs" />
-    <Compile Include="Migrations\202605040508485_AddToDos.Designer.cs">
-      <DependentUpon>202605040508485_AddToDos.cs</DependentUpon>
+    <Compile Include="Migrations\202605052225079_AddPetModel.cs" />
+    <Compile Include="Migrations\202605052225079_AddPetModel.Designer.cs">
+      <DependentUpon>202605052225079_AddPetModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202605040526462_AddStudents.cs" />
-    <Compile Include="Migrations\202605040526462_AddStudents.Designer.cs">
-      <DependentUpon>202605040526462_AddStudents.cs</DependentUpon>
+    <Compile Include="Migrations\202605070252323_AddVeterinarianModel.cs" />
+    <Compile Include="Migrations\202605070252323_AddVeterinarianModel.Designer.cs">
+      <DependentUpon>202605070252323_AddVeterinarianModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070307580_AddMedicationModel.cs" />
+    <Compile Include="Migrations\202605070307580_AddMedicationModel.Designer.cs">
+      <DependentUpon>202605070307580_AddMedicationModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070311455_AddEmergencyContactAndDietModels.cs" />
+    <Compile Include="Migrations\202605070311455_AddEmergencyContactAndDietModels.Designer.cs">
+      <DependentUpon>202605070311455_AddEmergencyContactAndDietModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070313579_AddCustomerPetAndPetVaccineModels.cs" />
+    <Compile Include="Migrations\202605070313579_AddCustomerPetAndPetVaccineModels.Designer.cs">
+      <DependentUpon>202605070313579_AddCustomerPetAndPetVaccineModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070315446_AddPaymentAndInvoiceItemModels.cs" />
+    <Compile Include="Migrations\202605070315446_AddPaymentAndInvoiceItemModels.Designer.cs">
+      <DependentUpon>202605070315446_AddPaymentAndInvoiceItemModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070326473_AddServiceAndVaccineModels.cs" />
+    <Compile Include="Migrations\202605070326473_AddServiceAndVaccineModels.Designer.cs">
+      <DependentUpon>202605070326473_AddServiceAndVaccineModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070329531_AddBoardingModel.cs" />
+    <Compile Include="Migrations\202605070329531_AddBoardingModel.Designer.cs">
+      <DependentUpon>202605070329531_AddBoardingModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070332215_AddInvoiceModel.cs" />
+    <Compile Include="Migrations\202605070332215_AddInvoiceModel.Designer.cs">
+      <DependentUpon>202605070332215_AddInvoiceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070338285_AddEmployeeModel.cs" />
+    <Compile Include="Migrations\202605070338285_AddEmployeeModel.Designer.cs">
+      <DependentUpon>202605070338285_AddEmployeeModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070339426_AddBoardingUnitModel.cs" />
+    <Compile Include="Migrations\202605070339426_AddBoardingUnitModel.Designer.cs">
+      <DependentUpon>202605070339426_AddBoardingUnitModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070350589_AddCustomerIdToEmergencyContactModel.cs" />
+    <Compile Include="Migrations\202605070350589_AddCustomerIdToEmergencyContactModel.Designer.cs">
+      <DependentUpon>202605070350589_AddCustomerIdToEmergencyContactModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605070410220_AddCustomerModel.cs" />
+    <Compile Include="Migrations\202605070410220_AddCustomerModel.Designer.cs">
+      <DependentUpon>202605070410220_AddCustomerModel.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
-    <Compile Include="Models\StudentModel.cs" />
-    <Compile Include="Models\ToDoModel.cs" />
+    <Compile Include="Models\BoardingModel.cs" />
+    <Compile Include="Models\BoardingUnitModel.cs" />
+    <Compile Include="Models\CustomerModel.cs" />
+    <Compile Include="Models\CustomerPetModel.cs" />
+    <Compile Include="Models\DietModel.cs" />
+    <Compile Include="Models\EmergencyContactModel.cs" />
+    <Compile Include="Models\EmployeeModel.cs" />
+    <Compile Include="Models\InvoiceItemModel.cs" />
+    <Compile Include="Models\InvoiceModel.cs" />
+    <Compile Include="Models\MedicationModel.cs" />
+    <Compile Include="Models\PaymentModel.cs" />
+    <Compile Include="Models\PetVaccineModel.cs" />
+    <Compile Include="Models\ServiceModel.cs" />
+    <Compile Include="Models\VaccineModel.cs" />
+    <Compile Include="Models\VeterinarianModel.cs" />
+    <Compile Include="Models\PetModel.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
@@ -309,14 +367,47 @@
     <Content Include="Scripts\jquery-3.7.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202604240354192_InitialCreate.resx">
-      <DependentUpon>202604240354192_InitialCreate.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202605052221240_InitialCreate.resx">
+      <DependentUpon>202605052221240_InitialCreate.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202605040508485_AddToDos.resx">
-      <DependentUpon>202605040508485_AddToDos.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202605052225079_AddPetModel.resx">
+      <DependentUpon>202605052225079_AddPetModel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202605040526462_AddStudents.resx">
-      <DependentUpon>202605040526462_AddStudents.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202605070252323_AddVeterinarianModel.resx">
+      <DependentUpon>202605070252323_AddVeterinarianModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070307580_AddMedicationModel.resx">
+      <DependentUpon>202605070307580_AddMedicationModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070311455_AddEmergencyContactAndDietModels.resx">
+      <DependentUpon>202605070311455_AddEmergencyContactAndDietModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070313579_AddCustomerPetAndPetVaccineModels.resx">
+      <DependentUpon>202605070313579_AddCustomerPetAndPetVaccineModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070315446_AddPaymentAndInvoiceItemModels.resx">
+      <DependentUpon>202605070315446_AddPaymentAndInvoiceItemModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070326473_AddServiceAndVaccineModels.resx">
+      <DependentUpon>202605070326473_AddServiceAndVaccineModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070329531_AddBoardingModel.resx">
+      <DependentUpon>202605070329531_AddBoardingModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070332215_AddInvoiceModel.resx">
+      <DependentUpon>202605070332215_AddInvoiceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070338285_AddEmployeeModel.resx">
+      <DependentUpon>202605070338285_AddEmployeeModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070339426_AddBoardingUnitModel.resx">
+      <DependentUpon>202605070339426_AddBoardingUnitModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070350589_AddCustomerIdToEmergencyContactModel.resx">
+      <DependentUpon>202605070350589_AddCustomerIdToEmergencyContactModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605070410220_AddCustomerModel.resx">
+      <DependentUpon>202605070410220_AddCustomerModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,4 +1,4 @@
-﻿namespace WebAppTemplate.Migrations
+﻿namespace JamesPetBoarding.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;

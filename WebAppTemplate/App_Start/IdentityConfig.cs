@@ -10,9 +10,9 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using WebAppTemplate.Models;
+using JamesPetBoarding.Models;
 
-namespace WebAppTemplate
+namespace JamesPetBoarding
 {
     public class EmailService : IIdentityMessageService
     {

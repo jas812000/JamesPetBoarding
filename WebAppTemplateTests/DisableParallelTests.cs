@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 [assembly: Parallelizable(ParallelScope.None)]
-namespace WebAppTemplateTests
+namespace JamesPetBoardingTests
 {
     public class DisableParallelTests
     {

@@ -5,9 +5,9 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using WebAppTemplate.Models;
+using JamesPetBoarding.Models;
 
-namespace WebAppTemplate
+namespace JamesPetBoarding
 {
     public partial class Startup
     {

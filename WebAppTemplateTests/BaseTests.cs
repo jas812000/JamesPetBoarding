@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace WebAppTemplateTests
+namespace JamesPetBoardingTests
 {
     [TestFixture]
     public class BaseTests

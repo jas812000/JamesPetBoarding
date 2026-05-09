@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "WebAppTemplateTests": {
+    "JamesPetBoardingTests": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
