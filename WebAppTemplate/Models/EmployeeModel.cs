@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -34,10 +35,13 @@ namespace JamesPetBoarding.Models
         [Required]
         public bool IsActive { get; set; }
 
+        [InverseProperty("CheckedInByEmployee")]
         public List<BoardingModel> CheckedInBoardings { get; set; }
 
+        [InverseProperty("CheckedOutByEmployee")]
         public List<BoardingModel> CheckedOutBoardings { get; set; }
 
+        [InverseProperty("CancelledByEmployee")]
         public List<BoardingModel> CancelledBoardings { get; set; }
 
     }

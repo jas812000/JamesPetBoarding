@@ -12,35 +12,35 @@ namespace JamesPetBoarding.Models
 
         public DbSet<PetModel> Pets { get; set; }
 
-        public DbSet<VeterinarianModel> Veterinarian { get; set; }
+        public DbSet<VeterinarianModel> Veterinarians { get; set; }
 
-        public DbSet<DietModel> Diet { get; set; }
+        public DbSet<DietModel> Diets { get; set; }
 
-        public DbSet<MedicationModel> Medication { get; set; }
+        public DbSet<MedicationModel> Medications { get; set; }
 
-        public DbSet<CustomerPetModel> CustomerPet { get; set; }
+        public DbSet<CustomerPetModel> CustomerPets { get; set; }
 
-        public DbSet<PetVaccineModel> PetVaccine { get; set; }
+        public DbSet<PetVaccineModel> PetVaccines { get; set; }
 
-        public DbSet<ServiceModel> Service { get; set; }
+        public DbSet<ServiceModel> Services { get; set; }
 
-        public DbSet<InvoiceItemModel> InvoiceItem { get; set; }
+        public DbSet<InvoiceItemModel> InvoiceItems { get; set; }
 
-        public DbSet<PaymentModel> Payment { get; set; }
+        public DbSet<PaymentModel> Payments { get; set; }
 
-        public DbSet<VaccineModel> Vaccine { get; set; }
+        public DbSet<VaccineModel> Vaccines { get; set; }
 
-        public DbSet<BoardingModel> Boarding { get; set; }
+        public DbSet<BoardingModel> Boardings { get; set; }
 
-        public DbSet<InvoiceModel> Invoice { get; set; }
+        public DbSet<InvoiceModel> Invoices { get; set; }
 
-        public DbSet<CustomerModel> Customer { get; set; }
+        public DbSet<CustomerModel> Customers { get; set; }
 
-        public DbSet<EmergencyContactModel> EmergencyContact { get; set; }
+        public DbSet<EmergencyContactModel> EmergencyContacts { get; set; }
 
-        public DbSet<EmployeeModel> Employee { get; set; }
+        public DbSet<EmployeeModel> Employees { get; set; }
 
-        public DbSet<BoardingUnitModel> BoardingUnit { get; set; }
+        public DbSet<BoardingUnitModel> BoardingUnits { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

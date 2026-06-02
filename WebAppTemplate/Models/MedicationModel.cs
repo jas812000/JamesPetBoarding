@@ -39,7 +39,6 @@ namespace JamesPetBoarding.Models
         [Required]
         public DateTime StartDate { get; set; }
 
-        [Required]
         public DateTime? EndDate { get; set; }
 
         [MaxLength(2000)]

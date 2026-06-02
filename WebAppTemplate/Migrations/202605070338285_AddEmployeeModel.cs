@@ -21,22 +21,22 @@
                     })
                 .PrimaryKey(t => t.EmployeeId);
 
-            CreateIndex("dbo.BoardingModels", "CheckedInByEmployeeID");
-            CreateIndex("dbo.BoardingModels", "CheckedOutByEmployeeID");
-            CreateIndex("dbo.BoardingModels", "CancelledByEmployeeID");
-            AddForeignKey("dbo.BoardingModels", "CheckedInByEmployeeID", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
-            AddForeignKey("dbo.BoardingModels", "CheckedOutByEmployeeID", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
-            AddForeignKey("dbo.BoardingModels", "CancelledByEmployeeID", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
+            CreateIndex("dbo.BoardingModels", "CheckedInByEmployeeId");
+            CreateIndex("dbo.BoardingModels", "CheckedOutByEmployeeId");
+            CreateIndex("dbo.BoardingModels", "CancelledByEmployeeId");
+            AddForeignKey("dbo.BoardingModels", "CheckedInByEmployeeId", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
+            AddForeignKey("dbo.BoardingModels", "CheckedOutByEmployeeId", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
+            AddForeignKey("dbo.BoardingModels", "CancelledByEmployeeId", "dbo.EmployeeModels", "EmployeeId", cascadeDelete: false);
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.BoardingModels", "CancelledByEmployeeID", "dbo.EmployeeModels");
-            DropForeignKey("dbo.BoardingModels", "CheckedOutByEmployeeID", "dbo.EmployeeModels");
-            DropForeignKey("dbo.BoardingModels", "CheckedInByEmployeeID", "dbo.EmployeeModels");
-            DropIndex("dbo.BoardingModels", new[] { "CancelledByEmployeeID" });
-            DropIndex("dbo.BoardingModels", new[] { "CheckedOutByEmployeeID" });
-            DropIndex("dbo.BoardingModels", new[] { "CheckedInByEmployeeID" });
+            DropForeignKey("dbo.BoardingModels", "CancelledByEmployeeId", "dbo.EmployeeModels");
+            DropForeignKey("dbo.BoardingModels", "CheckedOutByEmployeeId", "dbo.EmployeeModels");
+            DropForeignKey("dbo.BoardingModels", "CheckedInByEmployeeId", "dbo.EmployeeModels");
+            DropIndex("dbo.BoardingModels", new[] { "CancelledByEmployeeId" });
+            DropIndex("dbo.BoardingModels", new[] { "CheckedOutByEmployeeId" });
+            DropIndex("dbo.BoardingModels", new[] { "CheckedInByEmployeeId" });
             DropTable("dbo.EmployeeModels");
         }
     }

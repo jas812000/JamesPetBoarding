@@ -228,6 +228,14 @@
     <Compile Include="Migrations\202605070410220_AddCustomerModel.Designer.cs">
       <DependentUpon>202605070410220_AddCustomerModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202605140418561_MakeMedicationEndDateOptional.cs" />
+    <Compile Include="Migrations\202605140418561_MakeMedicationEndDateOptional.Designer.cs">
+      <DependentUpon>202605140418561_MakeMedicationEndDateOptional.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202605140505499_FixEmployeeInverseRelationships.cs" />
+    <Compile Include="Migrations\202605140505499_FixEmployeeInverseRelationships.Designer.cs">
+      <DependentUpon>202605140505499_FixEmployeeInverseRelationships.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -408,6 +416,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605070410220_AddCustomerModel.resx">
       <DependentUpon>202605070410220_AddCustomerModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605140418561_MakeMedicationEndDateOptional.resx">
+      <DependentUpon>202605140418561_MakeMedicationEndDateOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202605140505499_FixEmployeeInverseRelationships.resx">
+      <DependentUpon>202605140505499_FixEmployeeInverseRelationships.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
