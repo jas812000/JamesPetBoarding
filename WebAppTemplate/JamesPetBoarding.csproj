@@ -60,6 +60,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.9\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -69,6 +72,12 @@
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.3.0\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Mvc.5.3.0\lib\net45\System.Web.Mvc.dll</HintPath>
@@ -162,7 +171,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BookingsController.cs" />
-    <Compile Include="Controllers\ContactUsController.cs" />
+    <Compile Include="Controllers\ContactUsSubmissionController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HoursController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -236,10 +245,15 @@
     <Compile Include="Migrations\202605140505499_FixEmployeeInverseRelationships.Designer.cs">
       <DependentUpon>202605140505499_FixEmployeeInverseRelationships.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606022047018_AddContactUsSubmissionModel.cs" />
+    <Compile Include="Migrations\202606022047018_AddContactUsSubmissionModel.Designer.cs">
+      <DependentUpon>202606022047018_AddContactUsSubmissionModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
     <Compile Include="Models\BoardingUnitModel.cs" />
+    <Compile Include="Models\ContactUsSubmissionModel.cs" />
     <Compile Include="Models\CustomerModel.cs" />
     <Compile Include="Models\CustomerPetModel.cs" />
     <Compile Include="Models\DietModel.cs" />
@@ -256,6 +270,7 @@
     <Compile Include="Models\PetModel.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="ViewModels\ContactUsSubmissionVM.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -336,12 +351,15 @@
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Hours\Index.cshtml" />
-    <Content Include="Views\ContactUs\Index.cshtml" />
+    <Content Include="Views\ContactUsSubmission\Index.cshtml" />
     <Content Include="Views\MyAccount\Index.cshtml" />
     <Content Include="Views\Bookings\Index.cshtml" />
     <Content Include="Views\Pets\Index.cshtml" />
     <Content Include="Views\Admin\Pets.cshtml" />
     <Content Include="Views\Admin\Bookings.cshtml" />
+    <Content Include="Views\ContactUsSubmission\ContactUsSuccessful.cshtml" />
+    <Content Include="Views\Home\OurTeam.cshtml" />
+    <Content Include="Views\Home\OurServices.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -422,6 +440,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202605140505499_FixEmployeeInverseRelationships.resx">
       <DependentUpon>202605140505499_FixEmployeeInverseRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606022047018_AddContactUsSubmissionModel.resx">
+      <DependentUpon>202606022047018_AddContactUsSubmissionModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

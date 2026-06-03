@@ -42,6 +42,8 @@ namespace JamesPetBoarding.Models
 
         public DbSet<BoardingUnitModel> BoardingUnits { get; set; }
 
+        public DbSet<ContactUsSubmissionModel> ContactUsSubmissions { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
