@@ -37,6 +37,18 @@ namespace JamesPetBoarding.Models
         [MaxLength(200)]
         public string TransactionReference { get; set; }
 
+        public bool IsVoided { get; set; }
+
+        public DateTime? VoidedDateTime { get; set; }
+
+        [MaxLength(500)]
+        public string VoidedReason { get; set; }
+
+        public Guid? VoidedByEmployeeId { get; set; }
+
+        [ForeignKey("VoidedByEmployeeId")]
+        public EmployeeModel VoidedByEmployee { get; set; }
+
         [MaxLength(2000)]
         public string Notes { get; set; }   
 

@@ -51,7 +51,6 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(50)]
         public string RelationshipType { get; set; }
 
-        [Required]
         public bool IsActive { get; set; }
 
         [MaxLength(2000)]
