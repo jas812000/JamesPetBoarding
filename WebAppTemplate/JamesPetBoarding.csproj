@@ -189,6 +189,28 @@
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VaccinesController.cs" />
     <Compile Include="Controllers\VeterinariansController.cs" />
+    <Compile Include="Enums\ActiveStatusEnum.cs" />
+    <Compile Include="Enums\BoardingStatusEnum.cs" />
+    <Compile Include="Enums\InactiveReasonEnum.cs" />
+    <Compile Include="Enums\VaccineComplianceStatusEnum.cs" />
+    <Compile Include="Enums\EmergencyContactRelationshipEnum.cs" />
+    <Compile Include="Enums\EmployeeRoleEnum.cs" />
+    <Compile Include="Enums\FrequencyEnum.cs" />
+    <Compile Include="Enums\InvoiceItemTypeEnum.cs" />
+    <Compile Include="Enums\InvoiceStatusEnum.cs" />
+    <Compile Include="Enums\InvoiceTypeEnum.cs" />
+    <Compile Include="Enums\MedicationRouteEnum.cs" />
+    <Compile Include="Enums\PaymentMethodEnum.cs" />
+    <Compile Include="Enums\PricingTypeEnum.cs" />
+    <Compile Include="Enums\RelationshipTypeEnum.cs" />
+    <Compile Include="Enums\ServiceNameEnum.cs" />
+    <Compile Include="Enums\SizeCategoryEnum.cs" />
+    <Compile Include="Enums\SpeciesAllowedEnum.cs" />
+    <Compile Include="Enums\SpeciesEnum.cs" />
+    <Compile Include="Enums\SexEnum.cs" />
+    <Compile Include="Enums\StateEnum.cs" />
+    <Compile Include="Enums\UnitNameEnum.cs" />
+    <Compile Include="Enums\UnitTypeEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -264,6 +286,26 @@
     <Compile Include="Migrations\202606110000451_AddVoidFieldsToPaymentModel.Designer.cs">
       <DependentUpon>202606110000451_AddVoidFieldsToPaymentModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606200309259_ConvertStateAndRelationshipToEnums.cs" />
+    <Compile Include="Migrations\202606200309259_ConvertStateAndRelationshipToEnums.Designer.cs">
+      <DependentUpon>202606200309259_ConvertStateAndRelationshipToEnums.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606240351227_AddSpeciesToServiceModel.cs" />
+    <Compile Include="Migrations\202606240351227_AddSpeciesToServiceModel.Designer.cs">
+      <DependentUpon>202606240351227_AddSpeciesToServiceModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606250332524_RemovePetAgeAndUpdateInvoiceRelationships.cs" />
+    <Compile Include="Migrations\202606250332524_RemovePetAgeAndUpdateInvoiceRelationships.Designer.cs">
+      <DependentUpon>202606250332524_RemovePetAgeAndUpdateInvoiceRelationships.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606250340191_RemovePetAgeAndUpdateInvoiceRelationships1.cs" />
+    <Compile Include="Migrations\202606250340191_RemovePetAgeAndUpdateInvoiceRelationships1.Designer.cs">
+      <DependentUpon>202606250340191_RemovePetAgeAndUpdateInvoiceRelationships1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.cs" />
+    <Compile Include="Migrations\202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.Designer.cs">
+      <DependentUpon>202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -277,6 +319,20 @@
     <Compile Include="Models\InvoiceItemModel.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\MedicationModel.cs" />
+    <Compile Include="ViewModels\BoardingUtilizationReportFilterVM.cs" />
+    <Compile Include="ViewModels\BoardingUtilizationReportRowVM.cs" />
+    <Compile Include="ViewModels\BoardingUtilizationReportVM.cs" />
+    <Compile Include="ViewModels\CustomerReportFilterVM.cs" />
+    <Compile Include="ViewModels\CustomerReportRowVM.cs" />
+    <Compile Include="ViewModels\CustomerReportVM.cs" />
+    <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
+    <Compile Include="ViewModels\InvoiceFormVM.cs" />
+    <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
+    <Compile Include="ViewModels\InvoiceReportRowVM.cs" />
+    <Compile Include="ViewModels\InvoiceReportVM.cs" />
+    <Compile Include="ViewModels\InvoiceSummaryVM.cs" />
+    <Compile Include="ViewModels\PaymentDetailsVM.cs" />
+    <Compile Include="ViewModels\PaymentFormVM.cs" />
     <Compile Include="Models\PaymentModel.cs" />
     <Compile Include="Models\PetVaccineModel.cs" />
     <Compile Include="Models\ServiceModel.cs" />
@@ -285,10 +341,64 @@
     <Compile Include="Models\PetModel.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="ViewModels\BoardingDetailsVM.cs" />
+    <Compile Include="ViewModels\BoardingFormVM.cs" />
+    <Compile Include="ViewModels\BoardingSummaryVM.cs" />
+    <Compile Include="ViewModels\BoardingUnitDetailsVM.cs" />
+    <Compile Include="ViewModels\BoardingUnitFormVM.cs" />
+    <Compile Include="ViewModels\CancelBoardingVM.cs" />
+    <Compile Include="ViewModels\CheckInBoardingVM.cs" />
+    <Compile Include="ViewModels\CheckOutBoardingVM.cs" />
+    <Compile Include="ViewModels\CustomerDetailsVM.cs" />
     <Compile Include="ViewModels\ContactUsSubmissionVM.cs" />
+    <Compile Include="ViewModels\CustomerFormVM.cs" />
+    <Compile Include="ViewModels\CustomerPetFormVM.cs" />
+    <Compile Include="ViewModels\CustomerPetSummaryVM.cs" />
+    <Compile Include="ViewModels\DietDetailsVM.cs" />
+    <Compile Include="ViewModels\DietFormVM.cs" />
+    <Compile Include="ViewModels\DietSummaryVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactDetailsVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactFormVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactSummaryVM.cs" />
+    <Compile Include="ViewModels\EmployeeDetailsVM.cs" />
+    <Compile Include="ViewModels\EmployeeFormVM.cs" />
+    <Compile Include="ViewModels\InvoiceItemDetailsVM.cs" />
+    <Compile Include="ViewModels\InvoiceItemFormVM.cs" />
+    <Compile Include="ViewModels\InvoiceItemSummaryVM.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Compile Include="ViewModels\MedicationDetailsVM.cs" />
+    <Compile Include="ViewModels\MedicationFormVM.cs" />
+    <Compile Include="ViewModels\MedicationSummaryVM.cs" />
+    <Compile Include="ViewModels\PaymentReportFilterVM.cs" />
+    <Compile Include="ViewModels\PaymentReportRowVM.cs" />
+    <Compile Include="ViewModels\PaymentReportVM.cs" />
+    <Compile Include="ViewModels\PaymentSummaryVM.cs" />
+    <Compile Include="ViewModels\PetDetailsVM.cs" />
+    <Compile Include="ViewModels\PetFormVM.cs" />
+    <Compile Include="ViewModels\PetReportFilterVM.cs" />
+    <Compile Include="ViewModels\PetReportRowVM.cs" />
+    <Compile Include="ViewModels\PetReportVM.cs" />
+    <Compile Include="ViewModels\PetVaccineDetailsVM.cs" />
+    <Compile Include="ViewModels\PetVaccineFormVM.cs" />
+    <Compile Include="ViewModels\PetVaccineSummaryVM.cs" />
+    <Compile Include="ViewModels\RevenueReportFilterVM.cs" />
+    <Compile Include="ViewModels\RevenueReportRowVM.cs" />
+    <Compile Include="ViewModels\RevenueReportVM.cs" />
+    <Compile Include="ViewModels\ServiceDetailsVM.cs" />
+    <Compile Include="ViewModels\ServiceFormVM.cs" />
+    <Compile Include="ViewModels\VaccineDetailsVM.cs" />
+    <Compile Include="ViewModels\VaccineFormVM.cs" />
+    <Compile Include="ViewModels\VaccineComplianceReportFilterVM.cs" />
+    <Compile Include="ViewModels\VaccineComplianceReportRowVM.cs" />
+    <Compile Include="ViewModels\VaccineComplianceReportVM.cs" />
+    <Compile Include="ViewModels\VeterinarianDetailsVM.cs" />
+    <Compile Include="ViewModels\VeterinarianFormVM.cs" />
+    <Compile Include="ViewModels\VoidedPaymentReportFilterVM.cs" />
+    <Compile Include="ViewModels\VoidedPaymentReportRowVM.cs" />
+    <Compile Include="ViewModels\VoidedPaymentReportVM.cs" />
+    <Compile Include="ViewModels\VoidPaymentVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -449,6 +559,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606110000451_AddVoidFieldsToPaymentModel.resx">
       <DependentUpon>202606110000451_AddVoidFieldsToPaymentModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606200309259_ConvertStateAndRelationshipToEnums.resx">
+      <DependentUpon>202606200309259_ConvertStateAndRelationshipToEnums.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606240351227_AddSpeciesToServiceModel.resx">
+      <DependentUpon>202606240351227_AddSpeciesToServiceModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606250332524_RemovePetAgeAndUpdateInvoiceRelationships.resx">
+      <DependentUpon>202606250332524_RemovePetAgeAndUpdateInvoiceRelationships.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606250340191_RemovePetAgeAndUpdateInvoiceRelationships1.resx">
+      <DependentUpon>202606250340191_RemovePetAgeAndUpdateInvoiceRelationships1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.resx">
+      <DependentUpon>202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace JamesPetBoarding.Controllers
             Guid boardingId,
             Guid invoiceId,
             Guid serviceId,
-            string itemType,
+            InvoiceItemTypeEnum itemType,
             string description,
             int quantity,
             decimal unitPrice,
@@ -41,7 +42,6 @@ namespace JamesPetBoarding.Controllers
             ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
             if (service == null) { return Content("Service ID #" + serviceId + " does not exist."); }
 
-            if (string.IsNullOrWhiteSpace(itemType)) { return Content("Item type is required."); }
             if (string.IsNullOrWhiteSpace(description)) { return Content("A description is required."); }
 
             if (quantity <= 0) { return Content("Quantity must be greater than zero."); }
@@ -63,14 +63,13 @@ namespace JamesPetBoarding.Controllers
             try
             {
                 dbContext.InvoiceItems.Add(invoiceItem);
+                dbContext.SaveChanges();
 
                 decimal subtotal = dbContext.InvoiceItems
                     .Where(x => x.InvoiceId == invoiceId)
                     .Select(x => x.LineTotal)
                     .DefaultIfEmpty(0)
                     .Sum();
-
-                subtotal = subtotal + invoiceItem.LineTotal;
 
                 decimal taxAmount = subtotal * 0.0825m;
                 decimal totalAmount = subtotal + taxAmount - invoice.DiscountAmount;
@@ -110,12 +109,21 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : invoiceItem.Notes;
 
+            string invoiceItemTypeDisplay = invoiceItem.ItemType.ToString();
+
+            switch (invoiceItem.ItemType)
+            { 
+                case InvoiceItemTypeEnum.VeterinarianCare:
+                    invoiceItemTypeDisplay = "Veterinarian Care";
+                    break;
+            }
+
             return Content(
                 "InvoiceItem ID #" + invoiceItem.InvoiceItemId +
                 "<br />Boarding ID #" + invoiceItem.BoardingId +
                 "<br />Invoice ID #" + invoiceItem.InvoiceId +
                 "<br />Service ID #" + invoiceItem.ServiceId +
-                "<br />Item Type: " + invoiceItem.ItemType +
+                "<br />Item Type: " + invoiceItemTypeDisplay +
                 "<br />Description: " + invoiceItem.Description +
                 "<br />Quantity: " + invoiceItem.Quantity +
                 "<br />Unit Price: $" + invoiceItem.UnitPrice.ToString("F2") +
@@ -132,7 +140,7 @@ namespace JamesPetBoarding.Controllers
             Guid boardingId, 
             Guid invoiceId, 
             Guid serviceId, 
-            string itemType, 
+            InvoiceItemTypeEnum itemType, 
             string description, 
             int quantity, 
             decimal unitPrice, 
@@ -155,10 +163,19 @@ namespace JamesPetBoarding.Controllers
             ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
             if (service == null) { return Content("Service ID #" + serviceId + " does not exist."); }
 
-            if (string.IsNullOrWhiteSpace(itemType)) { return Content("Item type is required."); }
             if (string.IsNullOrWhiteSpace(description)) { return Content("A description is required."); }
             if (quantity <= 0) { return Content("Quantity must be greater than zero."); }
             if (unitPrice < 0) { return Content("Unit price cannot be negative."); }
+
+            if (invoiceItem.InvoiceId != invoiceId)
+            { 
+                return Content("Invoice item cannot be moved to a different invoice."); 
+            }
+
+            if (invoice.AmountPaid > 0)
+            {
+                return Content("Invoice has payments and cannot be modified.");
+            }
 
             invoiceItem.BoardingId = boardingId;
             invoiceItem.InvoiceId = invoiceId;
@@ -171,7 +188,8 @@ namespace JamesPetBoarding.Controllers
             invoiceItem.Notes = notes;
 
             try
-            { 
+            {
+                
                 decimal subtotal = dbContext.InvoiceItems
                     .Where(x => x.InvoiceId == invoiceId)
                     .Select(x => x.LineTotal)
@@ -221,6 +239,11 @@ namespace JamesPetBoarding.Controllers
 
             try
             {
+                if (invoice.AmountPaid > 0) 
+                {
+                    return Content("Invoice has payments and invoice items cannot be deleted.");
+                }
+
                 dbContext.InvoiceItems.Remove(invoiceItem);
 
                 decimal subtotal = dbContext.InvoiceItems

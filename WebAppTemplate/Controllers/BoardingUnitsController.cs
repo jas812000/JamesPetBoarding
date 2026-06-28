@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,27 +20,36 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: BoardingUnits/Create
-        // /BoardingUnits/Create?unitName=Texas&unitType=Kennel&speciesAllowed=Dog&sizeCategory=Lgarge&isActive=false&notes=floor%20being%20repaved
+        // /BoardingUnits/Create?unitName=Mercury&unitType=Kennel&unitNumber=1&speciesAllowed=Canine&sizeCategory=Large&isActive=true&notes=
         public ActionResult Create(
-            string unitName,
-            string unitType,
-            string speciesAllowed,
-            string sizeCategory,
+            UnitNameEnum unitName,
+            UnitTypeEnum unitType,
+            int unitNumber,
+            SpeciesAllowedEnum speciesAllowed,
+            SizeCategoryEnum sizeCategory,
             bool isActive,
             string notes   
         )
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(unitName)) { return Content("Unit name is required."); }
-            if (string.IsNullOrWhiteSpace(unitType)) { return Content("Unit type is required."); }
-            if (string.IsNullOrWhiteSpace(speciesAllowed)) { return Content("Species allowed in unit is required."); }
-            if (string.IsNullOrWhiteSpace(sizeCategory)) { return Content("Size category of unit is required."); }
+            if (unitNumber < 1 || unitNumber > 10)
+            {
+                return Content("Unit number must be between 1 and 10.");
+            }
+
+            BoardingUnitModel existingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.UnitName == unitName && x.UnitNumber == unitNumber);
+
+            if (existingUnit != null)
+            {
+                return Content(unitName + "-" + unitNumber + " already exists.");
+            }
 
             BoardingUnitModel boardingUnit = new BoardingUnitModel();
 
             boardingUnit.UnitName = unitName;
             boardingUnit.UnitType = unitType;
+            boardingUnit.UnitNumber = unitNumber;
             boardingUnit.SpeciesAllowed = speciesAllowed;
             boardingUnit.SizeCategory = sizeCategory;
             boardingUnit.IsActive = isActive;
@@ -50,7 +60,7 @@ namespace JamesPetBoarding.Controllers
                 dbContext.BoardingUnits.Add(boardingUnit);
                 dbContext.SaveChanges();
                 
-                return Content(boardingUnit.UnitName + " successfully added to the database.");
+                return Content(boardingUnit.UnitName + "-" + boardingUnit.UnitNumber + " successfully added to the database.");
             }
             catch (Exception ex) 
             { 
@@ -67,7 +77,10 @@ namespace JamesPetBoarding.Controllers
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
-            if (boardingUnit == null) { return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); }
+            if (boardingUnit == null) 
+            { 
+                return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); 
+            }
 
             string unitAvailable = boardingUnit.IsActive 
                 ? "Yes" 
@@ -77,25 +90,66 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : boardingUnit.Notes;
 
+            string unitTypeDisplay = boardingUnit.UnitType.ToString();
+            string speciesAllowedDisplay = boardingUnit.SpeciesAllowed.ToString();
+            string sizeCategoryDisplay = boardingUnit.SizeCategory.ToString();
+
+            switch (boardingUnit.UnitType)
+            {
+                case UnitTypeEnum.BirdCage:
+                    unitTypeDisplay = "Bird Cage";
+                    break;
+
+                case UnitTypeEnum.CatCondo:
+                    unitTypeDisplay = "Cat Condo";
+                    break;
+
+                case UnitTypeEnum.SmallAnimalEnclosure:
+                    unitTypeDisplay = "Small Animal Enclosure";
+                    break;
+
+                case UnitTypeEnum.LargeAnimalEnclosure:
+                    unitTypeDisplay = "Large Animal Enclosure";
+                    break;
+            
+            }
+
+            switch (boardingUnit.SpeciesAllowed) 
+            {
+                case SpeciesAllowedEnum.SmallMammal:
+                    speciesAllowedDisplay = "Small Mammal";
+                    break;
+            
+            }
+        
+            switch (boardingUnit.SizeCategory) 
+            {
+                case SizeCategoryEnum.AnySize:
+                    sizeCategoryDisplay = "Any Size";
+                    break;
+            
+            }
+
             return Content(
                 "Boarding Unit ID #" + boardingUnit.BoardingUnitId + 
-                "<br />Unit Name: " + boardingUnit.UnitName +
-                "<br />Unit Type: " + boardingUnit.UnitType +
-                "<br />Species Allowed: " + boardingUnit.SpeciesAllowed +
-                "<br />Unit Size: " + boardingUnit.SizeCategory +
+                "<br />Unit: " + boardingUnit.UnitName + "-" + boardingUnit.UnitNumber +
+                "<br />Unit Type: " + unitTypeDisplay +
+                "<br />Species Allowed: " + speciesAllowedDisplay +
+                "<br />Unit Size: " + sizeCategoryDisplay +
                 "<br />Unit Available: " + unitAvailable +
                 "<br />Notes: " + notesDisplay
             );
         }
 
         // GET: BoardingUnits/Update
-        // /BoardingUnits/Update?boardingUnitId=USE_EXISTING_BOARDING_UNIT_ID&unitName=Texas&unitType=Kennel&speciesAllowed=Dog&sizeCategory=Large&isActive=true&notes=floor%20repaved
+        // /BoardingUnits/Update?boardingUnitId=USE_EXISTING_BOARDING_UNIT_ID&unitName=Mercury&unitType=Kennel&unitNumber=1&speciesAllowed=Canine&sizeCategory=Large&isActive=true&notes=
         public ActionResult Update(
             Guid boardingUnitId,
-            string unitName,
-            string unitType,
-            string speciesAllowed,
-            string sizeCategory,
+            UnitNameEnum unitName,
+            UnitTypeEnum unitType,
+            int unitNumber,
+            SpeciesAllowedEnum speciesAllowed,
+            SizeCategoryEnum sizeCategory,
             bool isActive,
             string notes
         )
@@ -104,15 +158,26 @@ namespace JamesPetBoarding.Controllers
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
-            if (boardingUnit == null) { return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); }
+            if (boardingUnit == null) 
+            { 
+                return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); 
+            }
 
-            if (string.IsNullOrWhiteSpace(unitName)) { return Content("Unit name is required."); }
-            if (string.IsNullOrWhiteSpace(unitType)) { return Content("Unit type is required."); }
-            if (string.IsNullOrWhiteSpace(speciesAllowed)) { return Content("Species allowed in unit is required."); }
-            if (string.IsNullOrWhiteSpace(sizeCategory)) { return Content("Size category of unit is required."); }
+            if (unitNumber < 1 || unitNumber > 10)
+            {
+                return Content("Unit number must be between 1 and 10.");
+            }
+
+            BoardingUnitModel existingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId != boardingUnitId && x.UnitName == unitName && x.UnitNumber == unitNumber);
+
+            if (existingUnit != null)
+            {
+                return Content(unitName + "-" + unitNumber + " already exists.");
+            }
 
             boardingUnit.UnitName = unitName;
             boardingUnit.UnitType = unitType;
+            boardingUnit.UnitNumber = unitNumber;
             boardingUnit.SpeciesAllowed = speciesAllowed;
             boardingUnit.SizeCategory = sizeCategory;
             boardingUnit.IsActive = isActive;
@@ -138,8 +203,18 @@ namespace JamesPetBoarding.Controllers
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
-            if (boardingUnit == null) { return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); }
+            if (boardingUnit == null) 
+            { 
+                return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); 
+            }
 
+            List<BoardingModel> boardings = dbContext.Boardings.Where(x => x.BoardingUnitId == boardingUnitId).ToList();
+
+            if (boardings.Count > 0)
+            {
+                return Content("This boarding unit has boarding records and cannot be deleted.");
+            }
+        
             try 
             {
                 dbContext.BoardingUnits.Remove(boardingUnit);
@@ -153,3 +228,4 @@ namespace JamesPetBoarding.Controllers
         }
     }
 }
+

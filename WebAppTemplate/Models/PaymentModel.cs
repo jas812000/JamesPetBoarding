@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,8 +28,8 @@ namespace JamesPetBoarding.Models
         [Required]
         public DateTime PaymentDateTime { get; set; }
 
-        [Required, MaxLength(50)]
-        public string PaymentMethod { get; set; }
+        [Required]
+        public PaymentMethodEnum PaymentMethod { get; set; }
 
         [Required]
         [Range(0, 999999999.99)]
@@ -36,6 +37,12 @@ namespace JamesPetBoarding.Models
 
         [MaxLength(200)]
         public string TransactionReference { get; set; }
+
+        [Required]
+        public Guid ProcessedByEmployeeId { get; set; }
+
+        [ForeignKey("ProcessedByEmployeeId")]
+        public EmployeeModel ProcessedByEmployee { get; set; }
 
         public bool IsVoided { get; set; }
 

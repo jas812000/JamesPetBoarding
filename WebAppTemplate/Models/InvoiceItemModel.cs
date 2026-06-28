@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin.Security;
+﻿using JamesPetBoarding.Enums;
+using Microsoft.Owin.Security;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -19,8 +20,7 @@ namespace JamesPetBoarding.Models
             InvoiceItemId = Guid.NewGuid();
         }
 
-        [Required]
-        public Guid BoardingId { get; set; }
+        public Guid? BoardingId { get; set; }
 
         [ForeignKey("BoardingId")]
         public BoardingModel Boarding {  get; set; }
@@ -37,8 +37,8 @@ namespace JamesPetBoarding.Models
         [ForeignKey("ServiceId")]
         public ServiceModel Service { get; set; }
 
-        [Required, MaxLength(200)]
-        public string ItemType { get; set; }
+        [Required]
+        public InvoiceItemTypeEnum ItemType { get; set; }
 
         [MaxLength(2000)]
         public string Description { get; set; }

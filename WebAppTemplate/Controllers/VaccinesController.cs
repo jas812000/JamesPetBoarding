@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace JamesPetBoarding.Controllers
         // /Vaccines/Create?vaccineName=Rabies&species=Dog&requiredFlag=false&notes=
         public ActionResult Create(
             string vaccineName,
-            string species,
+            SpeciesEnum species,
             bool requiredFlag,
             string notes
         )
@@ -30,8 +31,13 @@ namespace JamesPetBoarding.Controllers
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             if (string.IsNullOrWhiteSpace(vaccineName)) { return Content("Name of the vaccine is required."); }
-            if (string.IsNullOrWhiteSpace(species)) { return Content("Species is required."); }
-            
+
+            VaccineModel existingVaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineName == vaccineName && x.Species == species);
+            if (existingVaccine != null) 
+            { 
+                return Content(vaccineName + " for " + species + " already exists.");
+            }
+        
 
             VaccineModel vaccine = new VaccineModel();
 
@@ -71,10 +77,12 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : vaccine.Notes;
 
+            string speciesDisplay = vaccine.Species.ToString();
+
             return Content(
                 "Vaccine ID #" + vaccine.VaccineId +
                 "<br />Vaccine Name: " + vaccine.VaccineName +
-                "<br />Species: " + vaccine.Species +
+                "<br />Species: " + speciesDisplay +
                 "<br />Vaccine Required: " + vaccineRequired +
                 "<br />Notes: " + notesDisplay
             );
@@ -86,7 +94,7 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Update(
             Guid vaccineId,
             string vaccineName,
-            string species,
+            SpeciesEnum species,
             bool requiredFlag,
             string notes
         )
@@ -98,7 +106,12 @@ namespace JamesPetBoarding.Controllers
             if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist."); }
 
             if (string.IsNullOrWhiteSpace(vaccineName)) { return Content("Name of the vaccine is required."); }
-            if (string.IsNullOrWhiteSpace(species)) { return Content("Species is required."); }
+
+            VaccineModel existingVaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId != vaccineId && x.VaccineName == vaccineName && x.Species == species);
+            if (existingVaccine != null)
+            {
+                return Content(vaccineName + " for a " + species + " already exists.");
+            }
 
             vaccine.VaccineName = vaccineName;
             vaccine.Species = species;
@@ -120,7 +133,6 @@ namespace JamesPetBoarding.Controllers
 
         }
 
-
         // GET: Vaccines/Delete
         // /Vaccines/Delete?vaccineId=USE_EXISTING_VACCINE_ID
         public ActionResult Delete(Guid vaccineId)
@@ -130,6 +142,13 @@ namespace JamesPetBoarding.Controllers
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
             if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist"); }
+
+            List<PetVaccineModel> petVaccines = dbContext.PetVaccines.Where(x => x.VaccineId == vaccineId).ToList();
+            
+            if (petVaccines.Count > 0) 
+            { 
+                return Content("This vaccine is assigned to pet vaccine records and cannot be deleted."); 
+            }
 
             try 
             {

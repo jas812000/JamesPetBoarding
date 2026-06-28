@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +22,9 @@ namespace JamesPetBoarding.Controllers
         // /Payments/Create?invoiceId=  &paymentMethod=  ^&amount=  &notes=
         public ActionResult Create(
             Guid invoiceId,
-            string paymentMethod,
+            PaymentMethodEnum paymentMethod,
             decimal amount,
+            Guid processedByEmployeeId,
             string notes
         )
         {
@@ -30,9 +32,14 @@ namespace JamesPetBoarding.Controllers
 
             InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x => x.InvoiceId == invoiceId);
             if (invoice == null) { return Content("Invoice ID #" + invoiceId + " does not exist."); }
-            if (string.IsNullOrWhiteSpace(paymentMethod)) { return Content("A payment method is required."); }
             if (amount <= 0) { return Content("The amount must be greater than zero."); }
             if (amount > invoice.Balance) { return Content("Payment amount cannot be greater than the invoice balance of $" + invoice.Balance.ToString("F2") + "."); }
+
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == processedByEmployeeId);
+            if (employee == null) 
+            { 
+                return Content("Employee ID#" + processedByEmployeeId + " does not exist."); 
+            }
 
             PaymentModel payment = new PaymentModel();
 
@@ -42,6 +49,7 @@ namespace JamesPetBoarding.Controllers
             payment.PaymentDateTime = payDateTime;
             payment.PaymentMethod = paymentMethod;
             payment.Amount = amount;
+            payment.ProcessedByEmployeeId = processedByEmployeeId;
             
             string generatedTimeStamp = payDateTime.ToString("yyyyMMddHHmmss");
             string uniqueValue = Guid.NewGuid().ToString().Substring(0, 6).ToUpper();
@@ -101,13 +109,43 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : payment.Notes;
 
+            string processedByEmployeeDisplay = payment.ProcessedByEmployee != null 
+                ? payment.ProcessedByEmployee.LastName + ", " + payment.ProcessedByEmployee.FirstName 
+                : "N/A";
+
+            string paymentMethodDisplay = payment.PaymentMethod.ToString();
+
+            switch (payment.PaymentMethod)
+            {
+                case PaymentMethodEnum.CreditCard:
+                    paymentMethodDisplay = "Credit Card";
+                    break;
+
+                case PaymentMethodEnum.DebitCard:
+                    paymentMethodDisplay = "Debit Card";
+                    break;
+
+                case PaymentMethodEnum.ACH:
+                    paymentMethodDisplay = "ACH / Bank Transfer";
+                    break;
+
+                case PaymentMethodEnum.ApplePay:
+                    paymentMethodDisplay = "Apple Pay";
+                    break;
+
+                case PaymentMethodEnum.GooglePay:
+                    paymentMethodDisplay = "Google Pay";
+                    break;
+            } 
+
             return Content(
                 "Payment ID #" + payment.PaymentId +
                 "<br />Invoice ID #" + payment.InvoiceId +
                 "<br />Payment Date-Time: " + payment.PaymentDateTime +
-                "<br />Payment Method: " + payment.PaymentMethod +
+                "<br />Payment Method: " + paymentMethodDisplay +
                 "<br />Amount: " + payment.Amount.ToString("F2") +
                 "<br />Transaction Reference: " + payment.TransactionReference +
+                "<br />Processed By: " + processedByEmployeeDisplay +
                 "<br />Voided: " + isVoidedDisplay +
                 "<br />Voided Date-Time: " + voidDateTimeDisplay +
                 "<br />Voided By: " + voidEmployeeDisplay +
@@ -145,7 +183,7 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Payments/Delete
-        // /Payments/Delete?paymentId=USE_EXISTING_PAYMENT_ID&voidReason=Returned%20by%20bank&voidedByEmployeeID=USE_EXISTING_EMPLOYEE_ID
+        // /Payments/Delete?paymentId=USE_EXISTING_PAYMENT_ID&voidReason=Returned%20by%20bank&voidedByEmployeeId=USE_EXISTING_EMPLOYEE_ID
         public ActionResult Delete(Guid paymentId, string voidReason, Guid voidedByEmployeeId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();

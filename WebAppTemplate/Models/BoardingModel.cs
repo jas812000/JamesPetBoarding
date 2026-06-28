@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -66,8 +67,8 @@ namespace JamesPetBoarding.Models
         [MaxLength(1000)]
         public string CancelledReason { get; set; }
 
-        [Required, MaxLength(20)]
-        public string Status { get; set; }
+        [Required]
+        public BoardingStatusEnum Status { get; set; }
 
         [MaxLength(2000)]
         public string Notes { get; set; }

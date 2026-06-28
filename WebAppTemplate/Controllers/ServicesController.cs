@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,20 +18,28 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Services/Create
-        // /Services/Create?serviceName=Medicatn%20Administran&basePrice=10.00&pricingType=Per%20Doce&notes=
+        // /Services/Create?serviceName=MedicationAdministration&basePrice=10.00&pricingType=PerService&notes=
         public ActionResult Create(
-            string serviceName,
+            ServiceNameEnum serviceName,
             decimal basePrice,
-            string pricingType,
+            PricingTypeEnum pricingType,
             string notes
         )
         {
            
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(serviceName)) { return Content("Service name is required."); }
-            if (basePrice <= 0) { return Content("Base price must be greater than zero."); }
-            if (string.IsNullOrWhiteSpace(pricingType)) { return Content("Pricing type is required."); }
+            if (basePrice <= 0) 
+            { 
+                return Content("Base price must be greater than zero."); 
+            }
+
+            ServiceModel existingService = dbContext.Services.FirstOrDefault(x => x.ServiceName == serviceName);
+
+            if (existingService != null)
+            {
+                return Content(serviceName + " already exists.");
+            }
 
             ServiceModel service = new ServiceModel();
 
@@ -51,6 +60,7 @@ namespace JamesPetBoarding.Controllers
                 return Content(ex.Message);
             }
         }
+        
 
         // GET: Services/Read
         // /Services/Read?serviceId=USE_EXISTING_SERVICE_ID
@@ -66,22 +76,126 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes" 
                 : service.Notes;
 
+            string serviceNameDisplay = service.ServiceName.ToString();
+
+            switch (service.ServiceName) 
+            {
+                case ServiceNameEnum.FullGrooming:
+                    serviceNameDisplay = "Full Grooming";
+                    break;
+
+                case ServiceNameEnum.NailTrim:
+                    serviceNameDisplay = "Nail Trim";
+                    break;
+
+                case ServiceNameEnum.EarCleaning:
+                    serviceNameDisplay = "Ear Cleaning";
+                    break;
+
+                case ServiceNameEnum.TeethBrushing:
+                    serviceNameDisplay = "Teeth Brushing";
+                    break;
+
+                case ServiceNameEnum.HandFeeding:
+                    serviceNameDisplay = "Hand Feeding";
+                    break;
+
+                case ServiceNameEnum.FoodPreparation:
+                    serviceNameDisplay = "Food Preparation";
+                    break;
+
+                case ServiceNameEnum.MedicationAdministration:
+                    serviceNameDisplay = "Medication Administration";
+                    break;
+
+                case ServiceNameEnum.ExtraPlayTime:
+                    serviceNameDisplay = "Extra Play Time";
+                    break;
+
+                case ServiceNameEnum.ExtraWalk:
+                    serviceNameDisplay = "Extra Walk";
+                    break;
+
+                case ServiceNameEnum.OneOnOnePlay:
+                    serviceNameDisplay = "One on One Play";
+                    break;
+
+                case ServiceNameEnum.LatePickUp:
+                    serviceNameDisplay = "Late Pick Up";
+                    break;
+
+                case ServiceNameEnum.AfterHoursPickup:
+                    serviceNameDisplay = "After Hours Pick Up";
+                    break;
+
+                case ServiceNameEnum.EarlyDropOff:
+                    serviceNameDisplay = "Early Drop Off";
+                    break;
+
+                case ServiceNameEnum.BoardingUpgrade:
+                    serviceNameDisplay = "Boarding Upgrade";
+                    break;
+
+                case ServiceNameEnum.LuxurySuiteUpgrade:
+                    serviceNameDisplay = "Luxury Suite Upgrade";
+                    break;
+
+                case ServiceNameEnum.TrainingSession:
+                    serviceNameDisplay = "Training Session";
+                    break;
+
+                case ServiceNameEnum.BehavioralAssessment:
+                    serviceNameDisplay = "Behavioral Assessment";
+                    break;
+
+            }
+
+            string pricingTypeDisplay = service.PricingType.ToString();
+
+            switch (service.PricingType) 
+            {
+                case PricingTypeEnum.PerPet:
+                    pricingTypeDisplay = "Per Pet";
+                    break;
+
+                case PricingTypeEnum.PerNight:
+                    pricingTypeDisplay = "Per Night";
+                    break;
+
+                case PricingTypeEnum.PerDay:
+                    pricingTypeDisplay = "Per Day";
+                    break;
+
+                case PricingTypeEnum.PerHour:
+                    pricingTypeDisplay = "Per Hour";
+                    break;
+
+                case PricingTypeEnum.PerStay:
+                    pricingTypeDisplay = "Per Stay";
+                    break;
+
+                case PricingTypeEnum.PerService:
+                    pricingTypeDisplay = "Per Service";
+                    break;
+
+            }
+
             return Content(
                 "Service ID #" + service.ServiceId +
-                "<br />Service Name: " + service.ServiceName +
+                "<br />Service Name: " + serviceNameDisplay +
                 "<br />Base Price: $" + service.BasePrice.ToString("F2") +
-                "<br />Pricing Type: " + service.PricingType +
-                "<br />Notes: " + notesDisplay 
+                "<br />Pricing Type: " + pricingTypeDisplay +
+                "<br />Notes: " + notesDisplay
             );
         }
 
         // GET: Services/Update
-        // /Services/Update?serviceId=USE_EXISTING_SERVICE_ID&serviceName=Medication%20Administration&basePrice=9.99&pricingType=Per%20Dose&notes=
+        // /Services/Update?serviceId=USE_EXISTING_SERVICE_ID&serviceName=MedicationAdministration&basePrice=9.99&pricingType=PerService&notes=
         public ActionResult Update(
             Guid serviceId,
-            string serviceName,
+            ServiceNameEnum serviceName,
             decimal basePrice,
-            string pricingType,
+            PricingTypeEnum pricingType,
             string notes
         )
         {
@@ -91,9 +205,14 @@ namespace JamesPetBoarding.Controllers
 
             if (service == null) { return Content("Service ID #" + serviceId + " does not exist."); }
 
-            if (string.IsNullOrWhiteSpace(serviceName)) { return Content("Swervice name is required."); }
             if (basePrice <= 0) { return Content("Base price must be greater than zero."); }
-            if (string.IsNullOrWhiteSpace(pricingType)) { return Content("Pricing type is required."); }
+
+            ServiceModel existingService = dbContext.Services.FirstOrDefault(x => x.ServiceId != serviceId && x.ServiceName == serviceName);
+
+            if (existingService != null)
+            {
+                return Content(serviceName + " already exists.");
+            }
 
             service.ServiceName = serviceName;
             service.BasePrice = basePrice;

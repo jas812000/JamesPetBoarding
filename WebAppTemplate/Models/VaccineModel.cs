@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,8 +21,8 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(200)]
         public string VaccineName { get; set; }
 
-        [Required, MaxLength(25)]
-        public string Species { get; set; }
+        [Required]
+        public SpeciesEnum Species { get; set; }
 
         [Required]
         public bool RequiredFlag { get; set; }

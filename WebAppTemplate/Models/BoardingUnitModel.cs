@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,20 +18,23 @@ namespace JamesPetBoarding.Models
             BoardingUnitId = Guid.NewGuid();
         }
 
-        [Required, MaxLength(50)]
-        public string UnitName { get; set; }
-
-        [Required, MaxLength(50)]
-        public string UnitType { get; set; }
-
-        [Required, MaxLength(20)]
-        public string SpeciesAllowed { get; set; }
-
-        [Required, MaxLength(20)]
-        public string SizeCategory { get; set; }
+        [Required]
+        public UnitTypeEnum UnitType { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
+        public UnitNameEnum UnitName { get; set; }
+
+        [Required, Range(1, 10)]
+        public int UnitNumber { get; set; }
+
+        [Required]
+        public SpeciesAllowedEnum SpeciesAllowed { get; set; }
+
+        [Required]
+        public SizeCategoryEnum SizeCategory { get; set; }
+
+        [Required]
+        public bool IsActive { get; set; } = true;
 
         [MaxLength(2000)]
         public string Notes { get; set; }

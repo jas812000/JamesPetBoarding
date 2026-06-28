@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,28 +17,39 @@ namespace JamesPetBoarding.Controllers
         {
             return View();
         }
-        
+
 
         // GET: CustomerPets/Create
-        // /CustomerPets/Create?petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=owner
+        // /CustomerPets/Create?petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=Owner
         public ActionResult Create(
             Guid petId,
             Guid customerId,
-            string relationshipType
+            RelationshipTypeEnum relationshipType
         )
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(relationshipType)) { return Content("Relationship type is required."); }
-
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
+            if (pet == null) 
+            { 
+                return Content("Pet ID #" + petId + " does not exist."); 
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) { return Content("Customer ID #" + customerId + " does not exist."); }
+            if (customer == null) 
+            { 
+                return Content("Customer ID #" + customerId + " does not exist."); 
+            }
+
+            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == customerId && x.PetId == petId);
+            if (existingRelationship != null)
+            {
+                return Content("This customer is already associated with this pet.");
+            }
 
             CustomerPetModel customerPet = new CustomerPetModel();
 
+            customerPet.CustomerPetId = Guid.NewGuid();
             customerPet.PetId = petId;
             customerPet.CustomerId = customerId;
             customerPet.RelationshipType = relationshipType;
@@ -54,6 +66,7 @@ namespace JamesPetBoarding.Controllers
                 return Content(ex.Message);
             }
         }
+        
 
 
         // GET: CustomerPets/Read
@@ -64,38 +77,67 @@ namespace JamesPetBoarding.Controllers
 
             CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
-            if (customerPet == null) { return Content("CustomerPet ID #" + customerPetId + " does not exist."); }
+            if (customerPet == null) 
+            { 
+                return Content("CustomerPet ID #" + customerPetId + " does not exist."); 
+            }
+
+            string relationshipTypeDisplay = customerPet.RelationshipType.ToString();
+
+            switch (customerPet.RelationshipType)
+            {
+                case RelationshipTypeEnum.CoOwner:
+                    relationshipTypeDisplay = "Co Owner";
+                    break;
+
+                case RelationshipTypeEnum.AuthorizedPickup:
+                    relationshipTypeDisplay = "Authorized Pickup";
+                    break;
+            }
 
             return Content(
                 "CustomerPet ID #" + customerPet.CustomerPetId +
                 "<br />Customer ID #" + customerPet.CustomerId +
                 "<br />Pet ID #" + customerPet.PetId +
-                "<br />Relationship Type: " + customerPet.RelationshipType
+                "<br />Relationship Type: " + relationshipTypeDisplay
             );
         }
 
 
         // GET: CustomerPets/Update
-        // /CustomerPets/Update?customerPetId=USE_EXISTING_CUSTOMERPET_ID&petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=owner
+        // /CustomerPets/Update?customerPetId=USE_EXISTING_CUSTOMERPET_ID&petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=Owner
         public ActionResult Update(
             Guid customerPetId,
             Guid petId,
             Guid customerId,
-            string relationshipType
+            RelationshipTypeEnum relationshipType
         )
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetId);
-            if (customerPet == null) { return Content("CustomerPet ID #" + customerPetId + "does not exist"); }
+            if (customerPet == null) 
+            { 
+                return Content("CustomerPet ID #" + customerPetId + "does not exist"); 
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) { return Content("Pet ID #" + petId + "does not exist"); }
+            if (pet == null) 
+            { 
+                return Content("Pet ID #" + petId + "does not exist"); 
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) { return Content("Customer ID #" + customerId + "does not exist"); }
+            if (customer == null) 
+            { 
+                return Content("Customer ID #" + customerId + "does not exist"); 
+            }
 
-            if (string.IsNullOrWhiteSpace(relationshipType)) { return Content("Relationship type is required."); }
+            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId != customerPetId &&  x.CustomerId == customerId && x.PetId == petId);
+            if (existingRelationship != null)
+            {
+                return Content("This customer is already associated with this pet.");
+            }
 
             customerPet.PetId = petId;
             customerPet.CustomerId = customerId;

@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,11 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Employees/Create
-        // /Employees/Create?lastName=Stevens&firstName=Lilly&role=Pet%20Caretaker&phone=2145559874&email=lily.stevens@pawsllc.net&isActive=false
+        // /Employees/Create?lastName=Stevens&firstName=Lilly&role=KennelStaff&phone=2145559874&email=lily.stevens@pawsllc.net&isActive=false
         public ActionResult Create( 
             string lastName,
             string firstName,
-            string role,
+            EmployeeRoleEnum role,
             string phone,
             string email,
             bool isActive
@@ -32,7 +33,6 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(lastName)) { return Content("Last name is required."); }
             if (string.IsNullOrWhiteSpace(firstName)) { return Content("First name is required."); }
-            if (string.IsNullOrWhiteSpace(role)) { return Content("Role / position is required."); }
             if (string.IsNullOrWhiteSpace(phone)) { return Content("Phone number is required."); }
             if (string.IsNullOrWhiteSpace(email)) { return Content("Email address is required."); }
 
@@ -72,11 +72,28 @@ namespace JamesPetBoarding.Controllers
                 ? "Yes"
                 : "No";
 
+            string employeeRoleDisplay = employee.Role.ToString();
+
+            switch (employee.Role)
+            {
+                case EmployeeRoleEnum.FrontDesk:
+                    employeeRoleDisplay = "Front Desk";
+                    break;
+
+                case EmployeeRoleEnum.KennelStaff:
+                    employeeRoleDisplay = "Kennel Staff";
+                    break;
+
+                case EmployeeRoleEnum.VeterinaryTechnician:
+                    employeeRoleDisplay = "Veterinary Technician";
+                    break;
+            }
+
             return Content(
                 "Employee ID #" + employee.EmployeeId +
                 "<br />Last Name: " + employee.LastName +
                 "<br />First Name: " + employee.FirstName +
-                "<br />Role: " + employee.Role +
+                "<br />Role: " + employeeRoleDisplay +
                 "<br />Phone Number: " + employee.Phone +
                 "<br />Email Address: " + employee.Email +
                 "<br />Employee Active: " + employeeActive
@@ -85,12 +102,12 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Employees/Update
-        // /Employees/Update?employeeId=USE_EXISTING_EMPLOYEE_ID&lastName=Stevens&firstName=Lily&role=Pet%20Caretaker&phone=2145559874&email=lily.stevens@pawsllc.net&isActive=true
+        // /Employees/Update?employeeId=USE_EXISTING_EMPLOYEE_ID&lastName=Stevens&firstName=Lily&role=KennelStaff&phone=2145559874&email=lily.stevens@pawsllc.net&isActive=true
         public ActionResult Update(
             Guid employeeId,
             string lastName,
             string firstName,
-            string role,
+            EmployeeRoleEnum role,
             string phone,
             string email,
             bool isActive
@@ -104,7 +121,6 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(lastName)) { return Content("Last name is required."); }
             if (string.IsNullOrWhiteSpace(firstName)) { return Content("First name is required."); }
-            if (string.IsNullOrWhiteSpace(role)) { return Content("Role / position is required."); }
             if (string.IsNullOrWhiteSpace(phone)) { return Content("Phone number is required."); }
             if (string.IsNullOrWhiteSpace(email)) { return Content("Email address is required."); }
 
@@ -139,10 +155,8 @@ namespace JamesPetBoarding.Controllers
 
             try
             {
-                //dbContext.Employees.Remove(employee);
                 employee.IsActive = false;
                 dbContext.SaveChanges();
-                //return Content("Employee ID #" + employee.EmployeeId + " was successfully deleted.");
                 return Content("Employee ID #" + employee.EmployeeId + " was successfully deactivated.");
 
             }

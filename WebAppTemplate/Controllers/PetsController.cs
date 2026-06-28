@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -20,13 +21,13 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: Pets/Create
-        // /Pets/Create?vetId=275c80fc-8a49-410c-ae30-c33661e3eeb6&name=Steve&species=Dog&breed=German%20Shepard&sex=male&birthDate=11%2F11%2F2020&weight=57.8&notes=Brown%20and%20White
+        // /Pets/Create?vetId=275c80fc-8a49-410c-ae30-c33661e3eeb6&name=Steve&species=Dog&breed=German%20Shepard&sex=Male&birthDate=11%2F11%2F2020&weight=57.8&notes=Brown%20and%20White
         public ActionResult Create(
             Guid? vetId, 
             string name, 
-            string species, 
+            SpeciesEnum species, 
             string breed, 
-            string sex, 
+            SexEnum sex, 
             DateTime birthDate, 
             decimal weight, 
             string notes
@@ -36,34 +37,34 @@ namespace JamesPetBoarding.Controllers
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             if (string.IsNullOrWhiteSpace(name)) { return Content("A pet name is required."); }
-            if (string.IsNullOrWhiteSpace(species)) { return Content("Species is required."); }
             if (string.IsNullOrWhiteSpace(breed)) { return Content("Breed is required."); }
-            if (string.IsNullOrWhiteSpace(sex)) { return Content("Sex is required."); }
             if (birthDate > DateTime.Today) { return Content("Birth date cannot be in the future."); }
             if (weight <= 0) { return Content("Weight must be greater than zero."); }
 
-            PetModel pet = new PetModel();
-
-            int age = DateTime.Today.Year - birthDate.Year;
-            if (birthDate.Date > DateTime.Today.AddYears(-age)) 
+            if (vetId != null) 
             { 
-                age--;  
+                VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
+
+                if (veterinarian == null)
+                {
+                    return Content("Vet ID #" + vetId + " does not exist.");
+                
+                }       
             }
 
-            pet.PetId = Guid.NewGuid();
+            PetModel pet = new PetModel();
+
             pet.VetId = vetId;
             pet.Name = name;
             pet.Species = species;
             pet.Breed = breed;
             pet.Sex = sex;
             pet.BirthDate = birthDate;
-            pet.Age = age;
             pet.Weight = weight;
             pet.Notes = notes;
 
             try
             {
-                pet.VetId = null; // Remove after Veterinarian Controller is built
 
                 dbContext.Pets.Add(pet);
                 dbContext.SaveChanges();
@@ -76,6 +77,7 @@ namespace JamesPetBoarding.Controllers
                 return Content(ex.Message);
             }             
         }
+        
 
         // GET: Pets/Read
         // /Pets/Read?petId=2589b987-46b0-4372-a164-ced50db0b195
@@ -94,14 +96,23 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : pet.Notes;
 
+            string speciesDisplay = pet.Species.ToString();
+
+            int age = DateTime.Today.Year - pet.BirthDate.Year;
+            if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+
             //return View();
             return Content(
                    "Pet ID #" + pet.PetId +
-                   "<br />Name: " + pet.Name + pet.Species +
+                   "<br />Name: " + pet.Name + 
+                   "<br />Species: " + speciesDisplay +
                    "<br />Breed: " + pet.Breed +
                    "<br />Sex: " + pet.Sex +
                    "<br />Birthday: " + pet.BirthDate.ToString("MM/dd/yyyy") +
-                   "<br />Age: " + pet.Age +
+                   "<br />Age: " + age +
                    "<br />Weight: " + pet.Weight +
                    "<br />Notes: " + notesDisplay
              );
@@ -113,9 +124,9 @@ namespace JamesPetBoarding.Controllers
             Guid petId, 
             Guid? vetId, 
             string name, 
-            string species, 
+            SpeciesEnum species, 
             string breed, 
-            string sex, 
+            SexEnum sex, 
             DateTime birthDate, 
             decimal weight, 
             string notes
@@ -128,42 +139,24 @@ namespace JamesPetBoarding.Controllers
 
             if (pet == null) 
             {
-                // Test cases added to database
-                // Remove once validation is complete
-                pet = new PetModel 
-                { 
-                    PetId =  petId, 
-                    VetId = null, 
-                    Name = "Steve", 
-                    Species = "Dog", 
-                    Breed = "German Shepard", 
-                    Sex = "Male", 
-                    BirthDate = new DateTime(2020, 11, 11), 
-                    Age = 5, 
-                    Weight = 57.8m, 
-                    Notes = "Temporary test pet for edit"
-                };
+                return Content("Pet ID #" + petId + " does not exist."); 
+            }
 
-                dbContext.Pets.Add(pet);
-                dbContext.SaveChanges();
+            if (vetId != null)
+            {
+                VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
 
-                // Uncomment below once validation is complete
-                // return Content("Pet ID #" + petId + " does not exist."); 
+                if (veterinarian == null)
+                {
+                    return Content("Vet ID #" + vetId + " does not exist.");
 
+                }
             }
 
             if (string.IsNullOrWhiteSpace(name)) { return Content("A pet name is required."); }
-            if (string.IsNullOrWhiteSpace(species)) { return Content("Species is required."); }
             if (string.IsNullOrWhiteSpace(breed)) { return Content("Breed is required."); }
-            if (string.IsNullOrWhiteSpace(sex)) { return Content("Sex is required."); }
             if (birthDate > DateTime.Today) { return Content("Birth date cannot be in the future."); }
             if (weight <= 0) { return Content("Weight must be greater than zero."); }
-
-            int age = DateTime.Today.Year - birthDate.Year;
-            if (birthDate.Date > DateTime.Today.AddYears(-age))
-            { 
-                age--;
-            }
 
             pet.VetId = vetId;
             pet.Name = name;
@@ -171,7 +164,6 @@ namespace JamesPetBoarding.Controllers
             pet.Breed = breed;
             pet.Sex = sex;
             pet.BirthDate = birthDate;
-            pet.Age = age;
             pet.Weight = weight;
             pet.Notes = notes;
 
@@ -194,74 +186,23 @@ namespace JamesPetBoarding.Controllers
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
-            // Remove once validation is complete
             if (pet == null)
             { 
-                // Test case added to database
-                // Remove once validation is complete
-                pet = new PetModel
-                {
-                    PetId = petId,
-                    VetId = null,
-                    Name = "Steve",
-                    Species = "Dog",
-                    Breed = "German Shepard",
-                    Sex = "Male",
-                    BirthDate = new DateTime(2020, 11, 11),
-                    Age = 5,
-                    Weight = 57.8m,
-                    Notes = "Temporary test pet for removal"
-                };
-                dbContext.Pets.Add(pet);
+                return Content("Pet ID #" + petId + " does not exist.");
+            }
+
+            try
+            {
+                pet.IsActive = false;
                 dbContext.SaveChanges();
-                return Content("Temporary pet created.");
 
-                // Uncomment below once validation is complete
-                //return Content("Pet ID #" + petId + " does not exist.");
+                return Content(
+                    "Pet Id #" + petId + " was successfully deactivated.");
             }
-
-            if (pet != null)
+            catch (Exception ex) 
             {
-                try
-                {
-
-                    List<CustomerPetModel> customerPets = dbContext.CustomerPets.Where(x => x.PetId == petId).ToList();
-                    dbContext.CustomerPets.RemoveRange(customerPets);
-
-                    List<DietModel> diets = dbContext.Diets.Where(x => x.PetId == petId).ToList();
-                    dbContext.Diets.RemoveRange(diets);
-
-                    List<MedicationModel> medications = dbContext.Medications.Where(x => x.PetId == petId).ToList();
-                    dbContext.Medications.RemoveRange(medications);
-
-                    List<PetVaccineModel> petVaccines = dbContext.PetVaccines.Where(x => x.PetId == petId).ToList();
-                    dbContext.PetVaccines.RemoveRange(petVaccines);
-
-                    List<BoardingModel> petBookings = dbContext.Boardings.Where(x => x.PetId == petId).ToList();
-                    dbContext.Boardings.RemoveRange(petBookings);
-                    
-                    dbContext.Pets.Remove(pet);
-                    dbContext.SaveChanges();
-
-                    return Content(
-                        "Pet Id #" + petId + 
-                        " was successfully deleted. Removed " +
-                        customerPets.Count + " customer-pet record(s), " +
-                        diets.Count + " diet record(s), " +
-                        medications.Count + " medication record(s), "+
-                        petVaccines.Count + " pet-vaccine record(s), and "+
-                        petBookings.Count + " boarding record(s)."
-                    );
-                }
-                catch (Exception ex) 
-                {
-                    return Content(ex.Message);
-                }  
-            }
-            else 
-            {
-                return Content("Pet Id #" + petId + " does not exist."); 
-            }
+                return Content(ex.Message);
+            }  
         }
     }
 }

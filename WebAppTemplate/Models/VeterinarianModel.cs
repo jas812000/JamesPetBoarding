@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -35,8 +36,8 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(100)]
         public string City { get; set; }
 
-        [Required, MaxLength(50)]
-        public string State {  get; set; }
+        [Required]
+        public StateEnum State {  get; set; }
 
         [Required, MaxLength(20)]
         public string ZipCode { get; set; }
@@ -44,7 +45,7 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(20)]
         public string Phone {  get; set; }
 
-        [Required, EmailAddress]
+        [Required, EmailAddress, MaxLength(256)]
         public string Email { get; set; }
 
         [MaxLength(2000)]

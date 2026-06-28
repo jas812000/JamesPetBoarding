@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Invoices/Create
-        // Invoices/Create?customerId=USE_EXISTING_CUSTOMER_ID&invoiceDateTime=2026-06-09&status=Open&discountAmount=0.00&notes=Initial%20invoice
+        // Invoices/Create?customerId=USE_EXISTING_CUSTOMER_ID&invoiceDateTime=2026-06-09&status=Draft&discountAmount=0.00&notes=Initial%20invoice
         public ActionResult Create(     
             Guid customerId,
             DateTime invoiceDateTime,
-            string status,
+            InvoiceStatusEnum status,
             decimal discountAmount,
             string notes
         )
@@ -31,7 +32,6 @@ namespace JamesPetBoarding.Controllers
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
             if (customer == null) { return Content("Customer ID #" + customerId + " does not exist."); }
 
-            if (string.IsNullOrWhiteSpace(status)) { return Content("Invoice status is required."); }
             if (discountAmount < 0) { return Content("Discount amount cannot be negative."); }
 
             InvoiceModel invoice = new InvoiceModel();
@@ -75,11 +75,24 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : invoice.Notes;
 
+            string invoiceStatusDisplay = invoice.Status.ToString();
+
+            switch (invoice.Status)
+            { 
+                case InvoiceStatusEnum.PartiallyPaid:
+                    invoiceStatusDisplay = "Partially Paid";
+                    break;
+
+                case InvoiceStatusEnum.PaidInFull:
+                    invoiceStatusDisplay = "Paid In Full";
+                    break;
+            }
+
             return Content(
                 "Invoice Id # " + invoice.InvoiceId +
                 "<br />Customer ID #" + invoice.CustomerId +
                 "<br />Invoice Date/Time: " + invoice.InvoiceDateTime.ToString("MM/dd/yyyy hh:mm tt") +
-                "<br />Status: " + invoice.Status +
+                "<br />Status: " + invoiceStatusDisplay +
                 "<br />Subtotal: $" + invoice.Subtotal.ToString("F2") +
                 "<br />Tax Amount: $" + invoice.TaxAmount.ToString("F2")+
                 "<br />Discount Amount: $" + invoice.DiscountAmount.ToString("F2") +
@@ -92,11 +105,11 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Invoices/Update
-        // /Invoices/Update?invoiceId=USE_EXISTING_INVOICE_ID&invoiceDateTime=2026-06-09&status=Open&discountAmount=0.00&notes=Updated%20invoice
+        // /Invoices/Update?invoiceId=USE_EXISTING_INVOICE_ID&invoiceDateTime=2026-06-09&status=Issued&discountAmount=0.00&notes=Updated%20invoice
         public ActionResult Update(
             Guid invoiceId,
             DateTime invoiceDateTime,
-            string status,
+            InvoiceStatusEnum status,
             decimal discountAmount,
             string notes
         )
@@ -106,8 +119,6 @@ namespace JamesPetBoarding.Controllers
             InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x => x.InvoiceId == invoiceId);
 
             if (invoice == null) { return Content("Invoice ID #" + invoiceId + " does not exist."); }
-
-            if (string.IsNullOrWhiteSpace(status)) { return Content("Invoice status is required."); }
 
             if (discountAmount < 0) { return Content("Discount amount cannot be negative."); }
 
@@ -135,7 +146,7 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x =>x.InvoiceId == invoiceId);
+            InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x => x.InvoiceId == invoiceId);
 
             if (invoice == null) { return Content("Invoice ID #" + invoiceId + " does not exist."); }
 

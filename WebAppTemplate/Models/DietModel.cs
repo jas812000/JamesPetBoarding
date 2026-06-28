@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,8 +31,8 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(20)]
         public string Amount { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Frequency { get; set; }
+        [Required]
+        public FrequencyEnum Frequency { get; set; }
 
         [MaxLength(2000)]
         public string Notes { get; set; } 

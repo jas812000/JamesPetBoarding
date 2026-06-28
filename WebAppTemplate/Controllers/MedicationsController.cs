@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,13 +18,13 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: Medications/Create
-        // Medications/Create?petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=oral&frequency=once%20daily&startDate=2026-06-10&endDate=&notes=give%20with%20food
+        // Medications/Create?petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=Oral&frequency=OnceDaily&startDate=2026-06-10&endDate=&notes=give%20with%20food
         public ActionResult Create(
             Guid petId, 
             string medicationName, 
             string dosage, 
-            string route, 
-            string frequency,
+            MedicationRouteEnum route, 
+            FrequencyEnum frequency,
             DateTime startDate,
             DateTime? endDate,
             string notes
@@ -33,8 +34,6 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(medicationName)) { return Content("Name of the medication is required."); }
             if (string.IsNullOrWhiteSpace(dosage)) { return Content("Medication dosage is required."); }
-            if (string.IsNullOrWhiteSpace(route)) { return Content("Route of administration is required."); }
-            if (string.IsNullOrWhiteSpace(frequency)) { return Content("Medication frequency is required."); }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
@@ -84,13 +83,63 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : medication.Notes;
 
+            string routeDisplay = medication.Route.ToString();
+
+            switch (medication.Route)
+            {
+                case MedicationRouteEnum.Otic:
+                    routeDisplay = "Otic (Ear)";
+                    break;
+
+                case MedicationRouteEnum.Ophthalmic:
+                    routeDisplay = "Ophthalmic (Eye)";
+                    break;
+            }
+
+            string frequencyDisplay = medication.Frequency.ToString();
+
+            switch (medication.Frequency)
+            {
+                case FrequencyEnum.OnceDaily:
+                    frequencyDisplay = "Once Daily";
+                    break;
+
+                case FrequencyEnum.TwiceDaily:
+                    frequencyDisplay = "Twice Daily";
+                    break;
+
+                case FrequencyEnum.ThreeTimesDaily:
+                    frequencyDisplay = "Three Times Daily";
+                    break;
+
+                case FrequencyEnum.FourTimesDaily:
+                    frequencyDisplay = "Four Times Daily";
+                    break;
+
+                case FrequencyEnum.EveryOtherDay:
+                    frequencyDisplay = "Every Other Day";
+                    break;
+
+                case FrequencyEnum.OnceWeekly:
+                    frequencyDisplay = "Once Weekly";
+                    break;
+
+                case FrequencyEnum.OnceMonthly:
+                    frequencyDisplay = "Once Monthly";
+                    break;
+
+                case FrequencyEnum.AsNeeded:
+                    frequencyDisplay = "As Needed";
+                    break;
+            }
+
             return Content(
                 "Medication ID #" + medication.MedicationId +
                 "<br />Pet ID #" + medication.PetId +
                 "<br />Medication name: " + medication.MedicationName +
                 "<br />Dosage: " + medication.Dosage +
-                "<br />Route: " + medication.Route +
-                "<br />Frequency: " + medication.Frequency +
+                "<br />Route: " + routeDisplay +
+                "<br />Frequency: " + frequencyDisplay +
                 "<br />Start Date: " + medication.StartDate.ToString("MM/dd/yyyy") +
                 "<br />End Date: " + endDateDisplay +
                 "<br />Notes: " + notesDisplay
@@ -99,14 +148,14 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Medications/Update
-        // Medications/Update?medicationId=USE_EXISTING_MEDICATION_ID&petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=oral&frequency=every%2012%12%20hours%20as%20needed&startDate=2026-06-08&endDate=2026-06-20&notes=give%20with%20food
+        // Medications/Update?medicationId=USE_EXISTING_MEDICATION_ID&petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=Oral&frequency=TwiceDaily&startDate=2026-06-08&endDate=2026-06-20&notes=give%20with%20food
         public ActionResult Update(
             Guid medicationId,
             Guid petId,
             string medicationName,
             string dosage,
-            string route,
-            string frequency,
+            MedicationRouteEnum route,
+            FrequencyEnum frequency,
             DateTime startDate,
             DateTime? endDate,
             string notes
@@ -120,8 +169,6 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(medicationName)) { return Content("Name of the medication is required."); }
             if (string.IsNullOrWhiteSpace(dosage)) { return Content("Medication dosage is required."); }
-            if (string.IsNullOrWhiteSpace(route)) { return Content("Route of administration is required."); }
-            if (string.IsNullOrWhiteSpace(frequency)) { return Content("Medication frequency is required."); }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
             if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }

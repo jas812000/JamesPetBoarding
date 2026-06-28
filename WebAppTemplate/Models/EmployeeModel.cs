@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,17 +24,17 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(50)]
         public string FirstName { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Role { get; set; }
+        [Required]
+        public EmployeeRoleEnum Role { get; set; }
 
         [Required, MaxLength(20)]
         public string Phone { get; set; }
 
-        [Required, EmailAddress]
+        [Required, EmailAddress, MaxLength(256)]
         public string Email { get; set; }
 
         [Required]
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [InverseProperty("CheckedInByEmployee")]
         public List<BoardingModel> CheckedInBoardings { get; set; }

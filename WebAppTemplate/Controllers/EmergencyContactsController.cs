@@ -1,4 +1,5 @@
 ﻿using JamesPetBoarding.Models;
+using JamesPetBoarding.Enums;
 using System;
 using System.Linq;
 using System.Web.Mvc;
@@ -15,18 +16,18 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: EmergencyContacts/Create
-        // /EmergencyContacts/Create?customerId=1db53653-7cd8-4737-bba2-f8ef018ec35b&lastName=Rivera&firstName=Maria&address=4522%20BeltLine%20Road&city=Dallas&state=Texas&zipCode=75150&phone=6825558888&email=maria.rivera@anymail.com&relationshipType=Sister&notes=Send%20email%20first
+        // /EmergencyContacts/Create?customerId=1db53653-7cd8-4737-bba2-f8ef018ec35b&lastName=Rivera&firstName=Maria&address=4522%20BeltLine%20Road&city=Dallas&state=TX&zipCode=75150&phone=6825558888&email=maria.rivera@anymail.com&relationshipType=Sister&notes=Send%20email%20first
         public ActionResult Create(
             Guid customerId,
             string lastName,
             string firstName,
             string address,
             string city,
-            string state,
+            StateEnum state,
             string zipCode,
             string phone,
             string email,
-            string relationshipType,
+            EmergencyContactRelationshipEnum relationshipType,
             string notes
             )
         {
@@ -36,40 +37,15 @@ namespace JamesPetBoarding.Controllers
             if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
             if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
             if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(state)) { return Content("A state is required."); }
             if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
             if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
             if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
-            if (string.IsNullOrWhiteSpace(relationshipType)) { return Content("A relationship to the owner is required."); }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
-            // Remove once validation is complete
             if (customer == null)
             {
-                // Test case added to database
-                // Remove once validation is complete
-                customer = new CustomerModel
-                {
-                    CustomerId = customerId,
-                    LastName = "Mendoza",
-                    FirstName = "Antonio",
-                    Address = "1900 Sam Houston Pkwy",
-                    City = "Dallas",
-                    State = "Texas",
-                    ZipCode = "75214",
-                    Phone = "6825551235",
-                    Email = "amendoza@anymail.com",
-                    IsActive = true,
-                    Notes = "Temporary test customer."
-                };
-                dbContext.Customers.Add(customer);
-                dbContext.SaveChanges();
-                return Content("Temporary customer created.");
-
-                // Uncomment below after validation
-                //return Content("Customer ID #" + customerId + " does not exist.");
-
+                return Content("Customer ID #" + customerId + " does not exist.");
             }
 
             EmergencyContactModel emergencyContact = new EmergencyContactModel();
@@ -126,6 +102,9 @@ namespace JamesPetBoarding.Controllers
             string notesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
                 ? "No notes"
                 : emergencyContact.Notes;
+           
+            string stateDisplay = emergencyContact.State.ToString();
+            string relationshipTypeDisplay = emergencyContact.RelationshipType.ToString();
 
             return Content(
                 "Emergency Contact ID #" + emergencyContact.EmergencyContactId +
@@ -134,11 +113,11 @@ namespace JamesPetBoarding.Controllers
                 "<br />First Name: " + emergencyContact.FirstName +
                 "<br />Address: " + emergencyContact.Address +
                 "<br />City: " + emergencyContact.City +
-                "<br />State: " + emergencyContact.State +
+                "<br />State: " + stateDisplay +
                 "<br />ZipCode: " + emergencyContact.ZipCode +
                 "<br />Phone Number: " + emergencyContact.Phone +
                 "<br />Email Address: " + emergencyContact.Email +
-                "<br />Relationship Type: " + emergencyContact.RelationshipType +
+                "<br />Relationship Type: " + relationshipTypeDisplay +
                 "<br />Emergency Contact active? " + emergencyContactStatus +
                 "<br />Notes: " + notesDisplay
             );
@@ -146,7 +125,7 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: EmergencyContacts/Update
-        // /EmergencyContacts/Update?emergencyContactId=ENTER_EXISTING_EMERGENCY_CONTACT_ID&customerId=ENTER_EXISTING_CUSTOMER_ID&lastName=Fraizer&firstName=Joe&address=1003%20Montclair%20Road&city=Birmingham&state=Alabama&zipCode=35213&phone=2055554512&email=j.fraizer@anymail.com&relationshipType=Father&isActive=true&notes=Updated%20name,%20phone%20number%20and%20email%20address
+        // /EmergencyContacts/Update?emergencyContactId=ENTER_EXISTING_EMERGENCY_CONTACT_ID&customerId=ENTER_EXISTING_CUSTOMER_ID&lastName=Fraizer&firstName=Joe&address=1003%20Montclair%20Road&city=Birmingham&state=AL&zipCode=35213&phone=2055554512&email=j.fraizer@anymail.com&relationshipType=Father&isActive=true&notes=Updated%20name,%20phone%20number%20and%20email%20address
         public ActionResult Update(
             Guid emergencyContactId,
             Guid customerId,
@@ -154,11 +133,11 @@ namespace JamesPetBoarding.Controllers
             string firstName, 
             string address, 
             string city, 
-            string state, 
+            StateEnum state, 
             string zipCode, 
             string phone, 
             string email,
-            string relationshipType,
+            EmergencyContactRelationshipEnum relationshipType,
             bool isActive,
             string notes
         )
@@ -186,11 +165,9 @@ namespace JamesPetBoarding.Controllers
             if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
             if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
             if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(state)) { return Content("A state is required."); }
             if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
             if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
             if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
-            if (string.IsNullOrWhiteSpace(relationshipType)) { return Content("A relationship to the owner is required."); }
 
             emergencyContact.CustomerId = customerId;
             emergencyContact.LastName = lastName;

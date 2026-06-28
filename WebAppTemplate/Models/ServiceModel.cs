@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,15 +18,18 @@ namespace JamesPetBoarding.Models
             ServiceId = Guid.NewGuid();
         }
 
-        [Required, MaxLength(200)]
-        public string ServiceName { get; set; }
+        [Required]
+        public ServiceNameEnum ServiceName { get; set; }
+
+        [Required]
+        public SpeciesEnum Species { get; set; }
 
         [Required]
         [Range(0, 999999999.99)]
         public decimal BasePrice { get; set; }
 
-        [Required, MaxLength(50)]
-        public string PricingType { get; set; }
+        [Required]
+        public PricingTypeEnum PricingType { get; set; }
 
         [MaxLength(2000)]
         public string Notes { get; set; }

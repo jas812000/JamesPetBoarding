@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Owin.BuilderProperties;
 using Microsoft.SqlServer.Server;
@@ -21,12 +22,12 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: Diets/Create
-        // /Diets/Create?petId=USE_EXISTING_PET_ID&foodName=Nutro&amount=0.5%20cup&frequency=once%20daily&notes=food%20already%20separated%20in%20containers
+        // /Diets/Update?dietId=USE_EXISTING_DIET_ID&petId=USE_EXISTING_PET_ID&foodName=Nutro&amount=0.5%20cup&frequency=OnceDaily&notes=food%20already%20separated%20in%20containers
         public ActionResult Create(
             Guid petId,
             string foodName,
             string amount,
-            string frequency,
+            FrequencyEnum frequency,
             string notes
         )
         {
@@ -35,34 +36,12 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(foodName)) { return Content("Name of the food product is required."); }
             if (string.IsNullOrWhiteSpace(amount)) { return Content("Amount to be fed is required."); }
-            if (string.IsNullOrWhiteSpace(frequency)) { return Content("Feeding frequency is required."); }
 
             PetModel petModel = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
             if (petModel == null) 
             {
-
-                // Test case added to database
-                // Remove once validation is complete
-                petModel = new PetModel
-                {
-                    PetId = petId,
-                    VetId = null,
-                    Name = "Steve",
-                    Species = "Dog",
-                    Breed = "German Shepard",
-                    Sex = "Male",
-                    BirthDate = new DateTime(2020, 11, 11),
-                    Age = 5,
-                    Weight = 57.8m,
-                    Notes = "Temporary test pet for edit"
-                };
-
-                dbContext.Pets.Add(petModel);
-                dbContext.SaveChanges();
-
-                // Uncomment once validation is complete
-                //return Content("Pet ID #" + petId + " does not exist."); 
+                return Content("Pet ID #" + petId + " does not exist."); 
             }
 
             DietModel dietModel = new DietModel();
@@ -105,25 +84,62 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : diet.Notes;
 
+            string frequencyDisplay = diet.Frequency.ToString();
+
+            switch (diet.Frequency) 
+            {
+                case FrequencyEnum.OnceDaily:
+                    frequencyDisplay = "Once Daily";
+                    break;
+
+                case FrequencyEnum.TwiceDaily:
+                    frequencyDisplay = "Twice Daily";
+                    break;
+
+                case FrequencyEnum.ThreeTimesDaily:
+                    frequencyDisplay = "Three Times Daily";
+                    break;
+
+                case FrequencyEnum.FourTimesDaily:
+                    frequencyDisplay = "Four Times Daily";
+                    break;
+
+                case FrequencyEnum.EveryOtherDay:
+                    frequencyDisplay = "Every Other Day";
+                    break;
+
+                case FrequencyEnum.OnceWeekly:
+                    frequencyDisplay = "Once Weekly";
+                    break;
+
+                case FrequencyEnum.OnceMonthly:
+                    frequencyDisplay = "Once Monthly";
+                    break;
+
+                case FrequencyEnum.AsNeeded:
+                    frequencyDisplay = "As Needed";
+                    break;
+            }
+
             return Content(
                 "Diet ID #" + diet.DietId + 
                 "<br />Pet ID #" + diet.PetId +
                 "<br />Food Name: " + diet.FoodName +
                 "<br />Amount: " + diet.Amount +
-                "<br />Frequency: " + diet.Frequency +
+                "<br />Frequency: " + frequencyDisplay +
                 "<br />Notes: " + notesDisplay
             );
         }
 
 
         // GET: Diets/Update
-        // /Diets/Update?dietId=USE_EXISTING_DIET_ID&petId=USE_EXISITING_PET_ID&foodName=Hill%20Science&amount=0.5%20cup&frequency=twice%20daily&notes=food%20already%20separated%20in%20containers
+        // /Diets/Create?petId=USE_EXISTING_PET_ID&foodName=Nutro&amount=0.5%20cup&frequency=OnceDaily&notes=food%20already%20separated%20in%20containers
         public ActionResult Update(
             Guid dietId, 
             Guid petId, 
             string foodName, 
             string amount, 
-            string frequency, 
+            FrequencyEnum frequency, 
             string notes
         )
         {
@@ -139,7 +155,6 @@ namespace JamesPetBoarding.Controllers
 
             if (string.IsNullOrWhiteSpace(foodName)) { return Content("Name of the food product is required."); }
             if (string.IsNullOrWhiteSpace(amount)) { return Content("Amount to be fed is required."); }
-            if (string.IsNullOrWhiteSpace(frequency)) { return Content("Feeding frequency is required."); }
 
             diet.PetId = petId;
             diet.FoodName = foodName;

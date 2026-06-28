@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -30,11 +31,11 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(20)]
         public string Dosage {  get; set; }
 
-        [Required, MaxLength(20)]
-        public string Route { get; set; }
+        [Required]
+        public MedicationRouteEnum Route { get; set; }
 
-        [Required, MaxLength(50)]
-        public string Frequency { get; set; }
+        [Required]
+        public FrequencyEnum Frequency { get; set; }
 
         [Required]
         public DateTime StartDate { get; set; }

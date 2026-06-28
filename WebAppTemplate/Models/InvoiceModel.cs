@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -25,10 +26,21 @@ namespace JamesPetBoarding.Models
         public CustomerModel Customer { get; set; }
 
         [Required]
+        public Guid PetId { get; set; }
+
+        [ForeignKey("PetId")]
+        public PetModel Pet { get; set; }
+
+        public Guid? BoardingId { get; set; }
+
+        [ForeignKey("BoardingId")]
+        public BoardingModel Boarding { get; set; }
+
+        [Required]
         public DateTime InvoiceDateTime { get; set; }
 
-        [Required, MaxLength(20)]
-        public string Status { get; set; }
+        [Required]
+        public InvoiceStatusEnum Status { get; set; }
 
         [Range(0, 999999999.99)]
         public decimal Subtotal { get; set; }
