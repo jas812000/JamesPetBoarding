@@ -35,8 +35,6 @@ namespace JamesPetBoarding.ViewModels
         [Required, EmailAddress, MaxLength(256)]
         public string Email { get; set; }
 
-        public bool IsActive { get; set; } = true;
-
         [MaxLength(2000)]
         public string Notes { get; set; }
     }

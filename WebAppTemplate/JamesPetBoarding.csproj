@@ -172,6 +172,7 @@
     <Compile Include="Controllers\ContactUsSubmissionController.cs" />
     <Compile Include="Controllers\CustomerPetsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\DietsController.cs" />
     <Compile Include="Controllers\EmergencyContactsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
@@ -306,6 +307,10 @@
     <Compile Include="Migrations\202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.Designer.cs">
       <DependentUpon>202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202606290234301_UpdateCustomerReactivationAndPetName.cs" />
+    <Compile Include="Migrations\202606290234301_UpdateCustomerReactivationAndPetName.Designer.cs">
+      <DependentUpon>202606290234301_UpdateCustomerReactivationAndPetName.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -322,9 +327,13 @@
     <Compile Include="ViewModels\BoardingUtilizationReportFilterVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportRowVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportVM.cs" />
+    <Compile Include="ViewModels\CustomerDeleteVM.cs" />
+    <Compile Include="ViewModels\CustomerReactivateVM.cs" />
     <Compile Include="ViewModels\CustomerReportFilterVM.cs" />
     <Compile Include="ViewModels\CustomerReportRowVM.cs" />
     <Compile Include="ViewModels\CustomerReportVM.cs" />
+    <Compile Include="ViewModels\CustomerSearchResultVM.cs" />
+    <Compile Include="ViewModels\CustomerSearchVM.cs" />
     <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
     <Compile Include="ViewModels\InvoiceFormVM.cs" />
     <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
@@ -485,6 +494,14 @@
     <Content Include="Views\ContactUsSubmission\ContactUsSuccessful.cshtml" />
     <Content Include="Views\Home\OurTeam.cshtml" />
     <Content Include="Views\Home\OurServices.cshtml" />
+    <Content Include="Views\Customers\Create.cshtml" />
+    <Content Include="Views\Customers\Read.cshtml" />
+    <Content Include="Views\Customers\Update.cshtml" />
+    <Content Include="Views\Customers\Delete.cshtml" />
+    <Content Include="Views\Customers\Reactivate.cshtml" />
+    <Content Include="Views\Customers\Index.cshtml" />
+    <Content Include="Views\Customers\Search.cshtml" />
+    <Content Include="Views\Staff\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -492,7 +509,7 @@
     <Folder Include="Views\Boardings\" />
     <Folder Include="Views\BoardingUnits\" />
     <Folder Include="Views\CustomerPets\" />
-    <Folder Include="Views\Customer\" />
+    <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\Diets\" />
     <Folder Include="Views\EmergencyContacts\" />
     <Folder Include="Views\Employees\" />
@@ -574,6 +591,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.resx">
       <DependentUpon>202606270029244_AddInactiveTrackingAndPaymentEmployeeTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202606290234301_UpdateCustomerReactivationAndPetName.resx">
+      <DependentUpon>202606290234301_UpdateCustomerReactivationAndPetName.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

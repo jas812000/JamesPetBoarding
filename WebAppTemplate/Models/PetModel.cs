@@ -30,7 +30,7 @@ namespace JamesPetBoarding.Models
         public VeterinarianModel Veterinarian { get; set; }
 
         [Required, MaxLength(50)]
-        public string Name { get; set; }
+        public string PetName { get; set; }
 
         [Required]
         public SpeciesEnum Species { get; set; }

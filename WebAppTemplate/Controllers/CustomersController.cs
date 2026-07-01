@@ -1,11 +1,16 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Migrations;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
+using Microsoft.Owin.BuilderProperties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data.Entity;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 
@@ -13,114 +18,227 @@ namespace JamesPetBoarding.Controllers
 {
     public class CustomersController : Controller
     {
-        // GET: Customer
+        // GET: Customers
         public ActionResult Index()
         {
             return View();
         }
 
-        // GET: Customers/Create
-        // /Customers/Create?lastName=Chan&firstName=Nancy&address=4522BeltLine%20Road&city=Dallas&state=TX&zipCode=75150&phone=6825559991&email=nancy.chan@anymail.com&notes=10%20year%20customer
-        public ActionResult Create(
-            string lastName, 
-            string firstName, 
-            string address, 
-            string city, 
-            StateEnum state, 
-            string zipCode,
-            string phone,
-            string email,
-            string notes
-            )
+
+        // GET: Customers/Search
+        public ActionResult Search()
+        {
+            CustomerSearchVM customerSearch = new CustomerSearchVM();
+
+            return View(customerSearch);
+        }
+
+
+        // POST: Customers/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(CustomerSearchVM customerSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(lastName)) { return Content("A last name is required."); }
-            if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
-            if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
-            if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
-            if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
-            if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
+            List<CustomerModel> customers = dbContext.Customers.ToList();
+
+            if (!string.IsNullOrWhiteSpace(customerSearch.FirstName)) 
+            { 
+                customers = customers
+                    .Where(x => x.FirstName.ToLower().Contains(customerSearch.FirstName.ToLower()))
+                    .ToList(); 
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerSearch.LastName)) 
+            { customers = customers
+                    .Where(x => x.LastName.ToLower().Contains(customerSearch.LastName.ToLower()))
+                    .ToList(); 
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerSearch.Phone)) 
+            { customers = customers
+                    .Where(x => x.Phone.Contains(customerSearch.Phone))
+                    .ToList(); 
+            }
+
+            if (!string.IsNullOrWhiteSpace(customerSearch.Email)) 
+            { 
+                customers = customers
+                    .Where(x => x.Email.Contains(customerSearch.Email))
+                    .ToList(); 
+            }
+
+            if (customerSearch.IsActive.HasValue) 
+            { 
+                customers = customers
+                    .Where(x => x.IsActive == customerSearch.IsActive.Value)
+                    .ToList(); 
+            }
+
+            customerSearch.Customers.Clear();
+
+            foreach (CustomerModel customer in customers) 
+            { 
+                customerSearch.Customers.Add(new CustomerSearchResultVM 
+                { 
+                    CustomerId = customer.CustomerId,
+                    CustomerNameDisplay = customer.LastName + ", " + customer.FirstName,
+                    PhoneDisplay = customer.Phone,
+                    EmailDisplay = customer.Email,
+                    ActiveStatusDisplay = customer.IsActive ? "Active" : "Inactive",
+                    IsActive = customer.IsActive    
+                }); 
+            }
+
+            return View(customerSearch);
+        }
+
+
+        // GET: Customers/Create
+        public ActionResult Create()
+        {
+            CustomerFormVM customerForm = new CustomerFormVM();
+
+            return View(customerForm);
+        }
+
+
+        // POST: Customers/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CustomerFormVM customerForm)
+        {
+            if (!ModelState.IsValid) 
+            { 
+                return View(customerForm); 
+            }
+            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = new CustomerModel();
 
-            try
-            {
-                customer.LastName = lastName;
-                customer.FirstName = firstName;
-                customer.Address = address;
-                customer.City = city;
-                customer.State = state;
-                customer.ZipCode = zipCode;
-                customer.Phone = phone;
-                customer.Email = email;
-                customer.Notes = notes;
+            customer.LastName = customerForm.LastName;
+            customer.FirstName = customerForm.FirstName;
+            customer.Address = customerForm.Address;
+            customer.City = customerForm.City;
+            customer.State = customerForm.State;
+            customer.ZipCode = customerForm.ZipCode;
+            customer.Phone = customerForm.Phone;
+            customer.Email = customerForm.Email;
+            customer.Notes = customerForm.Notes;
 
-                dbContext.Customers.Add(customer);
-                dbContext.SaveChanges();
+            dbContext.Customers.Add(customer);
+            dbContext.SaveChanges();
 
-                return Content("Successfully added " + firstName + " " + lastName + " to the database.");
-            }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            return RedirectToAction("Read", 
+                new 
+                { 
+                    customerId = customer.CustomerId 
+                }
+             );
         }
 
+
         // GET: Customers/Read
-        // Customers/Read?customerId=USE_EXISITNG_CUSTOMER_ID
         public ActionResult Read(Guid customerId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
-            if (customer == null) 
-            { 
-                return Content("Customer ID #" + customerId + " does not exist."); 
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            string customerStatus = customer.IsActive 
-                ? "Active" 
+            string customerStatus = customer.IsActive
+                ? "Active"
                 : "Inactive";
 
             string notesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
                 ? "No notes"
                 : customer.Notes;
 
-            string stateDisplay = customer.State.ToString();
+            CustomerDetailsVM customerDetails = new CustomerDetailsVM();
 
-            //return View();
-            return Content(
-                "Customer ID #" + customerId + 
-                "<br />Last Name: " + customer.LastName + 
-                "<br />First Name: " + customer.FirstName + 
-                "<br />Address: " + customer.Address + 
-                "<br />City: " + customer.City + 
-                "<br />State: " + stateDisplay + 
-                "<br />Zip Code: " + customer.ZipCode + 
-                "<br />Phone Number: " + customer.Phone + 
-                "<br />Email Address: " + customer.Email + 
-                "<br />Customer active? " + customerStatus + 
-                "<br />Notes: " + notesDisplay
-            );
+            customerDetails.CustomerId = customer.CustomerId;
+            customerDetails.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+            customerDetails.PhoneDisplay = customer.Phone;
+            customerDetails.EmailDisplay = customer.Email;
+            customerDetails.AddressDisplay = customer.Address;
+            customerDetails.CityStateZipDisplay = customer.City + ", " + customer.State + " " + customer.ZipCode;
+            customerDetails.NotesDisplay = notesDisplay;
+            customerDetails.IsActive = customer.IsActive;
+
+            customerDetails.ActiveStatusDisplay = customer.IsActive
+                ? "Active"
+                : "Inactive";
+
+            customerDetails.InactiveReasonDisplay = customer.InactiveReason.HasValue
+                ? customer.InactiveReason.ToString()
+                : "Not Applicable";
+
+            customerDetails.InactivatedDateDisplay = customer.InactivatedDate.HasValue
+                ? customer.InactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            customerDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
+                ? "No inactive notes"
+                : customer.InactiveNotes;
+
+            customerDetails.ReactivatedDateDisplay = customer.ReactivatedDate.HasValue
+                ? customer.ReactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            customerDetails.ReactivatedNotesDisplay = string.IsNullOrWhiteSpace(customer.ReactivatedNotes)
+                ? "No reactivation notes"
+                : customer.ReactivatedNotes;
+
+            List<EmergencyContactModel> emergencyContacts = dbContext.EmergencyContacts
+                .Where(x => x.CustomerId == customerId)
+                .ToList();
+
+            foreach (EmergencyContactModel emergencyContact in emergencyContacts)
+            {
+                EmergencyContactSummaryVM emergencyContactSummary = new EmergencyContactSummaryVM();
+
+                emergencyContactSummary.EmergencyContactId = emergencyContact.EmergencyContactId;
+                emergencyContactSummary.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+                emergencyContactSummary.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+                emergencyContactSummary.IsActive = emergencyContact.IsActive;
+                emergencyContactSummary.ActiveStatusDisplay = emergencyContact.IsActive ? "Active" : "Inactive";
+
+                customerDetails.EmergencyContacts.Add(emergencyContactSummary);
+
+            }
+
+            List<CustomerPetModel> customerPets = dbContext.CustomerPets
+                .Include("Pet")
+                .Where(x => x.CustomerId == customerId)
+                .ToList();
+
+            foreach (CustomerPetModel customerPet in customerPets) 
+            { 
+                CustomerPetSummaryVM customerPetSummary = new CustomerPetSummaryVM();
+
+                customerPetSummary.CustomerPetId = customerPet.CustomerPetId;
+                customerPetSummary.CustomerId = customerPet.CustomerId;
+                customerPetSummary.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+                customerPetSummary.PetId = customerPet.PetId;
+                customerPetSummary.PetNameDisplay = customerPet.Pet.PetName;
+                customerPetSummary.RelationshipTypeDisplay = customerPet.RelationshipType.ToString();
+
+                customerDetails.CustomerPets.Add(customerPetSummary);
+            
+            }
+
+            return View(customerDetails);
+
         }
+
 
         // GET: Customers/Update
-        // /Customers/Update?customerId=USE_EXISITNG_CUSTOMER_ID&lastName=Chan&firstName=Nancy&address=4522%20BeltLine%20Road&city=Dallas&state=TX&zipCode=75150&phone=6825559991&email=nancy.chan@anymail.com&notes=10%20year%20customer
-        public ActionResult Update(
-            Guid customerId,
-            string lastName,
-            string firstName,
-            string address,
-            string city,
-            StateEnum state,
-            string zipCode,
-            string phone,
-            string email,
-            string notes
-            )
+        public ActionResult Update(Guid customerId)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -129,49 +247,70 @@ namespace JamesPetBoarding.Controllers
 
             if (customer == null)
             {
-
                 return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            if (string.IsNullOrWhiteSpace(lastName)) { return Content("A last name is required."); }
-            if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
-            if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
-            if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
-            if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
-            if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
+            CustomerFormVM customerForm = new CustomerFormVM();
 
-            customer.LastName = lastName;
-            customer.FirstName = firstName;
-            customer.Address = address;
-            customer.City = city;
-            customer.State = state;
-            customer.ZipCode = zipCode;
-            customer.Phone = phone;
-            customer.Email = email;
-            customer.Notes = notes;
+            customerForm.CustomerId = customer.CustomerId;
+            customerForm.LastName = customer.LastName;
+            customerForm.FirstName = customer.FirstName;
+            customerForm.Address = customer.Address;
+            customerForm.City = customer.City;
+            customerForm.State = customer.State;
+            customerForm.ZipCode = customer.ZipCode;
+            customerForm.Phone = customer.Phone;
+            customerForm.Email = customer.Email;
+            customerForm.Notes = customer.Notes;
 
-            try 
-            {
-                dbContext.SaveChanges();
-                return Content("Successfully updated customer ID #" + customer.CustomerId + ".");
-            
-            }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            return View(customerForm);
         }
 
-        // GET: Customers/Delete
-        // /Customers/Delete?customerId=USE_EXISITNG_CUSTOMER_ID
-        public ActionResult Delete(
-            Guid customerId,
-            InactiveReasonEnum inactiveReason,
-            string inactiveNotes
-            
-            )
+
+        // POST: Customers/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(CustomerFormVM customerForm)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(customerForm);
+            }
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerForm.CustomerId);
+
+            if (customer == null)
+            {
+
+                return Content("Customer ID #" + customerForm.CustomerId + " does not exist.");
+            }
+
+            customer.LastName = customerForm.LastName;
+            customer.FirstName = customerForm.FirstName;
+            customer.Address = customerForm.Address;
+            customer.City = customerForm.City;
+            customer.State = customerForm.State;
+            customer.ZipCode = customerForm.ZipCode;
+            customer.Phone = customerForm.Phone;
+            customer.Email = customerForm.Email;
+            customer.Notes = customerForm.Notes;
+
+
+            dbContext.SaveChanges();
+            return RedirectToAction("Read",
+                new
+                {
+                    customerId = customer.CustomerId
+                }
+             );
+        }
+
+
+        // GET: Customers/Delete
+        public ActionResult Delete(Guid customerId)
+        {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
@@ -181,23 +320,127 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            try
-            {
+            CustomerDeleteVM customerDelete = new CustomerDeleteVM();
 
-                customer.IsActive = false;
-                customer.InactiveReason = inactiveReason;
-                customer.InactivatedDate = DateTime.Now;
-                customer.InactiveNotes = inactiveNotes;
-                dbContext.SaveChanges();
-                return Content(
-                    "Customer ID #" + customerId + " was successfully deactivated."
+            customerDelete.CustomerId = customer.CustomerId;
+            customerDelete.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+            customerDelete.AddressDisplay = customer.Address;
+            customerDelete.CityStateZipDisplay = customer.City + ", " + customer.State + " " + customer.ZipCode;
+            customerDelete.PhoneDisplay = customer.Phone;
+            customerDelete.EmailDisplay = customer.Email;
+            customerDelete.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
+                ? "No notes"
+                : customer.Notes;
 
-                );
-            }
-            catch (Exception ex)
+            return View(customerDelete);
+
+        }
+
+
+        // POST: Customers/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(CustomerDeleteVM customerDelete)
+
+        {
+            if (!ModelState.IsValid)
             {
-                return Content(ex.Message);
+                return View(customerDelete);
             }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerDelete.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerDelete.CustomerId + " does not exist.");
+            }
+
+            customer.IsActive = false;
+            customer.InactiveReason = customerDelete.InactiveReason;
+            customer.InactivatedDate = DateTime.Now;
+            customer.InactiveNotes = customerDelete.InactiveNotes;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { customerId = customer.CustomerId });
+
+        }
+
+
+        // GET: Customers/Reactivate
+        public ActionResult Reactivate(Guid customerId)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerId + " does not exist.");
+            }
+
+            CustomerReactivateVM customerReactivate = new CustomerReactivateVM();
+
+            customerReactivate.CustomerId = customer.CustomerId;
+            customerReactivate.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+            customerReactivate.AddressDisplay = customer.Address;
+            customerReactivate.CityStateZipDisplay = customer.City + ", " + customer.State + " " + customer.ZipCode;
+            customerReactivate.PhoneDisplay = customer.Phone;
+            customerReactivate.EmailDisplay = customer.Email;
+
+            customerReactivate.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
+                ? "No notes"
+                : customer.Notes;
+
+            customerReactivate.InactiveReasonDisplay = customer.InactiveReason.HasValue
+                ? customer.InactiveReason.ToString()
+                : "Not Applicable";
+
+            customerReactivate.InactivatedDateDisplay = customer.InactivatedDate.HasValue
+                ? customer.InactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
+                ? "No inactive notes"
+                : customer.InactiveNotes;
+
+            return View(customerReactivate);
+
+        }
+
+
+        // POST: Customers/Reactivate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reactivate(CustomerReactivateVM customerReactivate)
+
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(customerReactivate);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerReactivate.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerReactivate.CustomerId + " does not exist.");
+            }
+
+            customer.IsActive = true;
+            customer.ReactivatedDate = DateTime.Now;
+            customer.ReactivatedNotes = customerReactivate.ReactivatedNotes;
+            customer.InactiveReason = null;
+            customer.InactivatedDate = null;
+            customer.InactiveNotes = null;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { customerId = customer.CustomerId });
+
         }
     }
 }

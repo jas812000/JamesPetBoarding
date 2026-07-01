@@ -55,7 +55,7 @@ namespace JamesPetBoarding.Controllers
             PetModel pet = new PetModel();
 
             pet.VetId = vetId;
-            pet.Name = name;
+            pet.PetName = name;
             pet.Species = species;
             pet.Breed = breed;
             pet.Sex = sex;
@@ -69,7 +69,7 @@ namespace JamesPetBoarding.Controllers
                 dbContext.Pets.Add(pet);
                 dbContext.SaveChanges();
 
-                return Content("Successfully added " + pet.Name + ".");
+                return Content("Successfully added " + pet.PetName + ".");
 
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace JamesPetBoarding.Controllers
             //return View();
             return Content(
                    "Pet ID #" + pet.PetId +
-                   "<br />Name: " + pet.Name + 
+                   "<br />Name: " + pet.PetName + 
                    "<br />Species: " + speciesDisplay +
                    "<br />Breed: " + pet.Breed +
                    "<br />Sex: " + pet.Sex +
@@ -159,7 +159,7 @@ namespace JamesPetBoarding.Controllers
             if (weight <= 0) { return Content("Weight must be greater than zero."); }
 
             pet.VetId = vetId;
-            pet.Name = name;
+            pet.PetName = name;
             pet.Species = species;
             pet.Breed = breed;
             pet.Sex = sex;
@@ -170,7 +170,7 @@ namespace JamesPetBoarding.Controllers
             try
             {
                 dbContext.SaveChanges();
-                return Content("Successfully updated " + pet.Name + ".");
+                return Content("Successfully updated " + pet.PetName + ".");
             }
             catch (Exception ex) 
             { 

@@ -56,7 +56,7 @@ namespace JamesPetBoarding.Controllers
                 dbContext.PetVaccines.Add( petVaccine );
                 dbContext.SaveChanges();
 
-                return Content(pet.Name + " and " + vaccine.VaccineName + " relationship was successfully created.");
+                return Content(pet.PetName + " and " + vaccine.VaccineName + " relationship was successfully created.");
             }
             catch (Exception ex) 
             {

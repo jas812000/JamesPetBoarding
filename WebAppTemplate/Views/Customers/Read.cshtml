@@ -1,0 +1,177 @@
+﻿@model JamesPetBoarding.ViewModels.CustomerDetailsVM
+@{
+    ViewBag.Title = "Read Customer";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Customer Profile</h2>
+    <p class="lead">
+        View customer contact information, status, pets and emergency contacts.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Customer ID</label>
+        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Customer Name</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">City, State, Zip Code</label>
+        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    @if (!Model.IsActive)
+    {
+        <div class="col-md-8">
+            <h4 class="mt-4">Inactive Information</h4>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Inactive Reason</label>
+            @Html.TextBoxFor(x => x.InactiveReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Inactivated Date</label>
+            @Html.TextBoxFor(x => x.InactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Inactive Notes</label>
+            @Html.TextAreaFor(x => x.InactiveNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        </div>
+    }
+
+    @if (Model.ReactivatedDateDisplay != "Not Applicable")
+    {
+        <div class="col-md-8">
+            <h4 class="mt-4">Reactivation Information</h4>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Reactivated Date</label>
+            @Html.TextBoxFor(x => x.ReactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Reactivated Notes</label>
+            @Html.TextAreaFor(x => x.ReactivatedNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        </div>
+    }
+
+    <div class="col-md-10 mt-5">
+        <h4>Associated Pets</h4>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Pet Name</th>
+                    <th scope="col">Relationship Type</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pet in Model.CustomerPets)
+                {
+                    <tr>
+                        <td>@pet.PetNameDisplay</td>
+                        <td>@pet.RelationshipTypeDisplay</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-10 mt-4">
+        <h4>Emergency Contacts</h4>
+
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Emergency Contact Name</th>
+                    <th scope="col">Relationship Type</th>
+                    <th scope="col">Active Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var emergencyContact in Model.EmergencyContacts)
+                {
+                    <tr>
+                        <td>@emergencyContact.FullNameDisplay</td>
+                        <td>@emergencyContact.RelationshipDisplay</td>
+                        <td>@emergencyContact.ActiveStatusDisplay</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        @Html.ActionLink(
+            "Update Customer",
+            "Update",
+            "Customers",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-primary me-2" })
+
+        @if (Model.IsActive)
+        {
+            @Html.ActionLink(
+                "Deactivate Customer",
+                "Delete",
+                "Customers",
+                new { customerId = Model.CustomerId },
+                new { @class = "btn btn-danger me-2" })
+        }
+        else
+        {
+            @Html.ActionLink(
+                "Reactivate Customer",
+                "Reactivate",
+                "Customers",
+                new { customerId = Model.CustomerId },
+                new { @class = "btn btn-success me-2" })
+        }
+
+        @Html.ActionLink(
+            "Back to Customer Dashboard", 
+            "Index", 
+            "Customers", 
+            null, 
+            new { @class = "btn btn-secondary ms-2" })
+
+    </div>
+</div>

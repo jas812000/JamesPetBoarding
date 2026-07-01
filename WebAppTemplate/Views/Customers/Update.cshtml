@@ -1,0 +1,97 @@
+﻿@model JamesPetBoarding.ViewModels.CustomerFormVM
+@{
+    ViewBag.Title = "Update Customer";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Update Customer Profile</h2>
+    <p class="lead">
+        Update customer contact information and profile details.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("Update", "Customers", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.CustomerId)
+
+    <div class="col-md-6">
+        <label class="form-label">Customer ID</label>
+        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">First Name</label>
+        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "John" })
+        @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Last Name</label>
+        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Doe" })
+        @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.Address, new { @class = "form-control", placeholder = "1234 Main Street" })
+        @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">City</label>
+        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">State</label>
+        @Html.EnumDropDownListFor(x => x.State, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Zip Code</label>
+        @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.ZipCode, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", placeholder = "202-555-1212" })
+        @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "johndoe@anymail.com" })
+        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", placeholder = "enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Save</button>
+
+        @Html.ActionLink("Cancel", "Read", "Customers",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-secondary ms-2" }
+        )
+    </div>
+
+}
+
+
+
+
+

@@ -59,7 +59,7 @@ namespace JamesPetBoarding.Controllers
                 dbContext.CustomerPets.Add( customerPet );
                 dbContext.SaveChanges();
 
-                return Content("The " + customer.FirstName + " and " + pet.Name + " relationship was successfully created.");
+                return Content("The " + customer.FirstName + " and " + pet.PetName + " relationship was successfully created.");
             }
             catch (Exception ex) 
             {

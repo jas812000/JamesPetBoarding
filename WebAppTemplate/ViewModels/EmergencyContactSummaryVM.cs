@@ -10,10 +10,12 @@ namespace JamesPetBoarding.ViewModels
     {
         public Guid EmergencyContactId { get; set; }
 
-        public string FullName { get; set; }
+        public string FullNameDisplay { get; set; }
 
         public string RelationshipDisplay {  get; set; }
 
         public bool IsActive { get; set; }
+
+        public string ActiveStatusDisplay { get; set; }
     }
 }

@@ -13,5 +13,15 @@ namespace JamesPetBoarding.Controllers
         {
             return View();
         }
+
+        public ActionResult Pets()
+        {
+            return View();
+        }
+
+        public ActionResult Bookings()
+        {
+            return View();
+        }
     }
 }

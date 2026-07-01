@@ -38,6 +38,10 @@ namespace JamesPetBoarding.ViewModels
 
         public string InactiveNotesDisplay { get; set; }
 
+        public string ReactivatedDateDisplay { get; set; }
+
+        public string ReactivatedNotesDisplay { get; set; }
+
         public List<EmergencyContactSummaryVM> EmergencyContacts { get; set; }
 
         public List<CustomerPetSummaryVM> CustomerPets { get; set; }
