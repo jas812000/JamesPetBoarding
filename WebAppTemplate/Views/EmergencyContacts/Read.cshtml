@@ -1,0 +1,98 @@
+﻿@model JamesPetBoarding.ViewModels.EmergencyContactDetailsVM
+@{
+    ViewBag.Title = "Read Emergency Contact";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Emergency Contact Profile</h2>
+    <p class="lead">
+        View emergency contact information and status.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact ID</label>
+        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact Name</label>
+        @Html.TextBoxFor(x => x.FullNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Relationship</label>
+        @Html.TextBoxFor(x => x.RelationshipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">City, State, Zip Code</label>
+        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @if (Model.IsActive)
+        {
+            @Html.ActionLink(
+                "Update Emergency Contact",
+                "Update",
+                "EmergencyContacts",
+                new { emergencyContactId = Model.EmergencyContactId },
+                new { @class = "btn btn-primary me-2" })
+
+            @Html.ActionLink(
+                "Deactivate Emergency Contact",
+                "Deactivate",
+                "EmergencyContacts",
+                new { emergencyContactId = Model.EmergencyContactId },
+                new { @class = "btn btn-danger me-2" })
+        }
+        else
+        {
+            @Html.ActionLink(
+                "Reactivate Emergency Contact",
+                "Reactivate",
+                "EmergencyContacts",
+                new { emergencyContactId = Model.EmergencyContactId },
+                new { @class = "btn btn-success me-2" })
+        }
+
+        @Html.ActionLink(
+            "Back to Customer Profile",
+            "Read",
+            "Customers",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-secondary ms-2" })
+
+    </div>
+
+</div>
+

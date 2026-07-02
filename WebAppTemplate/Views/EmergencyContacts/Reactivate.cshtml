@@ -1,0 +1,111 @@
+﻿@model JamesPetBoarding.ViewModels.EmergencyContactReactivateVM
+@{
+    ViewBag.Title = "Reactivate Emergency Contact";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Reactivate Emergency Contact Profile</h2>
+    <p class="lead">
+        Review emergency contact information and reactivate the emergency contact's profile.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("Reactivate", "EmergencyContacts", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.EmergencyContactId)
+
+    @Html.HiddenFor(x => x.CustomerId)
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact ID</label>
+        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Customer ID</label>
+        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact Name</label>
+        @Html.TextBoxFor(x => x.FullNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Relationship</label>
+        @Html.TextBoxFor(x => x.RelationshipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">City, State, Zip Code</label>
+        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <h4>Inactive History</h4>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Inactive Reason</label>
+        @Html.TextBoxFor(x => x.InactivatedReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Inactivated Date</label>
+        @Html.TextAreaFor(x => x.InactivatedDateDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Inactive Notes</label>
+        @Html.TextAreaFor(x => x.InactivatedNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <div class="alert alert-warning">
+            This action will reactivate the emergency contact's profile and restore access.
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Reactivated Notes</label>
+        @Html.TextAreaFor(x => x.ReactivatedNotes, new { @class = "form-control", rows = "3", placeholder = "enter notes" })
+        @Html.ValidationMessageFor(x => x.ReactivatedNotes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        <button type="submit" class="btn btn-success me-2">Reactivate</button>
+
+        @Html.ActionLink("Cancel", "Read", "EmergencyContacts",
+            new { emergencyContactId = Model.EmergencyContactId },
+            new { @class = "btn btn-secondary ms-2" }
+        )
+    </div>
+
+}

@@ -151,10 +151,6 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            string customerStatus = customer.IsActive
-                ? "Active"
-                : "Inactive";
-
             string notesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
                 ? "No notes"
                 : customer.Notes;

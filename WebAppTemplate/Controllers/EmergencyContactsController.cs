@@ -1,7 +1,13 @@
-﻿using JamesPetBoarding.Models;
-using JamesPetBoarding.Enums;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
+using Microsoft.Owin.BuilderProperties;
 using System;
+using System.Data.Entity;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
+using System.Reflection.Emit;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 
@@ -9,193 +15,193 @@ namespace JamesPetBoarding.Controllers
 {
     public class EmergencyContactsController : Controller
     {
-        // GET: EmergencyContacts
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: EmergencyContacts/Create
-        // /EmergencyContacts/Create?customerId=1db53653-7cd8-4737-bba2-f8ef018ec35b&lastName=Rivera&firstName=Maria&address=4522%20BeltLine%20Road&city=Dallas&state=TX&zipCode=75150&phone=6825558888&email=maria.rivera@anymail.com&relationshipType=Sister&notes=Send%20email%20first
-        public ActionResult Create(
-            Guid customerId,
-            string lastName,
-            string firstName,
-            string address,
-            string city,
-            StateEnum state,
-            string zipCode,
-            string phone,
-            string email,
-            EmergencyContactRelationshipEnum relationshipType,
-            string notes
-            )
+        public ActionResult Create(Guid customerId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(lastName)) { return Content("A last name is required."); }
-            if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
-            if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
-            if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
-            if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
-            if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
+            EmergencyContactFormVM emergencyContactForm = new EmergencyContactFormVM();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-
             if (customer == null)
             {
                 return Content("Customer ID #" + customerId + " does not exist.");
             }
 
+            emergencyContactForm.CustomerId = customerId;
+
+            return View(emergencyContactForm);
+        }
+
+        //POST: EmergencyContacts/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(EmergencyContactFormVM emergencyContactForm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(emergencyContactForm);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == emergencyContactForm.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + emergencyContactForm.CustomerId + " does not exist.");
+            }
+
             EmergencyContactModel emergencyContact = new EmergencyContactModel();
 
-            emergencyContact.CustomerId = customerId;
-            emergencyContact.LastName = lastName;
-            emergencyContact.FirstName = firstName;
-            emergencyContact.Address = address;
-            emergencyContact.City = city;
-            emergencyContact.State = state;
-            emergencyContact.ZipCode = zipCode;
-            emergencyContact.Phone = phone;
-            emergencyContact.Email = email;
-            emergencyContact.RelationshipType = relationshipType;
+            emergencyContact.CustomerId = emergencyContactForm.CustomerId;
+            emergencyContact.LastName = emergencyContactForm.LastName;
+            emergencyContact.FirstName = emergencyContactForm.FirstName;
+            emergencyContact.Address = emergencyContactForm.Address;
+            emergencyContact.City = emergencyContactForm.City;
+            emergencyContact.State = emergencyContactForm.State;
+            emergencyContact.ZipCode = emergencyContactForm.ZipCode;
+            emergencyContact.Phone = emergencyContactForm.Phone;
+            emergencyContact.Email = emergencyContactForm.Email;
+            emergencyContact.RelationshipType = emergencyContactForm.RelationshipType;
             emergencyContact.IsActive = true;
-            emergencyContact.Notes = notes;
+            emergencyContact.Notes = emergencyContactForm.Notes;
 
-            try 
-            { 
-                dbContext.EmergencyContacts.Add(emergencyContact);
-                dbContext.SaveChanges();
-                return Content(
-                    "Successfully added " +
-                    emergencyContact.FirstName + " " +
-                    emergencyContact.LastName +
-                    " to the database."
-                );
-            
-            } 
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            dbContext.EmergencyContacts.Add(emergencyContact);
+
+            dbContext.SaveChanges();
+            return RedirectToAction("Read", "Customers", new { customerId = emergencyContactForm.CustomerId });
 
         }
 
+
         // GET: EmergencyContacts/Read
-        // /EmergencyContacts/Read?emergencyContactId=
         public ActionResult Read(Guid emergencyContactId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
-            if (emergencyContact == null) 
-            { 
+            if (emergencyContact == null)
+            {
                 return Content("Emergency Contact ID #" + emergencyContactId + " does not exist.");
             }
-
-            string emergencyContactStatus = emergencyContact.IsActive 
-                ? "Active" 
-                : "Inactive";
 
             string notesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
                 ? "No notes"
                 : emergencyContact.Notes;
-           
-            string stateDisplay = emergencyContact.State.ToString();
-            string relationshipTypeDisplay = emergencyContact.RelationshipType.ToString();
 
-            return Content(
-                "Emergency Contact ID #" + emergencyContact.EmergencyContactId +
-                "<br />Customer ID #" + emergencyContact.CustomerId +
-                "<br />Last Name: " + emergencyContact.LastName +
-                "<br />First Name: " + emergencyContact.FirstName +
-                "<br />Address: " + emergencyContact.Address +
-                "<br />City: " + emergencyContact.City +
-                "<br />State: " + stateDisplay +
-                "<br />ZipCode: " + emergencyContact.ZipCode +
-                "<br />Phone Number: " + emergencyContact.Phone +
-                "<br />Email Address: " + emergencyContact.Email +
-                "<br />Relationship Type: " + relationshipTypeDisplay +
-                "<br />Emergency Contact active? " + emergencyContactStatus +
-                "<br />Notes: " + notesDisplay
-            );
+            EmergencyContactDetailsVM emergencyContactDetails = new EmergencyContactDetailsVM();
+
+            emergencyContactDetails.EmergencyContactId = emergencyContact.EmergencyContactId;
+            emergencyContactDetails.CustomerId = emergencyContact.CustomerId;
+            emergencyContactDetails.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+            emergencyContactDetails.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+            emergencyContactDetails.PhoneDisplay = emergencyContact.Phone;
+            emergencyContactDetails.EmailDisplay = emergencyContact.Email;
+            emergencyContactDetails.AddressDisplay = emergencyContact.Address;
+            emergencyContactDetails.CityStateZipDisplay = emergencyContact.City + ", " + emergencyContact.State + " " + emergencyContact.ZipCode;
+            emergencyContactDetails.NotesDisplay = notesDisplay;
+            emergencyContactDetails.IsActive = emergencyContact.IsActive;
+
+            emergencyContactDetails.StatusDisplay = emergencyContact.IsActive
+                ? "Active"
+                : "Inactive";
+
+            return View(emergencyContactDetails);
 
         }
 
+
         // GET: EmergencyContacts/Update
-        // /EmergencyContacts/Update?emergencyContactId=ENTER_EXISTING_EMERGENCY_CONTACT_ID&customerId=ENTER_EXISTING_CUSTOMER_ID&lastName=Fraizer&firstName=Joe&address=1003%20Montclair%20Road&city=Birmingham&state=AL&zipCode=35213&phone=2055554512&email=j.fraizer@anymail.com&relationshipType=Father&isActive=true&notes=Updated%20name,%20phone%20number%20and%20email%20address
-        public ActionResult Update(
-            Guid emergencyContactId,
-            Guid customerId,
-            string lastName, 
-            string firstName, 
-            string address, 
-            string city, 
-            StateEnum state, 
-            string zipCode, 
-            string phone, 
-            string email,
-            EmergencyContactRelationshipEnum relationshipType,
-            bool isActive,
-            string notes
-        )
+        public ActionResult Update(Guid emergencyContactId)
         {
 
-            ApplicationDbContext dbContext= new ApplicationDbContext();
+            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
-            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-
-            if (customer == null)
-            {
-                return Content("Customer ID #" + customerId + " does not exist.");
-            }
-
-            if (emergencyContact == null) 
+            if (emergencyContact == null)
             {
 
                 return Content("Emergency Contact ID #" + emergencyContactId + " does not exist.");
 
             }
 
-            if (string.IsNullOrWhiteSpace(lastName)) { return Content("A last name is required."); }
-            if (string.IsNullOrWhiteSpace(firstName)) { return Content("A first name is required."); }
-            if (string.IsNullOrWhiteSpace(address)) { return Content("A street address is required."); }
-            if (string.IsNullOrWhiteSpace(city)) { return Content("A city is required."); }
-            if (string.IsNullOrWhiteSpace(zipCode)) { return Content("A zip code is required."); }
-            if (string.IsNullOrWhiteSpace(phone)) { return Content("A phone number is required."); }
-            if (string.IsNullOrWhiteSpace(email)) { return Content("An email address is required."); }
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == emergencyContact.CustomerId);
 
-            emergencyContact.CustomerId = customerId;
-            emergencyContact.LastName = lastName;
-            emergencyContact.FirstName = firstName;
-            emergencyContact.Address = address;
-            emergencyContact.City = city;
-            emergencyContact.State = state;
-            emergencyContact.ZipCode = zipCode;
-            emergencyContact.Phone = phone;
-            emergencyContact.Email = email;
-            emergencyContact.RelationshipType = relationshipType;
-            emergencyContact.IsActive = isActive;
-            emergencyContact.Notes = notes;
-
-            try 
+            if (customer == null)
             {
-                dbContext.SaveChanges();
-                return Content("Emergency Contact ID #" + emergencyContact.EmergencyContactId + " successfully updated.");
-            } 
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
+                return Content("Customer ID #" + emergencyContact.CustomerId + " does not exist.");
             }
+
+            EmergencyContactFormVM emergencyContactForm = new EmergencyContactFormVM();
+
+            emergencyContactForm.EmergencyContactId = emergencyContact.EmergencyContactId;
+            emergencyContactForm.CustomerId = emergencyContact.CustomerId;
+            emergencyContactForm.LastName = emergencyContact.LastName;
+            emergencyContactForm.FirstName = emergencyContact.FirstName;
+            emergencyContactForm.Address = emergencyContact.Address;
+            emergencyContactForm.City = emergencyContact.City;
+            emergencyContactForm.State = emergencyContact.State;
+            emergencyContactForm.ZipCode = emergencyContact.ZipCode;
+            emergencyContactForm.Phone = emergencyContact.Phone;
+            emergencyContactForm.Email = emergencyContact.Email;
+            emergencyContactForm.RelationshipType = emergencyContact.RelationshipType;
+            emergencyContactForm.Notes = emergencyContact.Notes;
+
+            return View(emergencyContactForm);
 
         }
 
+
+        // POST: EmergencyContacts/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(EmergencyContactFormVM emergencyContactForm)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(emergencyContactForm);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactForm.EmergencyContactId);
+
+            if (emergencyContact == null)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactForm.EmergencyContactId + " does not exist.");
+
+            }
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == emergencyContact.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + emergencyContact.CustomerId + " does not exist.");
+            }
+
+            emergencyContact.LastName = emergencyContactForm.LastName;
+            emergencyContact.FirstName = emergencyContactForm.FirstName;
+            emergencyContact.Address = emergencyContactForm.Address;
+            emergencyContact.City = emergencyContactForm.City;
+            emergencyContact.State = emergencyContactForm.State;
+            emergencyContact.ZipCode = emergencyContactForm.ZipCode;
+            emergencyContact.Phone = emergencyContactForm.Phone;
+            emergencyContact.Email = emergencyContactForm.Email;
+            emergencyContact.RelationshipType = emergencyContactForm.RelationshipType;
+            emergencyContact.Notes = emergencyContactForm.Notes;
+
+            dbContext.SaveChanges();
+            return RedirectToAction("Read", "EmergencyContacts", new { emergencyContactId = emergencyContact.EmergencyContactId });
+
+        }
+
+
         // GET: EmergencyContacts/Delete
-        // /EmergencyContacts/Delete?emergencyContactId=USE_THE_ONE_FROM_CREATE
         public ActionResult Delete(Guid emergencyContactId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -208,22 +214,158 @@ namespace JamesPetBoarding.Controllers
                 return Content("Emergency Contact ID #" + emergencyContactId + " does not exist.");
 
             }
-            
-            try
-            {
-                dbContext.EmergencyContacts.Remove(emergencyContact);
-                dbContext.SaveChanges();
 
-                return Content(
-                    "Emergency Contact ID #" + emergencyContactId +
-                    " was successfully deleted.");
-            }
-            catch (Exception ex)
+            if (!emergencyContact.IsActive)
             {
-                return Content(ex.Message);
-            }
-           
 
+                return Content("Emergency Contact ID #" + emergencyContactId + " is already inactive.");
+
+            }
+
+            EmergencyContactDeleteVM emergencyContactDelete = new EmergencyContactDeleteVM();
+
+            emergencyContactDelete.EmergencyContactId = emergencyContact.EmergencyContactId;
+            emergencyContactDelete.CustomerId = emergencyContact.CustomerId;
+            emergencyContactDelete.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+            emergencyContactDelete.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+            emergencyContactDelete.AddressDisplay = emergencyContact.Address;
+            emergencyContactDelete.CityStateZipDisplay = emergencyContact.City + ", " + emergencyContact.State + " " + emergencyContact.ZipCode;
+            emergencyContactDelete.PhoneDisplay = emergencyContact.Phone;
+            emergencyContactDelete.EmailDisplay = emergencyContact.Email;
+            emergencyContactDelete.NotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
+                ? "No notes"
+                : emergencyContact.Notes;
+            emergencyContactDelete.IsActive = emergencyContact.IsActive;
+            emergencyContactDelete.StatusDisplay = emergencyContact.IsActive
+                ? "Active"
+                : "Inactive";
+
+            return View(emergencyContactDelete);
+
+        }
+
+
+        // POST: EmergencyContacts/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(EmergencyContactDeleteVM emergencyContactDelete)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(emergencyContactDelete);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactDelete.EmergencyContactId);
+
+            if (emergencyContact == null)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactDelete.EmergencyContactId + " does not exist.");
+
+            }
+
+            emergencyContact.IsActive = false;
+            emergencyContact.InactivatedReason = emergencyContactDelete.InactivatedReason;
+            emergencyContact.InactivatedDate = DateTime.Now;
+            emergencyContact.InactivatedNotes = emergencyContactDelete.InactivatedNotes;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Customers", new { customerId = emergencyContact.CustomerId });
+
+        }
+
+
+        // GET: EmergencyContacts/Reactivate
+        public ActionResult Reactivate(Guid emergencyContactId)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
+
+            if (emergencyContact == null)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactId + " does not exist.");
+
+            }
+
+            if (emergencyContact.IsActive)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactId + " is already active.");
+
+            }
+
+            EmergencyContactReactivateVM emergencyContactReactivate = new EmergencyContactReactivateVM();
+
+            emergencyContactReactivate.EmergencyContactId = emergencyContact.EmergencyContactId;
+            emergencyContactReactivate.CustomerId = emergencyContact.CustomerId;
+            emergencyContactReactivate.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+            emergencyContactReactivate.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+            emergencyContactReactivate.PhoneDisplay = emergencyContact.Phone;
+            emergencyContactReactivate.EmailDisplay = emergencyContact.Email;
+            emergencyContactReactivate.AddressDisplay = emergencyContact.Address;
+            emergencyContactReactivate.CityStateZipDisplay = emergencyContact.City + ", " + emergencyContact.State + " " + emergencyContact.ZipCode;
+
+            emergencyContactReactivate.NotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
+                ? "No notes"
+                : emergencyContact.Notes;
+
+            emergencyContactReactivate.InactivatedReasonDisplay = emergencyContact.InactivatedReason.HasValue
+                ? emergencyContact.InactivatedReason.ToString()
+                : "Not Applicable";
+
+            emergencyContactReactivate.InactivatedDateDisplay = emergencyContact.InactivatedDate.HasValue
+                ? emergencyContact.InactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            emergencyContactReactivate.InactivatedNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivatedNotes)
+                ? "No inactive notes"
+                : emergencyContact.InactivatedNotes;
+
+            return View(emergencyContactReactivate);
+        }
+
+
+        // POST: EmergencyContacts/Reactivate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reactivate(EmergencyContactReactivateVM emergencyContactReactivate)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(emergencyContactReactivate);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactReactivate.EmergencyContactId);
+
+            if (emergencyContact == null)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactReactivate.EmergencyContactId + " does not exist.");
+
+            }
+
+            if (emergencyContact.IsActive)
+            {
+
+                return Content("Emergency Contact ID #" + emergencyContactReactivate.EmergencyContactId + " is already active.");
+
+            }
+
+            emergencyContact.IsActive = true;
+            emergencyContact.ReactivatedDate = DateTime.Now;
+            emergencyContact.ReactivatedNotes = emergencyContactReactivate.ReactivatedNotes;
+            emergencyContact.InactivatedReason = null;
+            emergencyContact.InactivatedDate = null;
+            emergencyContact.InactivatedNotes = null;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Customers", new { customerId = emergencyContact.CustomerId });
         }
 
     }

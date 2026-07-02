@@ -54,6 +54,18 @@ namespace JamesPetBoarding.Models
 
         public bool IsActive { get; set; } = true;
 
+        public InactivatedReasonEnum? InactivatedReason { get; set; }
+
+        public DateTime? InactivatedDate { get; set; }
+
+        [MaxLength(500)]
+        public string InactivatedNotes { get; set; }
+
+        public DateTime? ReactivatedDate { get; set; }
+
+        [MaxLength(500)]
+        public string ReactivatedNotes { get; set; }
+
         [MaxLength(2000)]
         public string Notes { get; set; }
     }

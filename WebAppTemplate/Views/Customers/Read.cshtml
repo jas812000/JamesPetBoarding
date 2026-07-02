@@ -103,13 +103,26 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var pet in Model.CustomerPets)
+
+                @if (Model.CustomerPets.Any())
                 {
-                    <tr>
-                        <td>@pet.PetNameDisplay</td>
-                        <td>@pet.RelationshipTypeDisplay</td>
+                    foreach(var pet in Model.CustomerPets)
+                    {
+                        <tr>
+                            <td>@pet.PetNameDisplay</td>
+                            <td>@pet.RelationshipTypeDisplay</td>
+                        </tr>
+                    }
+                }
+                else 
+                { 
+                    <tr> 
+                        <td colspan="2" class="text-center">
+                            No associated pets found.
+                        </td> 
                     </tr>
                 }
+                
             </tbody>
         </table>
     </div>
@@ -123,20 +136,83 @@
                     <th scope="col">Emergency Contact Name</th>
                     <th scope="col">Relationship Type</th>
                     <th scope="col">Active Status</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var emergencyContact in Model.EmergencyContacts)
+                @if (Model.EmergencyContacts.Any())
+                {
+                    foreach (var emergencyContact in Model.EmergencyContacts)
+                    {
+                        <tr>
+
+                            <td>@emergencyContact.FullNameDisplay</td>
+                            <td>@emergencyContact.RelationshipDisplay</td>
+                            <td>@emergencyContact.ActiveStatusDisplay</td>
+                            <td>
+                                @Html.ActionLink(
+                                 "Read",
+                                 "Read",
+                                 "EmergencyContacts",
+                                 new { emergencyContactId = emergencyContact.EmergencyContactId },
+                                 new { @class = "btn btn-primary btn-sm me-2" })
+
+                                @if (emergencyContact.IsActive)
+                                {
+
+                                    @Html.ActionLink(
+                                         "Update",
+                                         "Update",
+                                         "EmergencyContacts",
+                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
+                                         new { @class = "btn btn-primary btn-sm me-2" })
+
+
+                                    @Html.ActionLink(
+                                         "Deactivate",
+                                         "Delete",
+                                         "EmergencyContacts",
+                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
+                                         new { @class = "btn btn-danger btn-sm me-2" })
+
+                                }
+                                else
+                                {
+
+                                    @Html.ActionLink(
+                                         "Reactivate",
+                                         "Reactivate",
+                                         "EmergencyContacts",
+                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
+                                         new { @class = "btn btn-success btn-sm me-2" })
+
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                }
+                else
                 {
                     <tr>
-                        <td>@emergencyContact.FullNameDisplay</td>
-                        <td>@emergencyContact.RelationshipDisplay</td>
-                        <td>@emergencyContact.ActiveStatusDisplay</td>
+                        <td colspan="4" class="text-center">
+                            No emergency contacts found.
+                        </td>
                     </tr>
                 }
+
             </tbody>
         </table>
 
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Create Emergency Contact", 
+            "Create", 
+            "EmergencyContacts", 
+            new { customerId = Model.CustomerId }, 
+            new { @class = "btn btn-success" })
     </div>
 
     <div class="col-md-10 text-center mt-4">

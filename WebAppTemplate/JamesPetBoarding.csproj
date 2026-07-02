@@ -192,7 +192,7 @@
     <Compile Include="Controllers\VeterinariansController.cs" />
     <Compile Include="Enums\ActiveStatusEnum.cs" />
     <Compile Include="Enums\BoardingStatusEnum.cs" />
-    <Compile Include="Enums\InactiveReasonEnum.cs" />
+    <Compile Include="Enums\InactivatedReasonEnum.cs" />
     <Compile Include="Enums\VaccineComplianceStatusEnum.cs" />
     <Compile Include="Enums\EmergencyContactRelationshipEnum.cs" />
     <Compile Include="Enums\EmployeeRoleEnum.cs" />
@@ -311,6 +311,10 @@
     <Compile Include="Migrations\202606290234301_UpdateCustomerReactivationAndPetName.Designer.cs">
       <DependentUpon>202606290234301_UpdateCustomerReactivationAndPetName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607010452378_AddEmergencyContactInactivationTracking.cs" />
+    <Compile Include="Migrations\202607010452378_AddEmergencyContactInactivationTracking.Designer.cs">
+      <DependentUpon>202607010452378_AddEmergencyContactInactivationTracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -334,6 +338,8 @@
     <Compile Include="ViewModels\CustomerReportVM.cs" />
     <Compile Include="ViewModels\CustomerSearchResultVM.cs" />
     <Compile Include="ViewModels\CustomerSearchVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactDeleteVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactReactivateVM.cs" />
     <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
     <Compile Include="ViewModels\InvoiceFormVM.cs" />
     <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
@@ -502,6 +508,11 @@
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Customers\Search.cshtml" />
     <Content Include="Views\Staff\Index.cshtml" />
+    <Content Include="Views\EmergencyContacts\Create.cshtml" />
+    <Content Include="Views\EmergencyContacts\Delete.cshtml" />
+    <Content Include="Views\EmergencyContacts\Update.cshtml" />
+    <Content Include="Views\EmergencyContacts\Read.cshtml" />
+    <Content Include="Views\EmergencyContacts\Reactivate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -511,7 +522,6 @@
     <Folder Include="Views\CustomerPets\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\Diets\" />
-    <Folder Include="Views\EmergencyContacts\" />
     <Folder Include="Views\Employees\" />
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
@@ -594,6 +604,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202606290234301_UpdateCustomerReactivationAndPetName.resx">
       <DependentUpon>202606290234301_UpdateCustomerReactivationAndPetName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607010452378_AddEmergencyContactInactivationTracking.resx">
+      <DependentUpon>202607010452378_AddEmergencyContactInactivationTracking.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -56,6 +56,11 @@
         @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
     </div>
 
+    <div class="col-md-4">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
     <div class="col-md-8">
         <div class="alert alert-warning">
             This action will deactivate the customer's profile. Historical records will remain available.
@@ -74,7 +79,7 @@
         @Html.ValidationMessageFor(x => x.InactiveNotes, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-12 text-center mt-4">
+    <div class="col-md-10 text-center mt-4">
         <button type="submit" class="btn btn-danger me-2">Deactivate</button>
 
         @Html.ActionLink("Cancel", "Read", "Customers",

@@ -49,7 +49,7 @@ namespace JamesPetBoarding.Models
 
         public bool IsActive { get; set; } = true;
 
-        public InactiveReasonEnum? InactiveReason { get; set; }
+        public InactivatedReasonEnum? InactiveReason { get; set; }
 
         public DateTime? InactivatedDate { get; set; }
 

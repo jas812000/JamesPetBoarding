@@ -7,11 +7,15 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CustomerDeleteVM
+    public class EmergencyContactDeleteVM
     {
+        public Guid EmergencyContactId { get; set; }
+
         public Guid CustomerId { get; set; }
 
-        public string CustomerNameDisplay { get; set; }
+        public string FullNameDisplay { get; set; }
+
+        public string RelationshipDisplay { get; set; }
 
         public string AddressDisplay { get; set; }
 
@@ -27,10 +31,10 @@ namespace JamesPetBoarding.ViewModels
 
         public string StatusDisplay { get; set; }
 
-        public InactivatedReasonEnum? InactiveReason { get; set; }
+        [Required]
+        public InactivatedReasonEnum InactivatedReason { get; set; }
 
         [MaxLength(500)]
-        public string InactiveNotes { get; set; }
-
+        public string InactivatedNotes { get; set; }
     }
 }

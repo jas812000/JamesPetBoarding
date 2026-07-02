@@ -1,0 +1,102 @@
+﻿@model JamesPetBoarding.ViewModels.EmergencyContactDeleteVM
+@{
+    ViewBag.Title = "Deactivate Emergency Contact";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Deactivate Emergency Contact Profile</h2>
+    <p class="lead">
+        Review emergency contact information and provide a reason for deactivation.
+    </p>
+</div>
+
+@using (Html.BeginForm("Delete", "EmergencyContacts", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.EmergencyContactId)
+
+    @Html.HiddenFor(x => x.CustomerId)
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact ID</label>
+        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Customer ID</label>
+        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Emergency Contact Name</label>
+        @Html.TextBoxFor(x => x.FullNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Relationship</label>
+        @Html.TextBoxFor(x => x.RelationshipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">City, State, Zip Code</label>
+        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <div class="alert alert-warning">
+            This action will deactivate the emergency contact's profile. Historical records will remain available.
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Inactive Reason</label>
+        @Html.EnumDropDownListFor(x => x.InactiveReason, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InactiveReason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Inactive Notes</label>
+        @Html.TextAreaFor(x => x.InactiveNotes, new { @class = "form-control", rows = "3", placeholder = "enter notes" })
+        @Html.ValidationMessageFor(x => x.InactiveNotes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Deactivate</button>
+
+        @Html.ActionLink("Cancel", "Read", "EmergencyContacts",
+            new { emergencyContactId = Model.EmergencyContactId },
+            new { @class = "btn btn-secondary ms-2" }
+        )
+    </div>
+
+}

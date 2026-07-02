@@ -6,7 +6,7 @@ using System.Web;
 
 namespace JamesPetBoarding.Enums
 {
-    public enum InactiveReasonEnum
+    public enum InactivatedReasonEnum
     {
         [Display(Name = "Deceased")]
         Deceased,
