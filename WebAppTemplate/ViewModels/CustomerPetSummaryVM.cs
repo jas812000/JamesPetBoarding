@@ -19,6 +19,10 @@ namespace JamesPetBoarding.ViewModels
 
         public string PetNameDisplay { get; set; }
 
+        public string SpeciesDisplay { get; set; }
+
+        public string BreedDisplay { get; set; }
+
         public string RelationshipTypeDisplay { get; set; }
 
     }

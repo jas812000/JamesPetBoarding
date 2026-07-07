@@ -1,0 +1,72 @@
+﻿@model JamesPetBoarding.ViewModels.CustomerPetSummaryVM
+@{
+    ViewBag.Title = "View Customer-Pet Association";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Customer-Pet Association</h2>
+    <p class="lead">
+        View the association between a customer and a pet, including their relationship type.
+    </p>
+</div>
+
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Customer ID</label>
+        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Customer Name</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Species</label>
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Breed</label>
+        @Html.TextBoxFor(x => x.BreedDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <label class="form-label">Relationship</label>
+        @Html.TextBoxFor(x => x.RelationshipTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        @Html.ActionLink(
+            "Update Customer-Pet",
+            "Update",
+            "CustomerPets",
+            new { customerPetId = Model.CustomerPetId },
+            new { @class = "btn btn-primary me-2" })
+
+ 
+        @Html.ActionLink(
+            "Disassociate Pet",
+            "Delete",
+            "CustomerPets",
+            new { customerPetId = Model.CustomerPetId },
+            new { @class = "btn btn-danger me-2" })
+       
+
+        @Html.ActionLink(
+            "Back to Customer Profile",
+            "Read",
+            "Customers",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-secondary ms-2" })
+
+    </div>
+</div>

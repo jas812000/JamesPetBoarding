@@ -1,9 +1,12 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Services.Description;
 using System.Web.UI;
@@ -20,164 +23,306 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: CustomerPets/Create
-        // /CustomerPets/Create?petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=Owner
-        public ActionResult Create(
-            Guid petId,
-            Guid customerId,
-            RelationshipTypeEnum relationshipType
-        )
+        public ActionResult Create(Guid customerId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) 
-            { 
-                return Content("Pet ID #" + petId + " does not exist."); 
-            }
-
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) 
-            { 
-                return Content("Customer ID #" + customerId + " does not exist."); 
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == customerId && x.PetId == petId);
+            CustomerPetFormVM customerPetForm = new CustomerPetFormVM();
+
+            customerPetForm.CustomerId = customer.CustomerId;
+
+            customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+            customerPetForm.CustomerPetId = Guid.NewGuid();
+
+            customerPetForm.PetSelectList = BuildPetSelectList();
+
+            return View(customerPetForm);
+        }
+
+
+        // POST: CustomerPets/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CustomerPetFormVM customerPetForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerPetForm.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerPetForm.CustomerId + " does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+
+                customerPetForm.PetSelectList = BuildPetSelectList();
+
+                customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                return View(customerPetForm);
+            }
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == customerPetForm.PetId);
+            if (pet == null)
+            {
+                return Content("Pet ID #" + customerPetForm.PetId + " does not exist.");
+            }
+
+            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == customerPetForm.CustomerId && x.PetId == customerPetForm.PetId);
+
             if (existingRelationship != null)
             {
-                return Content("This customer is already associated with this pet.");
+                ModelState.AddModelError("", "This customer is already associated with this pet.");
+
+                customerPetForm.PetSelectList = BuildPetSelectList();
+
+                customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                return View(customerPetForm);
+
             }
 
             CustomerPetModel customerPet = new CustomerPetModel();
 
             customerPet.CustomerPetId = Guid.NewGuid();
-            customerPet.PetId = petId;
-            customerPet.CustomerId = customerId;
-            customerPet.RelationshipType = relationshipType;
+            customerPet.PetId = customerPetForm.PetId;
+            customerPet.CustomerId = customerPetForm.CustomerId;
+            customerPet.RelationshipType = customerPetForm.RelationshipType;
 
-            try
-            {
-                dbContext.CustomerPets.Add( customerPet );
-                dbContext.SaveChanges();
+            dbContext.CustomerPets.Add(customerPet);
+            dbContext.SaveChanges();
 
-                return Content("The " + customer.FirstName + " and " + pet.PetName + " relationship was successfully created.");
-            }
-            catch (Exception ex) 
-            {
-                return Content(ex.Message);
-            }
+            return RedirectToAction("Read", "Customers", new { customerId = customerPetForm.CustomerId });
         }
-        
 
 
         // GET: CustomerPets/Read
-        // /CustomerPets/Read?customerPetId=USE_EXISTING_CUSTOMERPET_ID
         public ActionResult Read(Guid customerPetId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetId);
+            CustomerPetModel customerPet = dbContext.CustomerPets
+                .Include("Customer")
+                .Include("Pet")
+                .FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
-            if (customerPet == null) 
-            { 
-                return Content("CustomerPet ID #" + customerPetId + " does not exist."); 
-            }
-
-            string relationshipTypeDisplay = customerPet.RelationshipType.ToString();
-
-            switch (customerPet.RelationshipType)
+            if (customerPet == null)
             {
-                case RelationshipTypeEnum.CoOwner:
-                    relationshipTypeDisplay = "Co Owner";
-                    break;
-
-                case RelationshipTypeEnum.AuthorizedPickup:
-                    relationshipTypeDisplay = "Authorized Pickup";
-                    break;
+                return Content("CustomerPet ID #" + customerPetId + " does not exist.");
             }
 
-            return Content(
-                "CustomerPet ID #" + customerPet.CustomerPetId +
-                "<br />Customer ID #" + customerPet.CustomerId +
-                "<br />Pet ID #" + customerPet.PetId +
-                "<br />Relationship Type: " + relationshipTypeDisplay
-            );
+            CustomerPetSummaryVM customerPetSummary = new CustomerPetSummaryVM();
+
+            customerPetSummary.CustomerPetId = customerPet.CustomerPetId;
+            customerPetSummary.CustomerId = customerPet.CustomerId;
+            customerPetSummary.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
+            customerPetSummary.PetId = customerPet.PetId;
+            customerPetSummary.PetNameDisplay = customerPet.Pet.PetName;
+            customerPetSummary.SpeciesDisplay = customerPet.Pet.Species.ToString();
+            customerPetSummary.BreedDisplay = customerPet.Pet.Breed;
+            customerPetSummary.RelationshipTypeDisplay = customerPet.RelationshipType.ToString();
+
+
+            return View(customerPetSummary);
         }
 
 
         // GET: CustomerPets/Update
-        // /CustomerPets/Update?customerPetId=USE_EXISTING_CUSTOMERPET_ID&petId=USE_EXISTING_PET_ID&customerId=USE_EXISTING_CUSTOMER_ID&relationshipType=Owner
-        public ActionResult Update(
-            Guid customerPetId,
-            Guid petId,
-            Guid customerId,
-            RelationshipTypeEnum relationshipType
-        )
+        public ActionResult Update(Guid customerPetId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetId);
-            if (customerPet == null) 
-            { 
-                return Content("CustomerPet ID #" + customerPetId + "does not exist"); 
-            }
+            CustomerPetModel customerPet = dbContext.CustomerPets.Include("Customer").Include("Pet").FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) 
-            { 
-                return Content("Pet ID #" + petId + "does not exist"); 
-            }
-
-            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) 
-            { 
-                return Content("Customer ID #" + customerId + "does not exist"); 
-            }
-
-            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId != customerPetId &&  x.CustomerId == customerId && x.PetId == petId);
-            if (existingRelationship != null)
+            if (customerPet == null)
             {
-                return Content("This customer is already associated with this pet.");
+                return Content("CustomerPet ID #" + customerPetId + "does not exist");
             }
 
-            customerPet.PetId = petId;
-            customerPet.CustomerId = customerId;
-            customerPet.RelationshipType = relationshipType;
+            CustomerPetFormVM customerPetForm = new CustomerPetFormVM();
 
-            try
-            {
-                dbContext.SaveChanges();
+            customerPetForm.CustomerPetId = customerPet.CustomerPetId;
 
-                return Content("CustomerPet ID #" + customerPet.CustomerPetId + " was successfully updated.");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+            customerPetForm.CustomerId = customerPet.CustomerId;
+
+            customerPetForm.PetId = customerPet.PetId;
+
+            customerPetForm.RelationshipType = customerPet.RelationshipType;                
+            
+            customerPetForm.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
+
+            customerPetForm.PetSelectList = BuildPetSelectList();
+
+            return View(customerPetForm);
         }
 
 
+        // POST: CustomerPets/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(CustomerPetFormVM customerPetForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerPetForm.CustomerId);
+
+            if (customer == null)
+            {
+                return Content("Customer ID #" + customerPetForm.CustomerId + " does not exist");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                customerPetForm.PetSelectList = BuildPetSelectList();
+
+                customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                return View(customerPetForm);
+            }
+            
+            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetForm.CustomerPetId);
+
+            if (customerPet == null)
+            {
+                return Content("CustomerPet ID #" + customerPetForm.CustomerPetId + " does not exist");
+            }
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == customerPetForm.PetId);
+            if (pet == null)
+            {
+                return Content("Pet ID #" + customerPetForm.PetId + " does not exist");
+            }
+
+            CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId != customerPetForm.CustomerPetId && x.CustomerId == customerPetForm.CustomerId && x.PetId == customerPetForm.PetId);
+
+            if (existingRelationship != null)
+            {
+                ModelState.AddModelError("", "This customer is already associated with this pet.");
+
+                customerPetForm.PetSelectList = BuildPetSelectList();
+
+                customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                return View(customerPetForm);
+
+            }
+
+            customerPet.RelationshipType = customerPetForm.RelationshipType;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Customers", new { customerId = customerPetForm.CustomerId });
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         // GET: CustomerPets/Delete
-        // /CustomerPets/Delete?customerPetId=USE_EXISTING_CUSTOMERPET_ID
         public ActionResult Delete(Guid customerPetId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetId);
-            if (customerPet == null) { return Content("CustomerPet ID #" + customerPetId + " does not exist"); }
+            CustomerPetModel customerPet = dbContext.CustomerPets.Include("Customer").Include("Pet").FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
-
-            try
+            if (customerPet == null)
             {
-                dbContext.CustomerPets.Remove(customerPet);
-
-                dbContext.SaveChanges();
-
-                return Content("CustomerPet ID #" + customerPet.CustomerPetId + " was successfully deleted.");
+                return Content("CustomerPet ID #" + customerPetId + "does not exist");
             }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+
+            CustomerPetFormVM customerPetForm = new CustomerPetFormVM();
+
+            customerPetForm.CustomerPetId = customerPet.CustomerPetId;
+
+            customerPetForm.CustomerId = customerPet.CustomerId;
+
+            customerPetForm.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
+
+            customerPetForm.PetId = customerPet.PetId;
+
+            customerPetForm.PetNameDisplay = customerPet.Pet.PetName;
+
+            customerPetForm.RelationshipType = customerPet.RelationshipType;
+
+            return View(customerPetForm);
         }
+
+
+        // POST: CustomerPets/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(CustomerPetFormVM customerPetForm)
+        {
+            if(!ModelState.IsValid) 
+            {
+                return View(customerPetForm);
+            }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetForm.CustomerPetId);
+            if (customerPet == null) 
+            {
+                return Content("CustomerPet ID #" + customerPetForm.CustomerPetId + " does not exist"); 
+            }
+
+            dbContext.CustomerPets.Remove(customerPet);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Customers", new { customerId = customerPetForm.CustomerId });
+        }
+
+
+        private SelectList BuildPetSelectList() 
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            var petDropdownItems = dbContext.Pets
+                        .Where(x => x.IsActive)
+                        .Select(x => new
+                        {
+                            PetId = x.PetId,
+                            PetDisplay = x.PetName + " - " + x.Species + " - " + x.Breed
+                        })
+                        .ToList();
+
+            SelectList petSelectList = new SelectList(petDropdownItems, "PetId", "PetDisplay");
+
+            return petSelectList;
+
+        }
+
     }
 }

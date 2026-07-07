@@ -1,0 +1,54 @@
+﻿@model JamesPetBoarding.ViewModels.CustomerPetFormVM
+@{
+    ViewBag.Title = "Update Customer-Pet Association";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Update Customer-Pet Association</h2>
+    <p class="lead">
+        Update the relationship type for this customer-pet association.
+    </p>
+</div>
+
+@using (Html.BeginForm("Update", "CustomerPets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.CustomerId)
+
+    @Html.HiddenFor(x => x.CustomerPetId)
+
+    @Html.HiddenFor(x => x.PetId)
+
+    <div class="col-md-4">
+        <label class="form-label">Customer Name</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Relationship Type</label>
+        @Html.EnumDropDownListFor(x => x.RelationshipType, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.RelationshipType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Update Association</button>
+
+        @Html.ActionLink(
+            "Back to Customer Profile",
+            "Read",
+            "Customers",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
+
+}

@@ -99,32 +99,69 @@
             <thead>
                 <tr>
                     <th scope="col">Pet Name</th>
+                    <th scope="col">Species</th>
+                    <th scope="col">Breed</th>
                     <th scope="col">Relationship Type</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>
 
                 @if (Model.CustomerPets.Any())
                 {
-                    foreach(var pet in Model.CustomerPets)
+                    foreach (var pet in Model.CustomerPets)
                     {
                         <tr>
                             <td>@pet.PetNameDisplay</td>
+                            <td>@pet.SpeciesDisplay</td>
+                            <td>@pet.BreedDisplay</td>
                             <td>@pet.RelationshipTypeDisplay</td>
+                            <td>
+                                @Html.ActionLink(
+                                 "Read",
+                                 "Read",
+                                 "CustomerPets",
+                                 new { customerPetId = pet.CustomerPetId },
+                                 new { @class = "btn btn-primary btn-sm me-2" })
+
+                                @Html.ActionLink(
+                                 "Update",
+                                 "Update",
+                                 "CustomerPets",
+                                 new { customerPetId = pet.CustomerPetId },
+                                 new { @class = "btn btn-primary btn-sm me-2" })
+
+                                @Html.ActionLink(
+                                 "Disassociate",
+                                 "Delete",
+                                 "CustomerPets",
+                                 new { customerPetId = pet.CustomerPetId },
+                                 new { @class = "btn btn-danger btn-sm me-2" })
+
+                            </td>
                         </tr>
                     }
                 }
-                else 
-                { 
-                    <tr> 
-                        <td colspan="2" class="text-center">
+                else
+                {
+                    <tr>
+                        <td colspan="5" class="text-center">
                             No associated pets found.
-                        </td> 
+                        </td>
                     </tr>
                 }
-                
+
             </tbody>
         </table>
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Associate Pet",
+            "Create",
+            "CustomerPets",
+            new { customerId = Model.CustomerId },
+            new { @class = "btn btn-success" })
     </div>
 
     <div class="col-md-10 mt-4">
@@ -208,10 +245,10 @@
 
     <div class="col-md-10 text-center mt-3">
         @Html.ActionLink(
-            "Create Emergency Contact", 
-            "Create", 
-            "EmergencyContacts", 
-            new { customerId = Model.CustomerId }, 
+            "Create Emergency Contact",
+            "Create",
+            "EmergencyContacts",
+            new { customerId = Model.CustomerId },
             new { @class = "btn btn-success" })
     </div>
 
@@ -243,10 +280,10 @@
         }
 
         @Html.ActionLink(
-            "Back to Customer Dashboard", 
-            "Index", 
-            "Customers", 
-            null, 
+            "Back to Customer Dashboard",
+            "Index",
+            "Customers",
+            null,
             new { @class = "btn btn-secondary ms-2" })
 
     </div>

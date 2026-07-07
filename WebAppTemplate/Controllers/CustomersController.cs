@@ -222,6 +222,8 @@ namespace JamesPetBoarding.Controllers
                 customerPetSummary.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
                 customerPetSummary.PetId = customerPet.PetId;
                 customerPetSummary.PetNameDisplay = customerPet.Pet.PetName;
+                customerPetSummary.SpeciesDisplay = customerPet.Pet.Species.ToString();
+                customerPetSummary.BreedDisplay = customerPet.Pet.Breed;
                 customerPetSummary.RelationshipTypeDisplay = customerPet.RelationshipType.ToString();
 
                 customerDetails.CustomerPets.Add(customerPetSummary);

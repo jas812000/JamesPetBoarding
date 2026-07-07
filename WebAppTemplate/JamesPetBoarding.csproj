@@ -513,13 +513,16 @@
     <Content Include="Views\EmergencyContacts\Update.cshtml" />
     <Content Include="Views\EmergencyContacts\Read.cshtml" />
     <Content Include="Views\EmergencyContacts\Reactivate.cshtml" />
+    <Content Include="Views\CustomerPets\Create.cshtml" />
+    <Content Include="Views\CustomerPets\Read.cshtml" />
+    <Content Include="Views\CustomerPets\Update.cshtml" />
+    <Content Include="Views\CustomerPets\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Boardings\" />
     <Folder Include="Views\BoardingUnits\" />
-    <Folder Include="Views\CustomerPets\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\Diets\" />
     <Folder Include="Views\Employees\" />
