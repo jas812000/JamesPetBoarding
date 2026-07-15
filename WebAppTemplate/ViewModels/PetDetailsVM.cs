@@ -17,6 +17,7 @@ namespace JamesPetBoarding.ViewModels
             Diets = new List<DietSummaryVM>();
             Medications = new List<MedicationSummaryVM>();
             PetVaccines = new List<PetVaccineSummaryVM>();
+            Boardings = new List<BoardingSummaryVM>();
         }
 
         public Guid PetId { get; set; }
@@ -39,6 +40,8 @@ namespace JamesPetBoarding.ViewModels
 
         public string WeightDisplay { get; set; }
 
+        public bool IsActive { get; set; }
+
         public string ActiveStatusDisplay { get; set; }
 
         public string InactiveReasonDisplay { get; set; }
@@ -46,6 +49,10 @@ namespace JamesPetBoarding.ViewModels
         public string InactivatedDateDisplay { get; set; }
 
         public string InactiveNotesDisplay { get; set; }
+
+        public string ReactivatedDateDisplay { get; set; }
+
+        public string ReactivatedNotesDisplay { get; set; }
 
         public string NotesDisplay { get; set; }
 
@@ -56,6 +63,8 @@ namespace JamesPetBoarding.ViewModels
         public List<MedicationSummaryVM> Medications { get; set; }
 
         public List<PetVaccineSummaryVM> PetVaccines { get; set; }
+
+        public List<BoardingSummaryVM> Boardings { get; set; }
     
     }
 }

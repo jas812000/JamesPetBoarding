@@ -1,13 +1,12 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
-using System.Net.Cache;
-using System.Web;
 using System.Web.Mvc;
-using System.Web.Services.Description;
 using System.Web.UI;
 
 namespace JamesPetBoarding.Controllers
@@ -20,67 +19,141 @@ namespace JamesPetBoarding.Controllers
             return View();
         }
 
-        // GET: Pets/Create
-        // /Pets/Create?vetId=275c80fc-8a49-410c-ae30-c33661e3eeb6&name=Steve&species=Dog&breed=German%20Shepard&sex=Male&birthDate=11%2F11%2F2020&weight=57.8&notes=Brown%20and%20White
-        public ActionResult Create(
-            Guid? vetId, 
-            string name, 
-            SpeciesEnum species, 
-            string breed, 
-            SexEnum sex, 
-            DateTime birthDate, 
-            decimal weight, 
-            string notes
-            )
+        // GET: Pets/Search
+        public ActionResult Search()
         {
+            PetSearchVM petSearch = new PetSearchVM();
 
+            return View(petSearch);
+        }
+
+
+        // POST: Pets/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(PetSearchVM petSearch)
+        {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(name)) { return Content("A pet name is required."); }
-            if (string.IsNullOrWhiteSpace(breed)) { return Content("Breed is required."); }
-            if (birthDate > DateTime.Today) { return Content("Birth date cannot be in the future."); }
-            if (weight <= 0) { return Content("Weight must be greater than zero."); }
+            List<PetModel> pets = dbContext.Pets.ToList();
 
-            if (vetId != null) 
-            { 
-                VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
+            if (!string.IsNullOrWhiteSpace(petSearch.PetName))
+            {
+                pets = pets
+                    .Where(x => x.PetName.ToLower().Contains(petSearch.PetName.ToLower()))
+                    .ToList();
+            }
 
-                if (veterinarian == null)
+            if (petSearch.Species.HasValue) {
+                pets = pets
+                    .Where(x => x.Species == petSearch.Species.Value)
+                    .ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(petSearch.Breed))
+            {
+                pets = pets
+                    .Where(x => x.Breed != null && x.Breed.ToLower().Contains(petSearch.Breed.ToLower()))
+                    .ToList();
+            }
+
+            if (petSearch.Sex.HasValue)
+            {
+                pets = pets
+                    .Where(x => x.Sex == petSearch.Sex.Value)
+                    .ToList();
+            }
+
+            if (petSearch.IsActive.HasValue)
+            {
+                pets = pets
+                    .Where(x => x.IsActive == petSearch.IsActive.Value)
+                    .ToList();
+            }
+
+            petSearch.Pets.Clear();
+
+            foreach (PetModel pet in pets)
+            {
+                petSearch.Pets.Add(new PetSummaryVM
                 {
-                    return Content("Vet ID #" + vetId + " does not exist.");
-                
-                }       
+                    PetId = pet.PetId,
+                    PetNameDisplay = pet.PetName,
+                    SpeciesDisplay = pet.Species.ToString(),
+                    BreedDisplay = pet.Breed,
+                    SexDisplay = pet.Sex.ToString(),
+                    ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive",
+                    IsActive = pet.IsActive
+                });
+            }
+
+            return View(petSearch);
+        }
+
+
+        // GET: Pets/Create
+        public ActionResult Create()
+        {
+            PetFormVM petForm = new PetFormVM();
+
+            petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+
+            return View(petForm);
+        }
+
+
+        // POST: Pets/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(PetFormVM petForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            if (!ModelState.IsValid)
+            {
+                petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                return View(petForm);
+            }
+
+            if (petForm.BirthDate > DateTime.Today)
+            {
+                ModelState.AddModelError("BirthDate", "Birth date cannot be in the future.");
+                petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                return View(petForm);
+            }
+
+            if (petForm.VetId.HasValue)
+            {
+                bool veterinarianExists = dbContext.Veterinarians.Any(x => x.VetId == petForm.VetId.Value);
+
+                if (!veterinarianExists)
+                {
+                    ModelState.AddModelError("VetId", "Selected veterinarian does not exist.");
+                    petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                    return View(petForm);
+                }
             }
 
             PetModel pet = new PetModel();
 
-            pet.VetId = vetId;
-            pet.PetName = name;
-            pet.Species = species;
-            pet.Breed = breed;
-            pet.Sex = sex;
-            pet.BirthDate = birthDate;
-            pet.Weight = weight;
-            pet.Notes = notes;
+            pet.VetId = petForm.VetId;
+            pet.PetName = petForm.PetName;
+            pet.Species = petForm.Species;
+            pet.Breed = petForm.Breed;
+            pet.Sex = petForm.Sex;
+            pet.BirthDate = petForm.BirthDate;
+            pet.Weight = petForm.Weight;
+            pet.Notes = petForm.Notes;
 
-            try
-            {
+            dbContext.Pets.Add(pet);
+            dbContext.SaveChanges();
 
-                dbContext.Pets.Add(pet);
-                dbContext.SaveChanges();
+            return RedirectToAction("Read", new { petId = pet.PetId });
 
-                return Content("Successfully added " + pet.PetName + ".");
-
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }             
         }
-        
+
 
         // GET: Pets/Read
-        // /Pets/Read?petId=2589b987-46b0-4372-a164-ced50db0b195
         public ActionResult Read(Guid petId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -91,12 +164,6 @@ namespace JamesPetBoarding.Controllers
             {
                 return Content("Pet Id #" + petId + " does not exist.");
             }
-            
-            string notesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
-                ? "No notes"
-                : pet.Notes;
-
-            string speciesDisplay = pet.Species.ToString();
 
             int age = DateTime.Today.Year - pet.BirthDate.Year;
             if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
@@ -104,82 +171,154 @@ namespace JamesPetBoarding.Controllers
                 age--;
             }
 
-            //return View();
-            return Content(
-                   "Pet ID #" + pet.PetId +
-                   "<br />Name: " + pet.PetName + 
-                   "<br />Species: " + speciesDisplay +
-                   "<br />Breed: " + pet.Breed +
-                   "<br />Sex: " + pet.Sex +
-                   "<br />Birthday: " + pet.BirthDate.ToString("MM/dd/yyyy") +
-                   "<br />Age: " + age +
-                   "<br />Weight: " + pet.Weight +
-                   "<br />Notes: " + notesDisplay
-             );
+            PetDetailsVM petDetails = new PetDetailsVM();
+
+            petDetails.PetId = pet.PetId;
+            petDetails.PetNameDisplay = pet.PetName;
+            petDetails.SpeciesDisplay = pet.Species.ToString();
+            petDetails.BreedDisplay = pet.Breed;
+            petDetails.SexDisplay = pet.Sex.ToString();
+            petDetails.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+            petDetails.AgeDisplay = age.ToString();
+            petDetails.WeightDisplay = pet.Weight.ToString();
+            petDetails.IsActive = pet.IsActive;
+
+            petDetails.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+            petDetails.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                ? "No notes"
+                : pet.Notes;
+
+            petDetails.InactiveReasonDisplay = pet.InactiveReason.HasValue
+                ? pet.InactiveReason.ToString()
+                : "Not Applicable";
+
+            petDetails.InactivatedDateDisplay = pet.InactivatedDate.HasValue
+                ? pet.InactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            petDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
+                ? "No inactive notes"
+                : pet.InactiveNotes;
+
+            petDetails.ReactivatedDateDisplay = pet.ReactivatedDate.HasValue
+                ? pet.ReactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            petDetails.ReactivatedNotesDisplay = string.IsNullOrWhiteSpace(pet.ReactivatedNotes)
+                ? "No reactivation notes"
+                : pet.ReactivatedNotes;
+
+            if (pet.VetId.HasValue)
+            {
+                VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == pet.VetId.Value);
+
+                petDetails.VeterinarianDisplay = veterinarian == null
+                    ? "Veterinarian not found"
+                    : veterinarian.FirstName + " " + veterinarian.LastName + ", " + veterinarian.Credentials;
+            }
+            else
+            {
+                petDetails.VeterinarianDisplay = "No veterinarian assigned";
+            }
+
+            return View(petDetails);
         }
 
-        // /Pets/Update
-        // /Pets/Update?petId=11e84abe-3ab7-4b27-934a-51b4ccb7b5c7&vetId=275c80fc-8a49-410c-ae30-c33661e3eeb6&name=Steve&species=Dog&breed=German%20Shepard&sex=male&birthDate=04%2F15%2F2018&weight=61.8&notes=Brown%20and%20White
-        public ActionResult Update(
-            Guid petId, 
-            Guid? vetId, 
-            string name, 
-            SpeciesEnum species, 
-            string breed, 
-            SexEnum sex, 
-            DateTime birthDate, 
-            decimal weight, 
-            string notes
-            ) 
+
+        // GET: Pets/Update
+        public ActionResult Update(Guid petId)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
-            if (pet == null) 
+            if (pet == null)
             {
-                return Content("Pet ID #" + petId + " does not exist."); 
+                return Content("Pet ID #" + petId + " does not exist.");
             }
 
-            if (vetId != null)
+            PetFormVM petForm = new PetFormVM();
+
+            petForm.PetId = pet.PetId;
+            petForm.VetId = pet.VetId;
+            petForm.PetName = pet.PetName;
+            petForm.Species = pet.Species;
+            petForm.Breed = pet.Breed;
+            petForm.Sex = pet.Sex;
+            petForm.BirthDate = pet.BirthDate;
+            petForm.Weight = pet.Weight;
+            petForm.Notes = pet.Notes;
+
+            petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+
+            return View(petForm);
+
+        }
+
+
+        // POST: Pets/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(PetFormVM petForm)
+        {
+            
+            if (!ModelState.IsValid)
             {
-                VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
+                petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                return View(petForm);
+            }
 
-                if (veterinarian == null)
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            if (petForm.BirthDate > DateTime.Today)
+            {
+                ModelState.AddModelError("BirthDate", "Birth date cannot be in the future.");
+                petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                return View(petForm);
+            }
+
+            if (petForm.VetId.HasValue)
+            {
+                bool veterinarianExists = dbContext.Veterinarians.Any(x => x.VetId == petForm.VetId.Value);
+
+                if (!veterinarianExists)
                 {
-                    return Content("Vet ID #" + vetId + " does not exist.");
-
+                    ModelState.AddModelError("VetId", "Selected veterinarian does not exist.");
+                    petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
+                    return View(petForm);
                 }
             }
 
-            if (string.IsNullOrWhiteSpace(name)) { return Content("A pet name is required."); }
-            if (string.IsNullOrWhiteSpace(breed)) { return Content("Breed is required."); }
-            if (birthDate > DateTime.Today) { return Content("Birth date cannot be in the future."); }
-            if (weight <= 0) { return Content("Weight must be greater than zero."); }
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petForm.PetId);
 
-            pet.VetId = vetId;
-            pet.PetName = name;
-            pet.Species = species;
-            pet.Breed = breed;
-            pet.Sex = sex;
-            pet.BirthDate = birthDate;
-            pet.Weight = weight;
-            pet.Notes = notes;
-
-            try
+            if (pet == null)
             {
-                dbContext.SaveChanges();
-                return Content("Successfully updated " + pet.PetName + ".");
+                return Content("Pet ID #" + petForm.PetId + " does not exist.");
             }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+
+            pet.VetId = petForm.VetId;
+            pet.PetName = petForm.PetName;
+            pet.Species = petForm.Species;
+            pet.Breed = petForm.Breed;
+            pet.Sex = petForm.Sex;
+            pet.BirthDate = petForm.BirthDate;
+            pet.Weight = petForm.Weight;
+            pet.Notes = petForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read",
+                new
+                {
+                    petId = pet.PetId
+                }
+             );
         }
 
-        // /Pets/Delete
-        // /Pets/Delete?petId=2589b987-46b0-4372-a164-ced50db0b195
+
+        // GET: Pets/Delete
         public ActionResult Delete(Guid petId) { 
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -191,18 +330,223 @@ namespace JamesPetBoarding.Controllers
                 return Content("Pet ID #" + petId + " does not exist.");
             }
 
-            try
+            int age = DateTime.Today.Year - pet.BirthDate.Year;
+            if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
             {
-                pet.IsActive = false;
-                dbContext.SaveChanges();
-
-                return Content(
-                    "Pet Id #" + petId + " was successfully deactivated.");
+                age--;
             }
-            catch (Exception ex) 
+
+            PetDeleteVM petDelete = new PetDeleteVM();
+
+
+
+            petDelete.PetId = pet.PetId;
+            petDelete.PetNameDisplay = pet.PetName;
+            petDelete.SpeciesDisplay = pet.Species.ToString();
+            petDelete.BreedDisplay = pet.Breed;
+            petDelete.SexDisplay = pet.Sex.ToString();
+            petDelete.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+            petDelete.AgeDisplay = age.ToString();
+            petDelete.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+            petDelete.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                ? "No notes"
+                : pet.Notes;
+
+            return View(petDelete);
+ 
+        }
+
+
+        // POST: Pets/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(PetDeleteVM petDelete)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petDelete.PetId);
+
+            if (pet == null)
             {
-                return Content(ex.Message);
-            }  
+                return Content("Pet ID #" + petDelete.PetId + " does not exist.");
+            }
+
+            int age = DateTime.Today.Year - pet.BirthDate.Year;
+            if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+
+            if (!ModelState.IsValid) 
+            {
+
+                petDelete.PetId = pet.PetId;
+                petDelete.PetNameDisplay = pet.PetName;
+                petDelete.SpeciesDisplay = pet.Species.ToString();
+                petDelete.BreedDisplay = pet.Breed;
+                petDelete.SexDisplay = pet.Sex.ToString();
+                petDelete.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+                petDelete.AgeDisplay = age.ToString();
+                petDelete.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+                petDelete.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                    ? "No notes"
+                    : pet.Notes;
+
+                return View(petDelete); 
+            }
+
+            pet.IsActive = false;
+            pet.InactiveReason = petDelete.InactiveReason;
+            pet.InactivatedDate = DateTime.Now;
+            pet.InactiveNotes = petDelete.InactiveNotes;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read",
+                new
+                {
+                    petId = pet.PetId
+                }
+            );
+
+        }
+
+
+
+        // GET: Pets/Reactivate
+        public ActionResult Reactivate(Guid petId)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petId + " does not exist.");
+            }
+
+            int age = DateTime.Today.Year - pet.BirthDate.Year;
+            if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+
+            PetReactivateVM petReactivate = new PetReactivateVM();
+
+            petReactivate.PetId = pet.PetId;
+            petReactivate.PetNameDisplay = pet.PetName;
+            petReactivate.SpeciesDisplay = pet.Species.ToString();
+            petReactivate.BreedDisplay = pet.Breed;
+            petReactivate.SexDisplay = pet.Sex.ToString();
+            petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+            petReactivate.AgeDisplay = age.ToString();
+            petReactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+            petReactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                ? "No notes"
+                : pet.Notes;
+
+            petReactivate.InactiveReasonDisplay = pet.InactiveReason.HasValue
+                ? pet.InactiveReason.ToString()
+                : "Not Applicable";
+
+            petReactivate.InactivatedDateDisplay = pet.InactivatedDate.HasValue
+                ? pet.InactivatedDate.Value.ToShortDateString()
+                : "Not Applicable";
+
+            petReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
+                ? "No inactive notes"
+                : pet.InactiveNotes;
+
+            return View(petReactivate);
+
+        }
+
+
+        // POST: Pets/Reactivate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Reactivate(PetReactivateVM petReactivate)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petReactivate.PetId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petReactivate.PetId + " does not exist.");
+            }
+
+            int age = DateTime.Today.Year - pet.BirthDate.Year;
+            if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
+            {
+                age--;
+            }
+
+            if (!ModelState.IsValid) 
+            {
+
+                petReactivate.PetId = pet.PetId;
+                petReactivate.PetNameDisplay = pet.PetName;
+                petReactivate.SpeciesDisplay = pet.Species.ToString();
+                petReactivate.BreedDisplay = pet.Breed;
+                petReactivate.SexDisplay = pet.Sex.ToString();
+                petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+                petReactivate.AgeDisplay = age.ToString();
+                petReactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+                petReactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                    ? "No notes"
+                    : pet.Notes;
+
+                petReactivate.InactiveReasonDisplay = pet.InactiveReason.HasValue
+                    ? pet.InactiveReason.ToString()
+                    : "Not Applicable";
+
+                petReactivate.InactivatedDateDisplay = pet.InactivatedDate.HasValue
+                    ? pet.InactivatedDate.Value.ToShortDateString()
+                    : "Not Applicable";
+
+                petReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
+                    ? "No inactive notes"
+                    : pet.InactiveNotes;
+
+                return View(petReactivate);
+            }
+
+            pet.IsActive = true;
+            pet.ReactivatedDate = DateTime.Now;
+            pet.ReactivatedNotes = petReactivate.ReactivatedNotes;
+
+            pet.InactiveReason = null;
+            pet.InactivatedDate = null;
+            pet.InactiveNotes = null;
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { petId = pet.PetId });
+
+        }
+
+
+        private SelectList BuildVeterinarianSelectList()
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            var vetDropdownItems = dbContext.Veterinarians
+                        .Select(x => new
+                        {
+                            VetId = x.VetId,
+                            VetDisplay = x.FirstName + " " + x.LastName + ", " + x.Credentials
+                        })
+                        .ToList();
+
+            SelectList vetSelectList = new SelectList(vetDropdownItems, "VetId", "VetDisplay");
+
+            return vetSelectList;
+
         }
     }
 }

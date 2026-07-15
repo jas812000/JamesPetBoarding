@@ -1,0 +1,66 @@
+﻿@model JamesPetBoarding.ViewModels.PetSearchVM
+@{
+    ViewBag.Title = "Search Pets";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Search Pets</h2>
+    <p class="lead">
+        Search by one or more fields to find an existing pet profile.
+    </p>
+</div>
+
+@using (Html.BeginForm("Search", "Pets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.PetName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Species</label>
+        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Breed</label>
+        @Html.TextBoxFor(x => x.Breed, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Breed, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Sex</label>
+        @Html.EnumDropDownListFor(x => x.Sex, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.Sex, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Active Status</label>
+        @Html.DropDownListFor(
+            x => x.IsActive,
+            new List<SelectListItem>
+            {
+                new SelectListItem { Text = "All Pets", Value = "" },
+                new SelectListItem { Text = "Active", Value = "true" },
+                new SelectListItem { Text = "Inactive", Value = "false" }
+            },
+            new { @class = "form-select" })
+
+        <small class="text-muted">Select All Pets, Active or Inactive.</small>
+        @Html.ValidationMessageFor(x => x.IsActive, "", new { @class = "text-danger" })
+
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Search</button>
+
+        @Html.ActionLink("Cancel", "Index", "Pets", null, new { @class = "btn btn-secondary ms-2" })
+    </div>
+
+}

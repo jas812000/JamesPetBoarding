@@ -226,29 +226,6 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // GET: CustomerPets/Delete
         public ActionResult Delete(Guid customerPetId)
         {
@@ -264,15 +241,10 @@ namespace JamesPetBoarding.Controllers
             CustomerPetFormVM customerPetForm = new CustomerPetFormVM();
 
             customerPetForm.CustomerPetId = customerPet.CustomerPetId;
-
             customerPetForm.CustomerId = customerPet.CustomerId;
-
             customerPetForm.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
-
             customerPetForm.PetId = customerPet.PetId;
-
             customerPetForm.PetNameDisplay = customerPet.Pet.PetName;
-
             customerPetForm.RelationshipType = customerPet.RelationshipType;
 
             return View(customerPetForm);
@@ -284,17 +256,29 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(CustomerPetFormVM customerPetForm)
         {
-            if(!ModelState.IsValid) 
-            {
-                return View(customerPetForm);
-            }
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId == customerPetForm.CustomerPetId);
-            if (customerPet == null) 
+            CustomerPetModel customerPet = dbContext.CustomerPets
+                .Include("Customer")
+                .Include("Pet")
+                .FirstOrDefault(x => x.CustomerPetId == customerPetForm.CustomerPetId);
+
+            if (customerPet == null)
             {
-                return Content("CustomerPet ID #" + customerPetForm.CustomerPetId + " does not exist"); 
+                return Content("CustomerPet ID #" + customerPetForm.CustomerPetId + " does not exist");
+            }
+
+            if (!ModelState.IsValid) 
+            {
+                customerPetForm.CustomerPetId = customerPet.CustomerPetId;
+                customerPetForm.CustomerId = customerPet.CustomerId;
+                customerPetForm.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
+                customerPetForm.PetId = customerPet.PetId;
+                customerPetForm.PetNameDisplay = customerPet.Pet.PetName;
+                customerPetForm.RelationshipType = customerPet.RelationshipType;
+                return View(customerPetForm);
+
             }
 
             dbContext.CustomerPets.Remove(customerPet);

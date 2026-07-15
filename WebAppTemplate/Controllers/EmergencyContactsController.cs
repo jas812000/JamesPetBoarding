@@ -250,11 +250,6 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(EmergencyContactDeleteVM emergencyContactDelete)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(emergencyContactDelete);
-            }
-
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactDelete.EmergencyContactId);
@@ -264,6 +259,27 @@ namespace JamesPetBoarding.Controllers
 
                 return Content("Emergency Contact ID #" + emergencyContactDelete.EmergencyContactId + " does not exist.");
 
+            }
+
+            if (!ModelState.IsValid)
+            {
+                emergencyContactDelete.EmergencyContactId = emergencyContact.EmergencyContactId;
+                emergencyContactDelete.CustomerId = emergencyContact.CustomerId;
+                emergencyContactDelete.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+                emergencyContactDelete.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+                emergencyContactDelete.AddressDisplay = emergencyContact.Address;
+                emergencyContactDelete.CityStateZipDisplay = emergencyContact.City + ", " + emergencyContact.State + " " + emergencyContact.ZipCode;
+                emergencyContactDelete.PhoneDisplay = emergencyContact.Phone;
+                emergencyContactDelete.EmailDisplay = emergencyContact.Email;
+                emergencyContactDelete.NotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
+                    ? "No notes"
+                    : emergencyContact.Notes;
+                emergencyContactDelete.IsActive = emergencyContact.IsActive;
+                emergencyContactDelete.StatusDisplay = emergencyContact.IsActive
+                    ? "Active"
+                    : "Inactive";
+
+                return View(emergencyContactDelete);
             }
 
             emergencyContact.IsActive = false;
@@ -334,11 +350,6 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reactivate(EmergencyContactReactivateVM emergencyContactReactivate)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(emergencyContactReactivate);
-            }
-
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactReactivate.EmergencyContactId);
@@ -355,6 +366,36 @@ namespace JamesPetBoarding.Controllers
 
                 return Content("Emergency Contact ID #" + emergencyContactReactivate.EmergencyContactId + " is already active.");
 
+            }
+
+            if (!ModelState.IsValid)
+            {
+                emergencyContactReactivate.EmergencyContactId = emergencyContact.EmergencyContactId;
+                emergencyContactReactivate.CustomerId = emergencyContact.CustomerId;
+                emergencyContactReactivate.FullNameDisplay = emergencyContact.FirstName + " " + emergencyContact.LastName;
+                emergencyContactReactivate.RelationshipDisplay = emergencyContact.RelationshipType.ToString();
+                emergencyContactReactivate.PhoneDisplay = emergencyContact.Phone;
+                emergencyContactReactivate.EmailDisplay = emergencyContact.Email;
+                emergencyContactReactivate.AddressDisplay = emergencyContact.Address;
+                emergencyContactReactivate.CityStateZipDisplay = emergencyContact.City + ", " + emergencyContact.State + " " + emergencyContact.ZipCode;
+
+                emergencyContactReactivate.NotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.Notes)
+                    ? "No notes"
+                    : emergencyContact.Notes;
+
+                emergencyContactReactivate.InactivatedReasonDisplay = emergencyContact.InactivatedReason.HasValue
+                    ? emergencyContact.InactivatedReason.ToString()
+                    : "Not Applicable";
+
+                emergencyContactReactivate.InactivatedDateDisplay = emergencyContact.InactivatedDate.HasValue
+                    ? emergencyContact.InactivatedDate.Value.ToShortDateString()
+                    : "Not Applicable";
+
+                emergencyContactReactivate.InactivatedNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivatedNotes)
+                    ? "No inactive notes"
+                    : emergencyContact.InactivatedNotes;
+
+                return View(emergencyContactReactivate);
             }
 
             emergencyContact.IsActive = true;

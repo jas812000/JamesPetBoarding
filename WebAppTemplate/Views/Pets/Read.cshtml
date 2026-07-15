@@ -1,0 +1,166 @@
+﻿@model JamesPetBoarding.ViewModels.PetDetailsVM
+@{
+    ViewBag.Title = "Read Pet";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Pet Profile</h2>
+    <p class="lead">
+        View pet information and status.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Pet ID</label>
+        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Veterinarian ID</label>
+        @Html.TextBoxFor(x => x.VetId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Veterinarian Name</label>
+        @Html.TextBoxFor(x => x.VeterinarianDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Species</label>
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Breed</label>
+        @Html.TextBoxFor(x => x.BreedDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Sex</label>
+        @Html.TextBoxFor(x => x.SexDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Birth Date</label>
+        @Html.TextBoxFor(x => x.BirthDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Age</label>
+        @Html.TextBoxFor(x => x.AgeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Weight</label>
+        @Html.TextBoxFor(x => x.WeightDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    @if (!Model.IsActive)
+    {
+        <div class="col-12">
+            <h4 class="mt-4">Deactivation Information</h4>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Inactive Reason</label>
+            @Html.TextBoxFor(x => x.InactiveReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Inactivated Date</label>
+            @Html.TextBoxFor(x => x.InactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Inactive Notes</label>
+            @Html.TextAreaFor(x => x.InactiveNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        </div>
+    }
+
+    @if (Model.ReactivatedDateDisplay != "Not Applicable")
+    {
+        <div class="col-12">
+            <h4 class="mt-4">Reactivation Information</h4>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label">Reactivated Date</label>
+            @Html.TextBoxFor(x => x.ReactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-8">
+            <label class="form-label">Reactivated Notes</label>
+            @Html.TextAreaFor(x => x.ReactivatedNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        </div>
+    }
+
+    <div class="col-md-10 text-center mt-4">
+        @Html.ActionLink(
+            "Update Pet",
+            "Update",
+            "Pets",
+            new { petId = Model.PetId },
+            new { @class = "btn btn-primary me-2" })
+
+        @if (Model.IsActive)
+        {
+            @Html.ActionLink(
+                "Deactivate Pet",
+                "Delete",
+                "Pets",
+                new { petId = Model.PetId },
+                new { @class = "btn btn-danger me-2" })
+        }
+        else
+        {
+            @Html.ActionLink(
+                "Reactivate Pet",
+                "Reactivate",
+                "Pets",
+                new { petId = Model.PetId },
+                new { @class = "btn btn-success me-2" })
+        }
+
+        @Html.ActionLink(
+            "Back to Pet Search",
+            "Search",
+            "Pets",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -58,6 +58,11 @@ namespace JamesPetBoarding.Models
         [MaxLength(500)]
         public string InactiveNotes { get; set; }
 
+        public DateTime? ReactivatedDate { get; set; }
+
+        [MaxLength(500)]
+        public string ReactivatedNotes { get; set; }
+
         [MaxLength(2000)]
         public string Notes { get; set; }
 

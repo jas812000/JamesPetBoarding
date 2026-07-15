@@ -7,19 +7,23 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CustomerReactivateVM
+    public class PetReactivateVM
     {
-        public Guid CustomerId { get; set; }
+        public Guid PetId { get; set; }
 
-        public string CustomerNameDisplay { get; set; }
+        public string PetNameDisplay { get; set; }
 
-        public string AddressDisplay { get; set; }
+        public string SpeciesDisplay { get; set; }
 
-        public string CityStateZipDisplay { get; set; }
+        public string BreedDisplay { get; set; }
 
-        public string PhoneDisplay { get; set; }
+        public string SexDisplay { get; set; }
 
-        public string EmailDisplay { get; set; }
+        public string BirthDateDisplay { get; set; }
+
+        public string AgeDisplay { get; set; }
+
+        public string ActiveStatusDisplay { get; set; }
 
         public string NotesDisplay { get; set; }
 

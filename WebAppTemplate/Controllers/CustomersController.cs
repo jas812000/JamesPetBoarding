@@ -111,6 +111,7 @@ namespace JamesPetBoarding.Controllers
         {
             if (!ModelState.IsValid) 
             { 
+
                 return View(customerForm); 
             }
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -270,10 +271,6 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(CustomerFormVM customerForm)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(customerForm);
-            }
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerForm.CustomerId);
@@ -284,6 +281,21 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + customerForm.CustomerId + " does not exist.");
             }
 
+            if (!ModelState.IsValid)
+            {
+                customerForm.CustomerId = customer.CustomerId;
+                customerForm.LastName = customer.LastName;
+                customerForm.FirstName = customer.FirstName;
+                customerForm.Address = customer.Address;
+                customerForm.City = customer.City;
+                customerForm.State = customer.State;
+                customerForm.ZipCode = customer.ZipCode;
+                customerForm.Phone = customer.Phone;
+                customerForm.Email = customer.Email;
+                customerForm.Notes = customer.Notes;
+                return View(customerForm);
+            }
+            
             customer.LastName = customerForm.LastName;
             customer.FirstName = customerForm.FirstName;
             customer.Address = customerForm.Address;
@@ -339,12 +351,7 @@ namespace JamesPetBoarding.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(CustomerDeleteVM customerDelete)
-
         {
-            if (!ModelState.IsValid)
-            {
-                return View(customerDelete);
-            }
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
@@ -353,6 +360,21 @@ namespace JamesPetBoarding.Controllers
             if (customer == null)
             {
                 return Content("Customer ID #" + customerDelete.CustomerId + " does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                customerDelete.CustomerId = customer.CustomerId;
+                customerDelete.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+                customerDelete.AddressDisplay = customer.Address;
+                customerDelete.CityStateZipDisplay = customer.City + ", " + customer.State + " " + customer.ZipCode;
+                customerDelete.PhoneDisplay = customer.Phone;
+                customerDelete.EmailDisplay = customer.Email;
+                customerDelete.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
+                    ? "No notes"
+                    : customer.Notes;
+
+                return View(customerDelete);
             }
 
             customer.IsActive = false;
@@ -413,13 +435,7 @@ namespace JamesPetBoarding.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Reactivate(CustomerReactivateVM customerReactivate)
-
         {
-            if (!ModelState.IsValid)
-            {
-                return View(customerReactivate);
-            }
-
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerReactivate.CustomerId);
@@ -427,6 +443,34 @@ namespace JamesPetBoarding.Controllers
             if (customer == null)
             {
                 return Content("Customer ID #" + customerReactivate.CustomerId + " does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                customerReactivate.CustomerId = customer.CustomerId;
+                customerReactivate.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+                customerReactivate.AddressDisplay = customer.Address;
+                customerReactivate.CityStateZipDisplay = customer.City + ", " + customer.State + " " + customer.ZipCode;
+                customerReactivate.PhoneDisplay = customer.Phone;
+                customerReactivate.EmailDisplay = customer.Email;
+
+                customerReactivate.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
+                    ? "No notes"
+                    : customer.Notes;
+
+                customerReactivate.InactiveReasonDisplay = customer.InactiveReason.HasValue
+                    ? customer.InactiveReason.ToString()
+                    : "Not Applicable";
+
+                customerReactivate.InactivatedDateDisplay = customer.InactivatedDate.HasValue
+                    ? customer.InactivatedDate.Value.ToShortDateString()
+                    : "Not Applicable";
+
+                customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
+                    ? "No inactive notes"
+                    : customer.InactiveNotes;
+
+                return View(customerReactivate);
             }
 
             customer.IsActive = true;

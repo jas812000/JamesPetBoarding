@@ -315,6 +315,10 @@
     <Compile Include="Migrations\202607010452378_AddEmergencyContactInactivationTracking.Designer.cs">
       <DependentUpon>202607010452378_AddEmergencyContactInactivationTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607052357213_AddPetReactivationFields.cs" />
+    <Compile Include="Migrations\202607052357213_AddPetReactivationFields.Designer.cs">
+      <DependentUpon>202607052357213_AddPetReactivationFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -390,11 +394,15 @@
     <Compile Include="ViewModels\PaymentReportRowVM.cs" />
     <Compile Include="ViewModels\PaymentReportVM.cs" />
     <Compile Include="ViewModels\PaymentSummaryVM.cs" />
+    <Compile Include="ViewModels\PetDeleteVM.cs" />
     <Compile Include="ViewModels\PetDetailsVM.cs" />
     <Compile Include="ViewModels\PetFormVM.cs" />
+    <Compile Include="ViewModels\PetReactivateVM.cs" />
     <Compile Include="ViewModels\PetReportFilterVM.cs" />
     <Compile Include="ViewModels\PetReportRowVM.cs" />
     <Compile Include="ViewModels\PetReportVM.cs" />
+    <Compile Include="ViewModels\PetSearchVM.cs" />
+    <Compile Include="ViewModels\PetSummaryVM.cs" />
     <Compile Include="ViewModels\PetVaccineDetailsVM.cs" />
     <Compile Include="ViewModels\PetVaccineFormVM.cs" />
     <Compile Include="ViewModels\PetVaccineSummaryVM.cs" />
@@ -517,6 +525,12 @@
     <Content Include="Views\CustomerPets\Read.cshtml" />
     <Content Include="Views\CustomerPets\Update.cshtml" />
     <Content Include="Views\CustomerPets\Delete.cshtml" />
+    <Content Include="Views\Pets\Create.cshtml" />
+    <Content Include="Views\Pets\Search.cshtml" />
+    <Content Include="Views\Pets\Read.cshtml" />
+    <Content Include="Views\Pets\Delete.cshtml" />
+    <Content Include="Views\Pets\Update.cshtml" />
+    <Content Include="Views\Pets\Reactivate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -610,6 +624,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607010452378_AddEmergencyContactInactivationTracking.resx">
       <DependentUpon>202607010452378_AddEmergencyContactInactivationTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607052357213_AddPetReactivationFields.resx">
+      <DependentUpon>202607052357213_AddPetReactivationFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

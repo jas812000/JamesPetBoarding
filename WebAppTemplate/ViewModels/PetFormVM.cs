@@ -6,11 +6,13 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace JamesPetBoarding.ViewModels
 {
     public class PetFormVM
     {
+
         public Guid PetId { get; set; }
 
         public Guid? VetId { get; set; }
@@ -33,9 +35,10 @@ namespace JamesPetBoarding.ViewModels
         [Required, Range(0.01, 9999.99)]
         public decimal Weight { get; set; }
 
-        public bool IsActive { get; set; }
-
         [MaxLength(2000)]
         public string Notes { get; set; }
+
+        public SelectList VeterinarianSelectList { get; set; }
+
     }
 }

@@ -56,7 +56,7 @@
     @if (!Model.IsActive)
     {
         <div class="col-md-8">
-            <h4 class="mt-4">Inactive Information</h4>
+            <h4 class="mt-4">Deactivation Information</h4>
         </div>
 
         <div class="col-md-4">
@@ -108,6 +108,7 @@
             <tbody>
 
                 @if (Model.CustomerPets.Any())
+
                 {
                     foreach (var pet in Model.CustomerPets)
                     {
