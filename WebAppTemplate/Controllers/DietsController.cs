@@ -1,5 +1,6 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using Microsoft.Ajax.Utilities;
 using Microsoft.Owin.BuilderProperties;
 using Microsoft.SqlServer.Server;
@@ -22,179 +23,207 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: Diets/Create
-        // /Diets/Update?dietId=USE_EXISTING_DIET_ID&petId=USE_EXISTING_PET_ID&foodName=Nutro&amount=0.5%20cup&frequency=OnceDaily&notes=food%20already%20separated%20in%20containers
-        public ActionResult Create(
-            Guid petId,
-            string foodName,
-            string amount,
-            FrequencyEnum frequency,
-            string notes
-        )
+        public ActionResult Create(Guid petId)
         {
             
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(foodName)) { return Content("Name of the food product is required."); }
-            if (string.IsNullOrWhiteSpace(amount)) { return Content("Amount to be fed is required."); }
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
-            PetModel petModel = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-
-            if (petModel == null) 
+            if (pet == null) 
             {
                 return Content("Pet ID #" + petId + " does not exist."); 
             }
 
-            DietModel dietModel = new DietModel();
+            DietFormVM dietForm = new DietFormVM();
 
-            dietModel.PetId = petId;
-            dietModel.FoodName = foodName;
-            dietModel.Amount = amount;
-            dietModel.Frequency = frequency;
-            dietModel.Notes = notes;
-
-            try 
-            { 
-                dbContext.Diets.Add( dietModel );
-                dbContext.SaveChanges();
-
-                return Content("Successfully added " + foodName + " to the database.");
-            } 
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            dietForm.PetId = petId;
+    
+            return View(dietForm); 
 
         }
 
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(DietFormVM dietForm)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == dietForm.PetId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + dietForm.PetId + " does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dietForm);
+            }
+
+            DietModel diet = new DietModel();
+
+            diet.PetId = dietForm.PetId;
+            diet.FoodName = dietForm.FoodName;
+            diet.Amount = dietForm.Amount;
+            diet.Frequency = dietForm.Frequency;
+            diet.Notes = dietForm.Notes;
+
+            dbContext.Diets.Add(diet);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Diets", new { dietId = diet.DietId }); 
+        }
+
+
         // GET: Diets/Read
-        // Diets/Read?dietId=USE_EXISTING_DIET_ID
         public ActionResult Read(Guid dietId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietId);
+            DietModel diet = dbContext.Diets.Include("Pet").FirstOrDefault(x => x.DietId == dietId);
 
             if (diet == null) 
             { 
                 return Content("Diet ID #" +  dietId + " does not exist."); 
             }
 
+            DietDetailsVM dietDetails = new DietDetailsVM();
+
+            dietDetails.DietId = diet.DietId;
+            dietDetails.PetId = diet.PetId;
+            dietDetails.PetNameDisplay = diet.Pet.PetName;
+            dietDetails.FoodName = diet.FoodName;
+            dietDetails.Amount = diet.Amount;
+            dietDetails.FrequencyDisplay = diet.Frequency.ToString();
+
             string notesDisplay = string.IsNullOrWhiteSpace(diet.Notes)
                 ? "No notes"
                 : diet.Notes;
 
-            string frequencyDisplay = diet.Frequency.ToString();
+            dietDetails.NotesDisplay = notesDisplay;
 
-            switch (diet.Frequency) 
-            {
-                case FrequencyEnum.OnceDaily:
-                    frequencyDisplay = "Once Daily";
-                    break;
+            return View(dietDetails);
 
-                case FrequencyEnum.TwiceDaily:
-                    frequencyDisplay = "Twice Daily";
-                    break;
-
-                case FrequencyEnum.ThreeTimesDaily:
-                    frequencyDisplay = "Three Times Daily";
-                    break;
-
-                case FrequencyEnum.FourTimesDaily:
-                    frequencyDisplay = "Four Times Daily";
-                    break;
-
-                case FrequencyEnum.EveryOtherDay:
-                    frequencyDisplay = "Every Other Day";
-                    break;
-
-                case FrequencyEnum.OnceWeekly:
-                    frequencyDisplay = "Once Weekly";
-                    break;
-
-                case FrequencyEnum.OnceMonthly:
-                    frequencyDisplay = "Once Monthly";
-                    break;
-
-                case FrequencyEnum.AsNeeded:
-                    frequencyDisplay = "As Needed";
-                    break;
-            }
-
-            return Content(
-                "Diet ID #" + diet.DietId + 
-                "<br />Pet ID #" + diet.PetId +
-                "<br />Food Name: " + diet.FoodName +
-                "<br />Amount: " + diet.Amount +
-                "<br />Frequency: " + frequencyDisplay +
-                "<br />Notes: " + notesDisplay
-            );
         }
 
 
         // GET: Diets/Update
-        // /Diets/Create?petId=USE_EXISTING_PET_ID&foodName=Nutro&amount=0.5%20cup&frequency=OnceDaily&notes=food%20already%20separated%20in%20containers
-        public ActionResult Update(
-            Guid dietId, 
-            Guid petId, 
-            string foodName, 
-            string amount, 
-            FrequencyEnum frequency, 
-            string notes
-        )
+        public ActionResult Update(Guid dietId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietId);
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-
-            if (diet == null) { return Content("Diet ID #" + dietId + " does not exist."); }
-
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
-
-            if (string.IsNullOrWhiteSpace(foodName)) { return Content("Name of the food product is required."); }
-            if (string.IsNullOrWhiteSpace(amount)) { return Content("Amount to be fed is required."); }
-
-            diet.PetId = petId;
-            diet.FoodName = foodName;
-            diet.Amount = amount;
-            diet.Frequency = frequency;
-            diet.Notes = notes;
-
-            try 
+            if (diet == null)
             {
-                dbContext.SaveChanges();
-                return Content("Diet ID #" + diet.DietId + " successfully updated.");
+                return Content("Diet ID #" + dietId + " does not exist.");
             }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
+
+            DietFormVM dietForm = new DietFormVM();
+
+            dietForm.DietId = diet.DietId;
+            dietForm.PetId = diet.PetId;
+            dietForm.FoodName = diet.FoodName;
+            dietForm.Amount = diet.Amount;
+            dietForm.Frequency = diet.Frequency;
+            dietForm.Notes = diet.Notes;
+
+            return View(dietForm); 
+  
+        }
+
+
+        // POST: Diets/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(DietFormVM dietForm)
+        {
+            
+            if (!ModelState.IsValid)
+            {
+                return View(dietForm);
             }
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietForm.DietId);
+
+            if (diet == null)
+            {
+                return Content("Diet ID #" + dietForm.DietId + " does not exist.");
+            }
+
+            diet.PetId = dietForm.PetId;
+            diet.FoodName = dietForm.FoodName;
+            diet.Amount = dietForm.Amount;
+            diet.Frequency = dietForm.Frequency;
+            diet.Notes = dietForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Diets", new { dietId = diet.DietId });
+
         }
 
 
         // GET: Diets/Delete
-        // /Diets/Delete?dietId=USE_EXISTING_DIET_ID
         public ActionResult Delete(Guid dietId)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietId);
+            DietModel diet = dbContext.Diets.Include("Pet").FirstOrDefault(x => x.DietId == dietId);
 
-            if (diet == null) { return Content("Diet ID #" + dietId + " does not exist."); }
+            if (diet == null) 
+            { 
+                
+                return Content("Diet ID #" + dietId + " does not exist."); 
+            }
 
-            try 
+            DietDeleteVM dietDelete = new DietDeleteVM();
+
+            dietDelete.DietId = diet.DietId;
+            dietDelete.PetId = diet.PetId;
+            dietDelete.PetNameDisplay = diet.Pet.PetName;
+            dietDelete.FoodName = diet.FoodName;
+            dietDelete.Amount = diet.Amount;
+            dietDelete.FrequencyDisplay = diet.Frequency.ToString();
+
+            string notesDisplay = string.IsNullOrWhiteSpace(diet.Notes)
+                ? "No notes"
+                : diet.Notes;
+
+            dietDelete.NotesDisplay = notesDisplay;
+   
+            return View(dietDelete); 
+
+        }
+
+
+        // POST: Diets/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(DietDeleteVM dietDelete)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietDelete.DietId);
+
+            if (diet == null)
             {
-                dbContext.Diets.Remove(diet);
-                dbContext.SaveChanges();
-                return Content("Diet ID #" + dietId + " has been successfully deleted.");
+
+                return Content("Diet ID #" + dietDelete.DietId + " does not exist.");
             }
-            catch (Exception ex)
-            {  
-                return Content(ex.Message); 
-            }
+
+            Guid petId = diet.PetId;
+
+            dbContext.Diets.Remove(diet);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Pets", new { petId });
         }
 
     }

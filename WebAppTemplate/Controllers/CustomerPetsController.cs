@@ -132,7 +132,6 @@ namespace JamesPetBoarding.Controllers
             customerPetSummary.BreedDisplay = customerPet.Pet.Breed;
             customerPetSummary.RelationshipTypeDisplay = customerPet.RelationshipType.ToString();
 
-
             return View(customerPetSummary);
         }
 

@@ -342,6 +342,7 @@
     <Compile Include="ViewModels\CustomerReportVM.cs" />
     <Compile Include="ViewModels\CustomerSearchResultVM.cs" />
     <Compile Include="ViewModels\CustomerSearchVM.cs" />
+    <Compile Include="ViewModels\DietDeleteVM.cs" />
     <Compile Include="ViewModels\EmergencyContactDeleteVM.cs" />
     <Compile Include="ViewModels\EmergencyContactReactivateVM.cs" />
     <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
@@ -531,6 +532,10 @@
     <Content Include="Views\Pets\Delete.cshtml" />
     <Content Include="Views\Pets\Update.cshtml" />
     <Content Include="Views\Pets\Reactivate.cshtml" />
+    <Content Include="Views\Diets\Create.cshtml" />
+    <Content Include="Views\Diets\Read.cshtml" />
+    <Content Include="Views\Diets\Update.cshtml" />
+    <Content Include="Views\Diets\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -538,7 +543,6 @@
     <Folder Include="Views\Boardings\" />
     <Folder Include="Views\BoardingUnits\" />
     <Folder Include="Views\Dashboard\" />
-    <Folder Include="Views\Diets\" />
     <Folder Include="Views\Employees\" />
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />

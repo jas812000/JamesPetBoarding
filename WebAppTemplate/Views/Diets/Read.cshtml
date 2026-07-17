@@ -1,0 +1,63 @@
+﻿@model JamesPetBoarding.ViewModels.DietDetailsVM
+@{
+    ViewBag.Title = "Read Diet";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Diet Profile</h2>
+    <p class="lead">
+        View diet information.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Diet ID</label>
+        @Html.TextBoxFor(x => x.DietId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet ID</label>
+        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Food Name</label>
+        @Html.TextBoxFor(x => x.FoodName, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Amount</label>
+        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Frequency</label>
+        @Html.TextBoxFor(x => x.FrequencyDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Back to Pet Profile", "Read", "Pets",
+            new { petId = Model.PetId },
+            new { @class = "btn btn-secondary" })
+    </div>
+
+</div>
+
+
+
+
+
