@@ -1,0 +1,92 @@
+﻿@model JamesPetBoarding.ViewModels.MedicationFormVM
+@{
+    ViewBag.Title = "Update Medication";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Update Medication Profile</h2>
+    <p class="lead">
+        Enter medication information to update the existing medication profile for this pet.
+    </p>
+</div>
+
+@using (Html.BeginForm("Update", "Medications", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.MedicationId)
+
+    @Html.HiddenFor(x => x.PetId)
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="col-md-6">
+        <label class="form-label">Medication ID</label>
+        @Html.TextBoxFor(x => x.MedicationId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pet ID</label>
+        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Medication Name</label>
+        @Html.TextBoxFor(x => x.MedicationName, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.MedicationName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Dosage</label>
+        @Html.TextBoxFor(x => x.Dosage, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Dosage, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Route</label>
+        @Html.EnumDropDownListFor(x => x.Route, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.Route, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Frequency</label>
+        @Html.EnumDropDownListFor(x => x.Frequency, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.Frequency, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Start Date</label>
+        @Html.TextBoxFor(x => x.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.StartDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">End Date</label>
+        @Html.TextBoxFor(x => x.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.EndDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-success me-2">Update Medication</button>
+
+        @Html.ActionLink(
+            "Cancel",
+            "Read",
+            "Pets",
+           new { petId = Model.PetId },
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
+}

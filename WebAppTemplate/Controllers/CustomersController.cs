@@ -210,7 +210,7 @@ namespace JamesPetBoarding.Controllers
             }
 
             List<CustomerPetModel> customerPets = dbContext.CustomerPets
-                .Include("Pet")
+                .Include(x => x.Pet)
                 .Where(x => x.CustomerId == customerId)
                 .ToList();
 

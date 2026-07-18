@@ -1,15 +1,11 @@
-﻿using JamesPetBoarding.Enums;
-using JamesPetBoarding.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class MedicationDetailsVM
+    public class MedicationDeleteVM
     {
         public Guid MedicationId { get; set; }
 
@@ -30,6 +26,5 @@ namespace JamesPetBoarding.ViewModels
         public string EndDateDisplay { get; set; }
 
         public string NotesDisplay { get; set; }
-
     }
 }

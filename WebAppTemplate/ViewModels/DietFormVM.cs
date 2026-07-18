@@ -15,6 +15,8 @@ namespace JamesPetBoarding.ViewModels
 
         public Guid PetId { get; set; }
 
+        public string PetNameDisplay { get; set; }
+
         [Required, MaxLength(50)]
         public string FoodName { get; set; }
 

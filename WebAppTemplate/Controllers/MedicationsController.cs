@@ -1,7 +1,10 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -18,204 +21,242 @@ namespace JamesPetBoarding.Controllers
         }
 
         // GET: Medications/Create
-        // Medications/Create?petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=Oral&frequency=OnceDaily&startDate=2026-06-10&endDate=&notes=give%20with%20food
-        public ActionResult Create(
-            Guid petId, 
-            string medicationName, 
-            string dosage, 
-            MedicationRouteEnum route, 
-            FrequencyEnum frequency,
-            DateTime startDate,
-            DateTime? endDate,
-            string notes
-        )
+        public ActionResult Create(Guid petId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
-
-            if (string.IsNullOrWhiteSpace(medicationName)) { return Content("Name of the medication is required."); }
-            if (string.IsNullOrWhiteSpace(dosage)) { return Content("Medication dosage is required."); }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
-
-            MedicationModel medication = new MedicationModel();
-
-            medication.PetId = petId;
-            medication.MedicationName = medicationName;
-            medication.Dosage = dosage;
-            medication.Route = route;
-            medication.Frequency = frequency;
-            medication.StartDate = startDate;
-            medication.EndDate = endDate;
-            medication.Notes = notes;
-
-            try
-            {
-
-                dbContext.Medications.Add(medication);
-                dbContext.SaveChanges();
-
-                return Content("Successfully added " + medication.MedicationName + " to the database.");
-            } 
-            catch (Exception ex) 
+            if (pet == null) 
             { 
-                return Content(ex.Message); 
+                return Content("Pet ID #" + petId + " does not exist."); 
             }
+
+            MedicationFormVM medicationForm = new MedicationFormVM();
+
+            medicationForm.PetId = petId;
+            medicationForm.PetNameDisplay = pet.PetName;
+
+            return View(medicationForm); 
         }
 
 
-        // GET: Medications/Read
-        // Medications/Read?medicationId=USE_EXISTING_MEDICATION_ID
-        public ActionResult Read(Guid medicationId)
+        //POST: Medications/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(MedicationFormVM medicationForm)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            MedicationModel medication = dbContext.Medications.FirstOrDefault(x => x.MedicationId == medicationId);
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == medicationForm.PetId);
 
-            if (medication == null) { return Content("Medication ID #" + medicationId + " does not exist."); }
+            if (pet == null)
+            {
+                return Content("Pet ID #" + medicationForm.PetId + " does not exist.");
+            }
 
-            string endDateDisplay = medication.EndDate == null
-                ? "No end date"
-                : medication.EndDate.Value.ToString("MM/dd/yyyy");
+            if (medicationForm.EndDate.HasValue && medicationForm.EndDate.Value < medicationForm.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "End date cannot be before start date.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                medicationForm.PetNameDisplay = pet.PetName;
+                return View(medicationForm);
+            }
+
+            MedicationModel medication = new MedicationModel();
+
+            medication.PetId = medicationForm.PetId;
+            medication.MedicationName = medicationForm.MedicationName;
+            medication.Dosage = medicationForm.Dosage;
+            medication.Route = medicationForm.Route;
+            medication.Frequency = medicationForm.Frequency;
+            medication.StartDate = medicationForm.StartDate;
+            medication.EndDate = medicationForm.EndDate;
+            medication.Notes = medicationForm.Notes;
+
+            dbContext.Medications.Add(medication);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Medications", new { medicationId = medication.MedicationId });
+        }
+
+        // GET: Medications/Read
+        public ActionResult Read(Guid medicationId)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            MedicationModel medication = dbContext.Medications
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.MedicationId == medicationId);
+
+            if (medication == null) 
+            { 
+                return Content("Medication ID #" + medicationId + " does not exist."); 
+            }
+
+            MedicationDetailsVM medicationDetails = new MedicationDetailsVM();
+
+            medicationDetails.MedicationId = medication.MedicationId;
+            medicationDetails.PetId = medication.PetId;
+            medicationDetails.PetNameDisplay = medication.Pet.PetName;
+            medicationDetails.MedicationName = medication.MedicationName;
+            medicationDetails.Dosage = medication.Dosage;
+            medicationDetails.RouteDisplay = medication.Route.ToString();
+            medicationDetails.FrequencyDisplay = medication.Frequency.ToString();
+            medicationDetails.StartDateDisplay = medication.StartDate.ToString("MM/dd/yyyy");
+            medicationDetails.EndDateDisplay = medication.EndDate.HasValue
+                ? medication.EndDate.Value.ToString("MM/dd/yyyy")
+                : "No end date";
 
             string notesDisplay = string.IsNullOrWhiteSpace(medication.Notes)
                 ? "No notes"
                 : medication.Notes;
 
-            string routeDisplay = medication.Route.ToString();
+            medicationDetails.NotesDisplay = notesDisplay;
 
-            switch (medication.Route)
-            {
-                case MedicationRouteEnum.Otic:
-                    routeDisplay = "Otic (Ear)";
-                    break;
+            return View(medicationDetails);
 
-                case MedicationRouteEnum.Ophthalmic:
-                    routeDisplay = "Ophthalmic (Eye)";
-                    break;
-            }
-
-            string frequencyDisplay = medication.Frequency.ToString();
-
-            switch (medication.Frequency)
-            {
-                case FrequencyEnum.OnceDaily:
-                    frequencyDisplay = "Once Daily";
-                    break;
-
-                case FrequencyEnum.TwiceDaily:
-                    frequencyDisplay = "Twice Daily";
-                    break;
-
-                case FrequencyEnum.ThreeTimesDaily:
-                    frequencyDisplay = "Three Times Daily";
-                    break;
-
-                case FrequencyEnum.FourTimesDaily:
-                    frequencyDisplay = "Four Times Daily";
-                    break;
-
-                case FrequencyEnum.EveryOtherDay:
-                    frequencyDisplay = "Every Other Day";
-                    break;
-
-                case FrequencyEnum.OnceWeekly:
-                    frequencyDisplay = "Once Weekly";
-                    break;
-
-                case FrequencyEnum.OnceMonthly:
-                    frequencyDisplay = "Once Monthly";
-                    break;
-
-                case FrequencyEnum.AsNeeded:
-                    frequencyDisplay = "As Needed";
-                    break;
-            }
-
-            return Content(
-                "Medication ID #" + medication.MedicationId +
-                "<br />Pet ID #" + medication.PetId +
-                "<br />Medication name: " + medication.MedicationName +
-                "<br />Dosage: " + medication.Dosage +
-                "<br />Route: " + routeDisplay +
-                "<br />Frequency: " + frequencyDisplay +
-                "<br />Start Date: " + medication.StartDate.ToString("MM/dd/yyyy") +
-                "<br />End Date: " + endDateDisplay +
-                "<br />Notes: " + notesDisplay
-            );
         }
 
 
         // GET: Medications/Update
-        // Medications/Update?medicationId=USE_EXISTING_MEDICATION_ID&petId=USE_EXISTING_PET_ID&medicationName=Carprofen&dosage=25mg&route=Oral&frequency=TwiceDaily&startDate=2026-06-08&endDate=2026-06-20&notes=give%20with%20food
-        public ActionResult Update(
-            Guid medicationId,
-            Guid petId,
-            string medicationName,
-            string dosage,
-            MedicationRouteEnum route,
-            FrequencyEnum frequency,
-            DateTime startDate,
-            DateTime? endDate,
-            string notes
-        )
+        public ActionResult Update(Guid medicationId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            MedicationModel medication = dbContext.Medications.FirstOrDefault(x => x.MedicationId == medicationId);
+            MedicationModel medication = dbContext.Medications
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.MedicationId == medicationId);
 
-            if (medication == null) { return Content("Medication ID #" + medicationId + " does not exist."); }
-
-            if (string.IsNullOrWhiteSpace(medicationName)) { return Content("Name of the medication is required."); }
-            if (string.IsNullOrWhiteSpace(dosage)) { return Content("Medication dosage is required."); }
-
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
-
-            medication.PetId = petId;
-            medication.MedicationName = medicationName;
-            medication.Dosage = dosage;
-            medication.Route = route;
-            medication.Frequency = frequency;
-            medication.StartDate = startDate;
-            medication.EndDate = endDate;
-            medication.Notes = notes;
-
-            try 
-            {
-                dbContext.SaveChanges();
-                return Content("Medication ID #" + medication.MedicationId + " successfully updated.");
-            } 
-            catch (Exception ex) 
+            if (medication == null) 
             { 
-                return Content(ex.Message); 
+                return Content("Medication ID #" + medicationId + " does not exist."); 
             }
+
+            MedicationFormVM medicationForm = new MedicationFormVM();
+
+            medicationForm.MedicationId = medication.MedicationId;
+            medicationForm.PetId = medication.PetId;
+            medicationForm.PetNameDisplay = medication.Pet.PetName;
+            medicationForm.MedicationName = medication.MedicationName;
+            medicationForm.Dosage = medication.Dosage;
+            medicationForm.Route = medication.Route;
+            medicationForm.Frequency = medication.Frequency;
+            medicationForm.StartDate = medication.StartDate;
+            medicationForm.EndDate = medication.EndDate;
+            medicationForm.Notes = medication.Notes;
+
+            return View(medicationForm);
         }
 
 
+        //POST: Medications/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(MedicationFormVM medicationForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            MedicationModel medication = dbContext.Medications
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.MedicationId == medicationForm.MedicationId);
+
+            if (medication == null)
+            {
+                return Content("Medication ID #" + medicationForm.MedicationId + " does not exist.");
+            }
+
+            if (medicationForm.EndDate.HasValue && medicationForm.EndDate.Value < medicationForm.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "End date cannot be before start date.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                medicationForm.PetNameDisplay = medication.Pet.PetName;
+                return View(medicationForm);
+            }
+
+            medication.MedicationName = medicationForm.MedicationName;
+            medication.Dosage = medicationForm.Dosage;
+            medication.Route = medicationForm.Route;
+            medication.Frequency = medicationForm.Frequency;
+            medication.StartDate = medicationForm.StartDate;
+            medication.EndDate = medicationForm.EndDate;
+            medication.Notes = medicationForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Medications", new { medicationId = medication.MedicationId });
+        }
+
 
         // GET: Medications/Delete
-        // Medications/Delete?medicationId=USE_EXISTING_MEDICATION_ID
         public ActionResult Delete(Guid medicationId)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            MedicationModel medication = dbContext.Medications.FirstOrDefault(x => x.MedicationId == medicationId);
+            MedicationModel medication = dbContext.Medications
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.MedicationId == medicationId);
 
-            if (medication == null) { return Content("Medication ID #" + medicationId + " does not exist."); }
-
-            try 
-            {
-                dbContext.Medications.Remove(medication);
-                dbContext.SaveChanges();
-                return Content("Medication ID #" + medication.MedicationId + " has been successfully deleted.");
-            } 
-            catch (Exception ex) 
+            if (medication == null) 
             { 
-                return Content(ex.Message); 
+                return Content("Medication ID #" + medicationId + " does not exist."); 
             }
+
+            MedicationDeleteVM medicationDelete = new MedicationDeleteVM();
+
+            medicationDelete.MedicationId = medication.MedicationId;
+            medicationDelete.PetId = medication.PetId;
+            medicationDelete.PetNameDisplay = medication.Pet.PetName;
+            medicationDelete.MedicationName = medication.MedicationName;
+            medicationDelete.Dosage = medication.Dosage;
+            medicationDelete.RouteDisplay = medication.Route.ToString();
+            medicationDelete.FrequencyDisplay = medication.Frequency.ToString();
+            medicationDelete.StartDateDisplay = medication.StartDate.ToString("MM/dd/yyyy");
+            medicationDelete.EndDateDisplay = medication.EndDate.HasValue
+                ? medication.EndDate.Value.ToString("MM/dd/yyyy")
+                : "No end date";
+
+            string notesDisplay = string.IsNullOrWhiteSpace(medication.Notes)
+                ? "No notes"
+                : medication.Notes;
+
+            medicationDelete.NotesDisplay = notesDisplay;
+
+            return View(medicationDelete);
+
+        }
+
+
+        // POST: Medications/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(MedicationDeleteVM medicationDelete)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            MedicationModel medication = dbContext.Medications
+                .FirstOrDefault(x => x.MedicationId == medicationDelete.MedicationId);
+
+            if (medication == null)
+            {
+                return Content("Medication ID #" + medicationDelete.MedicationId + " does not exist.");
+            }
+            Guid petId = medication.PetId;
+
+            dbContext.Medications.Remove(medication);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Pets", new { petId });
+
         }
     }
 }

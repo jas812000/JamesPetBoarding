@@ -351,6 +351,7 @@
     <Compile Include="ViewModels\InvoiceReportRowVM.cs" />
     <Compile Include="ViewModels\InvoiceReportVM.cs" />
     <Compile Include="ViewModels\InvoiceSummaryVM.cs" />
+    <Compile Include="ViewModels\MedicationDeleteVM.cs" />
     <Compile Include="ViewModels\PaymentDetailsVM.cs" />
     <Compile Include="ViewModels\PaymentFormVM.cs" />
     <Compile Include="Models\PaymentModel.cs" />
@@ -536,6 +537,10 @@
     <Content Include="Views\Diets\Read.cshtml" />
     <Content Include="Views\Diets\Update.cshtml" />
     <Content Include="Views\Diets\Delete.cshtml" />
+    <Content Include="Views\Medications\Create.cshtml" />
+    <Content Include="Views\Medications\Read.cshtml" />
+    <Content Include="Views\Medications\Update.cshtml" />
+    <Content Include="Views\Medications\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -546,7 +551,6 @@
     <Folder Include="Views\Employees\" />
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
-    <Folder Include="Views\Medications\" />
     <Folder Include="Views\Payments\" />
     <Folder Include="Views\PetVaccines\" />
     <Folder Include="Views\Services\" />

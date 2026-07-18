@@ -178,7 +178,7 @@ namespace JamesPetBoarding.Controllers
             petDetails.SpeciesDisplay = pet.Species.ToString();
             petDetails.BreedDisplay = pet.Breed;
             petDetails.SexDisplay = pet.Sex.ToString();
-            petDetails.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+            petDetails.BirthDateDisplay = pet.BirthDate.ToString("MM/dd/yyyy");
             petDetails.AgeDisplay = age.ToString();
             petDetails.WeightDisplay = pet.Weight.ToString();
             petDetails.IsActive = pet.IsActive;
@@ -194,7 +194,7 @@ namespace JamesPetBoarding.Controllers
                 : "Not Applicable";
 
             petDetails.InactivatedDateDisplay = pet.InactivatedDate.HasValue
-                ? pet.InactivatedDate.Value.ToShortDateString()
+                ? pet.InactivatedDate.Value.ToString("MM/dd/yyyy")
                 : "Not Applicable";
 
             petDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
@@ -202,7 +202,7 @@ namespace JamesPetBoarding.Controllers
                 : pet.InactiveNotes;
 
             petDetails.ReactivatedDateDisplay = pet.ReactivatedDate.HasValue
-                ? pet.ReactivatedDate.Value.ToShortDateString()
+                ? pet.ReactivatedDate.Value.ToString("MM/dd/yyyy")
                 : "Not Applicable";
 
             petDetails.ReactivatedNotesDisplay = string.IsNullOrWhiteSpace(pet.ReactivatedNotes)
@@ -222,6 +222,55 @@ namespace JamesPetBoarding.Controllers
                 petDetails.VeterinarianDisplay = "No veterinarian assigned";
             }
 
+            List<DietModel> diets = dbContext.Diets
+                .Where(x => x.PetId  == petId)
+                .ToList();
+
+            foreach (DietModel diet in diets)
+            {
+                DietSummaryVM dietSummary = new DietSummaryVM();
+
+                dietSummary.DietId = diet.DietId;
+                dietSummary.FoodName = diet.FoodName;
+                dietSummary.Amount = diet.Amount;
+
+                petDetails.Diets.Add(dietSummary);
+
+            }
+
+            List<MedicationModel> medications = dbContext.Medications
+               .Where(x => x.PetId == petId)
+               .ToList();
+
+            foreach (MedicationModel medication in medications)
+            {
+                MedicationSummaryVM medicationSummary = new MedicationSummaryVM();
+
+                medicationSummary.MedicationId = medication.MedicationId;
+                medicationSummary.MedicationName = medication.MedicationName;
+                medicationSummary.Dosage = medication.Dosage;
+
+                petDetails.Medications.Add(medicationSummary);
+
+            }
+
+            List<PetVaccineModel> petVaccines = dbContext.PetVaccines
+                .Include(x => x.Vaccine)
+                .Where(x => x.PetId == petId)
+                .ToList();
+
+            foreach (PetVaccineModel petVaccine in petVaccines)
+            {
+                PetVaccineSummaryVM petVaccineSummary = new PetVaccineSummaryVM();
+
+                petVaccineSummary.PetVaccineId = petVaccine.PetVaccineId;
+                petVaccineSummary.VaccineNameDisplay = petVaccine.Vaccine.VaccineName;
+                petVaccineSummary.DateGivenDisplay = petVaccine.DateGiven.ToString("MM/dd/yyyy");
+                petVaccineSummary.ExpirationDateDisplay = petVaccine.ExpirationDate.ToString("MM/dd/yyyy");
+
+                petDetails.PetVaccines.Add(petVaccineSummary);
+
+            }
             return View(petDetails);
         }
 
