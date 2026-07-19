@@ -413,11 +413,14 @@
     <Compile Include="ViewModels\RevenueReportVM.cs" />
     <Compile Include="ViewModels\ServiceDetailsVM.cs" />
     <Compile Include="ViewModels\ServiceFormVM.cs" />
+    <Compile Include="ViewModels\VaccineDeleteVM.cs" />
     <Compile Include="ViewModels\VaccineDetailsVM.cs" />
     <Compile Include="ViewModels\VaccineFormVM.cs" />
     <Compile Include="ViewModels\VaccineComplianceReportFilterVM.cs" />
     <Compile Include="ViewModels\VaccineComplianceReportRowVM.cs" />
     <Compile Include="ViewModels\VaccineComplianceReportVM.cs" />
+    <Compile Include="ViewModels\VaccineSearchVM.cs" />
+    <Compile Include="ViewModels\VaccineSummaryVM.cs" />
     <Compile Include="ViewModels\VeterinarianDetailsVM.cs" />
     <Compile Include="ViewModels\VeterinarianFormVM.cs" />
     <Compile Include="ViewModels\VoidedPaymentReportFilterVM.cs" />
@@ -541,6 +544,11 @@
     <Content Include="Views\Medications\Read.cshtml" />
     <Content Include="Views\Medications\Update.cshtml" />
     <Content Include="Views\Medications\Delete.cshtml" />
+    <Content Include="Views\Vaccines\Search.cshtml" />
+    <Content Include="Views\Vaccines\Create.cshtml" />
+    <Content Include="Views\Vaccines\Read.cshtml" />
+    <Content Include="Views\Vaccines\Update.cshtml" />
+    <Content Include="Views\Vaccines\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -554,7 +562,6 @@
     <Folder Include="Views\Payments\" />
     <Folder Include="Views\PetVaccines\" />
     <Folder Include="Views\Services\" />
-    <Folder Include="Views\Vaccines\" />
     <Folder Include="Views\Veterinarians\" />
   </ItemGroup>
   <ItemGroup>

@@ -112,8 +112,8 @@ namespace JamesPetBoarding.Controllers
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerPetModel customerPet = dbContext.CustomerPets
-                .Include("Customer")
-                .Include("Pet")
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
                 .FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
             if (customerPet == null)
@@ -141,7 +141,10 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.Include("Customer").Include("Pet").FirstOrDefault(x => x.CustomerPetId == customerPetId);
+            CustomerPetModel customerPet = dbContext.CustomerPets
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
             if (customerPet == null)
             {
@@ -230,7 +233,10 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.Include("Customer").Include("Pet").FirstOrDefault(x => x.CustomerPetId == customerPetId);
+            CustomerPetModel customerPet = dbContext.CustomerPets
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.CustomerPetId == customerPetId);
 
             if (customerPet == null)
             {
@@ -259,8 +265,8 @@ namespace JamesPetBoarding.Controllers
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerPetModel customerPet = dbContext.CustomerPets
-                .Include("Customer")
-                .Include("Pet")
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
                 .FirstOrDefault(x => x.CustomerPetId == customerPetForm.CustomerPetId);
 
             if (customerPet == null)

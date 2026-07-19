@@ -1,0 +1,66 @@
+﻿@model JamesPetBoarding.ViewModels.VaccineDeleteVM
+@{
+    ViewBag.Title = "Delete Vaccine";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Delete Vaccine Profile</h2>
+    <p class="lead">
+        View vaccine profile information before deletion.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("Delete", "Vaccines", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.VaccineId)
+
+
+    <div class="col-md-4">
+        <label class="form-label">Vaccine ID</label>
+        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Vaccine Name</label>
+        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Species</label>
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Required Status</label>
+        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <div class="alert alert-warning">
+            This action will permanently delete this vaccine profile and cannot be undone.
+            Deletion will be blocked if the vaccine is associated with any Pet Vaccine records.
+        </div>
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Delete</button>
+
+        @Html.ActionLink("Cancel", "Read", "Vaccines",
+             new { vaccineId = Model.VaccineId },
+             new { @class = "btn btn-secondary ms-2" }
+         )
+    </div>
+
+}

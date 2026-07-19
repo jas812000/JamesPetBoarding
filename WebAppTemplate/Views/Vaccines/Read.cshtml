@@ -1,0 +1,49 @@
+﻿@model JamesPetBoarding.ViewModels.VaccineDetailsVM
+@{
+    ViewBag.Title = "Read Vaccine";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Vaccine Profile</h2>
+    <p class="lead">
+        View vaccine profile information.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        <label class="form-label">Vaccine ID</label>
+        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Vaccine Name</label>
+        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Species</label>
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Required Status</label>
+        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Back to Search", "Search", "Vaccines",
+            null,
+            new { @class = "btn btn-secondary" })
+    </div>
+
+</div>
+

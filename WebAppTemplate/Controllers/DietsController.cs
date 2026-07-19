@@ -6,7 +6,9 @@ using Microsoft.Owin.BuilderProperties;
 using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -38,12 +40,14 @@ namespace JamesPetBoarding.Controllers
             DietFormVM dietForm = new DietFormVM();
 
             dietForm.PetId = petId;
-    
+
+            dietForm.PetNameDisplay = pet.PetName;
+
             return View(dietForm); 
 
         }
 
-
+        // POST: Diets/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(DietFormVM dietForm)
@@ -60,6 +64,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!ModelState.IsValid)
             {
+                dietForm.PetNameDisplay = pet.PetName;
                 return View(dietForm);
             }
 
@@ -83,7 +88,9 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.Include("Pet").FirstOrDefault(x => x.DietId == dietId);
+            DietModel diet = dbContext.Diets
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.DietId == dietId);
 
             if (diet == null) 
             { 
@@ -115,7 +122,9 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietId);
+            DietModel diet = dbContext.Diets
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.DietId == dietId);
 
             if (diet == null)
             {
@@ -125,10 +134,17 @@ namespace JamesPetBoarding.Controllers
             DietFormVM dietForm = new DietFormVM();
 
             dietForm.DietId = diet.DietId;
+
             dietForm.PetId = diet.PetId;
+
+            dietForm.PetNameDisplay = diet.Pet.PetName;
+
             dietForm.FoodName = diet.FoodName;
+
             dietForm.Amount = diet.Amount;
+
             dietForm.Frequency = diet.Frequency;
+
             dietForm.Notes = diet.Notes;
 
             return View(dietForm); 
@@ -141,22 +157,24 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(DietFormVM dietForm)
         {
-            
-            if (!ModelState.IsValid)
-            {
-                return View(dietForm);
-            }
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietForm.DietId);
+            DietModel diet = dbContext.Diets
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.DietId == dietForm.DietId);
 
             if (diet == null)
             {
                 return Content("Diet ID #" + dietForm.DietId + " does not exist.");
             }
 
-            diet.PetId = dietForm.PetId;
+            if (!ModelState.IsValid)
+            {
+                dietForm.PetNameDisplay = diet.Pet.PetName;
+                return View(dietForm);
+            }
+
             diet.FoodName = dietForm.FoodName;
             diet.Amount = dietForm.Amount;
             diet.Frequency = dietForm.Frequency;
@@ -175,11 +193,12 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            DietModel diet = dbContext.Diets.Include("Pet").FirstOrDefault(x => x.DietId == dietId);
+            DietModel diet = dbContext.Diets
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.DietId == dietId);
 
             if (diet == null) 
-            { 
-                
+            {      
                 return Content("Diet ID #" + dietId + " does not exist."); 
             }
 
@@ -214,7 +233,6 @@ namespace JamesPetBoarding.Controllers
 
             if (diet == null)
             {
-
                 return Content("Diet ID #" + dietDelete.DietId + " does not exist.");
             }
 

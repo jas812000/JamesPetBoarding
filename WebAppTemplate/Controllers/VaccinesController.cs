@@ -1,9 +1,12 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -17,150 +20,274 @@ namespace JamesPetBoarding.Controllers
             return View();
         }
 
+        // GET: Vaccines/Search
+        public ActionResult Search()
+        { 
+            VaccineSearchVM vaccineSearch = new VaccineSearchVM();
+
+            return View(vaccineSearch);    
+        }
 
 
-        // GET: Vaccines/Create
-        // /Vaccines/Create?vaccineName=Rabies&species=Dog&requiredFlag=false&notes=
-        public ActionResult Create(
-            string vaccineName,
-            SpeciesEnum species,
-            bool requiredFlag,
-            string notes
-        )
+        // POST: Vaccines/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search (VaccineSearchVM vaccineSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (string.IsNullOrWhiteSpace(vaccineName)) { return Content("Name of the vaccine is required."); }
+            List<VaccineModel> vaccines = dbContext.Vaccines.ToList();
 
-            VaccineModel existingVaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineName == vaccineName && x.Species == species);
-            if (existingVaccine != null) 
-            { 
-                return Content(vaccineName + " for " + species + " already exists.");
+            if (!string.IsNullOrWhiteSpace(vaccineSearch.VaccineName))
+            {
+                vaccines = vaccines
+                    .Where(x => x.VaccineName.ToLower().Contains(vaccineSearch.VaccineName.ToLower()))
+                    .ToList();
             }
-        
+
+            if (vaccineSearch.Species.HasValue)
+            {
+                vaccines = vaccines
+                    .Where(x => x.Species == vaccineSearch.Species.Value)
+                    .ToList();
+            }
+
+            if (vaccineSearch.RequiredFlag.HasValue)
+            {
+                vaccines = vaccines
+                    .Where(x => x.RequiredFlag == vaccineSearch.RequiredFlag.Value)
+                    .ToList();
+            }
+
+            vaccineSearch.VaccineSummary.Clear();
+
+            foreach (VaccineModel vaccine in vaccines)
+            {
+                vaccineSearch.VaccineSummary.Add(new VaccineSummaryVM
+                { 
+                    VaccineId = vaccine.VaccineId,
+                    VaccineName = vaccine.VaccineName,
+                    SpeciesDisplay = vaccine.Species.ToString(),
+                    RequiredDisplay = vaccine.RequiredFlag
+                    ? "Yes" 
+                    : "No"
+                     
+                });
+            }
+
+            return View(vaccineSearch);
+        }
+
+
+        // GET: Vaccines/Create
+        public ActionResult Create()
+        {
+            VaccineFormVM vaccineForm = new VaccineFormVM();
+
+            return View(vaccineForm);
+            
+        }
+
+
+        // POST: Vaccines/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(VaccineFormVM vaccineForm)
+        {
+
+            if (!ModelState.IsValid)
+            {
+
+                return View(vaccineForm);
+            }
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            VaccineModel existingVaccine = dbContext.Vaccines
+                .FirstOrDefault(x => 
+                x.VaccineName == vaccineForm.VaccineName && 
+                x.Species == vaccineForm.Species.Value);
+
+            if (existingVaccine != null)
+            {
+                ModelState.AddModelError("", vaccineForm.VaccineName + " for " + vaccineForm.Species + " already exists.");
+
+                return View(vaccineForm);
+            }
 
             VaccineModel vaccine = new VaccineModel();
 
-            vaccine.VaccineName = vaccineName;
-            vaccine.Species = species;
-            vaccine.RequiredFlag = requiredFlag;
-            vaccine.Notes = notes;
+            vaccine.VaccineName = vaccineForm.VaccineName;
+            vaccine.Species = vaccineForm.Species.Value;
+            vaccine.RequiredFlag = vaccineForm.RequiredFlag.Value;
+            vaccine.Notes = vaccineForm.Notes;
 
-            try
-            {
-                dbContext.Vaccines.Add( vaccine );
-                dbContext.SaveChanges();
-                return Content(vaccine.VaccineName + " successfully added to the database.");
-            }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            dbContext.Vaccines.Add(vaccine);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { vaccineId = vaccine.VaccineId });
+
         }
 
 
         // GET: Vaccines/Read
-        // /Vaccines/Read?vaccineId=USE_EXISTING_VACCINE_ID
         public ActionResult Read(Guid vaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
-            if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist."); }
+            if (vaccine == null) 
+            { 
+                return Content("Vaccine ID #" + vaccineId + " does not exist."); 
+            }
 
-            string vaccineRequired = vaccine.RequiredFlag
-                ? "Yes" 
-                : "No";
+            VaccineDetailsVM vaccineDetails = new VaccineDetailsVM();
 
-            string notesDisplay = string.IsNullOrWhiteSpace(vaccine.Notes)
+            vaccineDetails.VaccineId = vaccine.VaccineId;
+            vaccineDetails.VaccineName = vaccine.VaccineName;
+            vaccineDetails.SpeciesDisplay = vaccine.Species.ToString();
+            vaccineDetails.RequiredDisplay = vaccine.RequiredFlag ? "Yes" : "No";
+            vaccineDetails.Notes = string.IsNullOrWhiteSpace(vaccine.Notes)
                 ? "No notes"
                 : vaccine.Notes;
 
-            string speciesDisplay = vaccine.Species.ToString();
 
-            return Content(
-                "Vaccine ID #" + vaccine.VaccineId +
-                "<br />Vaccine Name: " + vaccine.VaccineName +
-                "<br />Species: " + speciesDisplay +
-                "<br />Vaccine Required: " + vaccineRequired +
-                "<br />Notes: " + notesDisplay
-            );
+            return View(vaccineDetails);
         }
 
 
         // GET: Vaccines/Update
-        // /Vaccines/Update?vaccineId=USE_EXISTING_VACCINE_ID&vaccineName=Rabies&species=Dog&requiredFlag=true&notes=annual%20by%20law
-        public ActionResult Update(
-            Guid vaccineId,
-            string vaccineName,
-            SpeciesEnum species,
-            bool requiredFlag,
-            string notes
-        )
+        public ActionResult Update(Guid vaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
-            if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist."); }
+            if (vaccine == null) 
+            { 
+                return Content("Vaccine ID #" + vaccineId + " does not exist."); 
+            }
 
-            if (string.IsNullOrWhiteSpace(vaccineName)) { return Content("Name of the vaccine is required."); }
+            VaccineFormVM vaccineForm = new VaccineFormVM();
 
-            VaccineModel existingVaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId != vaccineId && x.VaccineName == vaccineName && x.Species == species);
+            vaccineForm.VaccineId = vaccine.VaccineId;
+            vaccineForm.VaccineName = vaccine.VaccineName;
+            vaccineForm.Species = vaccine.Species;
+            vaccineForm.RequiredFlag = vaccine.RequiredFlag;
+            vaccineForm.Notes = vaccine.Notes;
+
+          return View(vaccineForm); 
+            
+        }
+
+
+        // POST: Vaccines/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(VaccineFormVM vaccineForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineForm.VaccineId);
+
+            if (vaccine == null)
+            { 
+                return Content("Vaccine ID #" + vaccineForm.VaccineId + " does not exist."); 
+            }
+
+            if (!ModelState.IsValid) 
+            { 
+                return View(vaccineForm); 
+            }
+
+            VaccineModel existingVaccine = dbContext.Vaccines
+                .FirstOrDefault(x =>
+                x.VaccineName == vaccineForm.VaccineName &&
+                x.Species == vaccineForm.Species.Value &&
+                x.VaccineId != vaccineForm.VaccineId);
+
             if (existingVaccine != null)
             {
-                return Content(vaccineName + " for a " + species + " already exists.");
+                ModelState.AddModelError("", "A vaccine with this name and species already exists.");
+
+                return View(vaccineForm);
             }
 
-            vaccine.VaccineName = vaccineName;
-            vaccine.Species = species;
-            vaccine.RequiredFlag = requiredFlag;
-            vaccine.Notes = notes;
+            vaccine.VaccineName = vaccineForm.VaccineName;
+            vaccine.Species = vaccineForm.Species.Value;
+            vaccine.RequiredFlag = vaccineForm.RequiredFlag.Value;
+            vaccine.Notes = vaccineForm.Notes;
 
-            try 
-            {
+            dbContext.SaveChanges();
 
-                dbContext.SaveChanges();
-
-                return Content("Vaccine ID #" + vaccine.VaccineId + " successfully updated.");
-
-            } 
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            return RedirectToAction("Read", new { vaccineId = vaccine.VaccineId });
 
         }
 
+
         // GET: Vaccines/Delete
-        // /Vaccines/Delete?vaccineId=USE_EXISTING_VACCINE_ID
         public ActionResult Delete(Guid vaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
-            if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist"); }
+            if (vaccine == null) 
+            { 
+                return Content("Vaccine ID #" + vaccineId + " does not exist"); 
+            }
 
-            List<PetVaccineModel> petVaccines = dbContext.PetVaccines.Where(x => x.VaccineId == vaccineId).ToList();
-            
+            VaccineDeleteVM vaccineDelete = new VaccineDeleteVM();
+
+            vaccineDelete.VaccineId = vaccine.VaccineId;
+            vaccineDelete.VaccineName = vaccine.VaccineName;
+            vaccineDelete.SpeciesDisplay = vaccine.Species.ToString();
+            vaccineDelete.RequiredDisplay = vaccine.RequiredFlag ? "Yes" : "No";
+            vaccineDelete.Notes = string.IsNullOrWhiteSpace(vaccine.Notes)
+                ? "No notes"
+                : vaccine.Notes;
+
+            return View(vaccineDelete);
+      
+        }
+
+
+        // POST: Vaccines/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(VaccineDeleteVM vaccineDelete)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineDelete.VaccineId);
+
+            if (vaccine == null)
+            {
+                return Content("Vaccine ID #" + vaccineDelete.VaccineId + " does not exist");
+            }
+
+            vaccineDelete.VaccineId = vaccine.VaccineId;
+            vaccineDelete.VaccineName = vaccine.VaccineName;
+            vaccineDelete.SpeciesDisplay = vaccine.Species.ToString();
+            vaccineDelete.RequiredDisplay = vaccine.RequiredFlag ? "Yes" : "No";
+            vaccineDelete.Notes = string.IsNullOrWhiteSpace(vaccine.Notes)
+                ? "No notes"
+                : vaccine.Notes;
+
+            List<PetVaccineModel> petVaccines = dbContext.PetVaccines
+                .Where(x => x.VaccineId == vaccineDelete.VaccineId)
+                .ToList();
+
             if (petVaccines.Count > 0) 
             { 
                 return Content("This vaccine is assigned to pet vaccine records and cannot be deleted."); 
             }
 
-            try 
-            {
-                dbContext.Vaccines.Remove(vaccine);
-                dbContext.SaveChanges();
+            dbContext.Vaccines.Remove(vaccine);
+            dbContext.SaveChanges();
 
-                return Content("Vaccine ID #" + vaccine.VaccineId + " successfully deleted.");
-            }
-            catch (Exception ex) 
-            { 
-                return Content(ex.Message); 
-            }
+            return RedirectToAction("Search");
+
         }
     }
 }

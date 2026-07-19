@@ -21,6 +21,11 @@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     <div class="col-md-4">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
         <label class="form-label">Food Name</label>
         @Html.TextBoxFor(x => x.FoodName, new { @class = "form-control" })
         @Html.ValidationMessageFor(x => x.FoodName, "", new { @class = "text-danger" })
@@ -32,13 +37,13 @@
         @Html.ValidationMessageFor(x => x.Amount, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-4">
         <label class="form-label">Frequency</label>
         @Html.EnumDropDownListFor(x => x.Frequency, "Select...", new { @class = "form-select" })
         @Html.ValidationMessageFor(x => x.Frequency, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-12">
         <label class="form-label">Notes</label>
         @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
