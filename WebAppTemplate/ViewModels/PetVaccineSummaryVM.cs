@@ -7,7 +7,10 @@ namespace JamesPetBoarding.ViewModels
 {
     public class PetVaccineSummaryVM
     {
+        
         public Guid PetVaccineId { get; set; }
+
+        public Guid PetId { get; set; }
 
         public string VaccineNameDisplay { get; set; }
 

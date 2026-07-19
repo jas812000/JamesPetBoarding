@@ -1,0 +1,69 @@
+﻿@model JamesPetBoarding.ViewModels.PetVaccineDeleteVM
+@{
+    ViewBag.Title = "Delete Pet-Vaccine";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Delete Pet Vaccination Record</h2>
+    <p class="lead">
+        Review the vaccination record before deletion.
+    </p>
+</div>
+
+@using (Html.BeginForm("Delete", "PetVaccines", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.PetVaccineId)
+
+    @Html.HiddenFor(x => x.PetId)
+
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Vaccine Name</label>
+        @Html.TextBoxFor(x => x.VaccineNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Date Given</label>
+        @Html.TextBoxFor(x => x.DateGivenDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Expiration Date</label>
+        @Html.TextBoxFor(x => x.ExpirationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Document File Path</label>
+        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-8">
+        <div class="alert alert-warning">
+            This action will permanently delete this pet vaccination record and cannot be undone.
+        </div>
+    </div>
+
+    <div class="col-md-10 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Delete</button>
+
+        @Html.ActionLink("Cancel", "Read", "Pets",
+            new { petId = Model.PetId },
+            new { @class = "btn btn-secondary ms-2" }
+        )
+
+    </div>
+}

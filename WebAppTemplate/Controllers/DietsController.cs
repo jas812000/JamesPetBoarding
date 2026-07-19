@@ -176,8 +176,11 @@ namespace JamesPetBoarding.Controllers
             }
 
             diet.FoodName = dietForm.FoodName;
+
             diet.Amount = dietForm.Amount;
+
             diet.Frequency = dietForm.Frequency;
+
             diet.Notes = dietForm.Notes;
 
             dbContext.SaveChanges();
@@ -205,10 +208,15 @@ namespace JamesPetBoarding.Controllers
             DietDeleteVM dietDelete = new DietDeleteVM();
 
             dietDelete.DietId = diet.DietId;
+
             dietDelete.PetId = diet.PetId;
+
             dietDelete.PetNameDisplay = diet.Pet.PetName;
+
             dietDelete.FoodName = diet.FoodName;
+
             dietDelete.Amount = diet.Amount;
+
             dietDelete.FrequencyDisplay = diet.Frequency.ToString();
 
             string notesDisplay = string.IsNullOrWhiteSpace(diet.Notes)

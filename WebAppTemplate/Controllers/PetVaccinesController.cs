@@ -1,7 +1,9 @@
 ﻿using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -19,143 +21,311 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: PetVaccines/Create
-        // /PetVaccines/Create?petId=USE_EXISTING_PET_ID&vaccineId=USE_EXISTING_VACCINE_ID&dateGiven=2025-06-01&expirationDate=2026-06-01&documentFilePath=/documents/vaccines/rabies.pdf&notes=will%20get%20updated%20vaccine
-        public ActionResult Create(
-            Guid petId,
-            Guid vaccineId,
-            DateTime dateGiven,
-            DateTime expirationDate,
-            string documentFilePath,
-            string notes
-        )
+        public ActionResult Create(Guid petId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petId + " does not exist.");
+            }
 
-            VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
-            if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist."); }
+            PetVaccineFormVM petVaccineForm = new PetVaccineFormVM();
 
-            if (expirationDate < dateGiven) { return Content("Expiration date cannot be before date given."); }
-            
-            if (string.IsNullOrWhiteSpace(documentFilePath)) { return Content("A file path for documents is required."); }
+            petVaccineForm.PetId = petId;
+            petVaccineForm.PetNameDisplay = pet.PetName;
+
+            petVaccineForm.VaccineOptions = BuildVaccineSelectList(petId);
+
+            return View(petVaccineForm);
+        }
+
+
+        // POST: PetVaccines/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(PetVaccineFormVM petVaccineForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petVaccineForm.PetId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petVaccineForm.PetId + " does not exist.");
+            }
+
+            if (petVaccineForm.VaccineId == Guid.Empty)
+            {
+                ModelState.AddModelError("VaccineId", "Please select a vaccine.");
+            }
+
+            VaccineModel vaccine = null;
+
+            if (petVaccineForm.VaccineId != Guid.Empty)
+            {
+                vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == petVaccineForm.VaccineId);
+
+                if (vaccine == null)
+                {
+                    ModelState.AddModelError("VaccineId", "The selected vaccine does not exist.");
+                }
+                else if (pet.Species != vaccine.Species)
+                {
+                    ModelState.AddModelError("VaccineId", "The selected vaccine does not match the pet's species.");
+                }
+            }
+
+            if (petVaccineForm.ExpirationDate < petVaccineForm.DateGiven)
+            {
+                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before date given.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                petVaccineForm.PetNameDisplay = pet.PetName;
+                petVaccineForm.VaccineOptions = BuildVaccineSelectList(petVaccineForm.PetId);
+
+                return View(petVaccineForm);
+            }
 
             PetVaccineModel petVaccine = new PetVaccineModel();
 
-            petVaccine.PetId = petId;
-            petVaccine.VaccineId = vaccineId;
-            petVaccine.DateGiven = dateGiven;
-            petVaccine.ExpirationDate = expirationDate;
-            petVaccine.DocumentFilePath = documentFilePath;
-            petVaccine.Notes = notes;
+            petVaccine.PetId = petVaccineForm.PetId;
+            petVaccine.VaccineId = petVaccineForm.VaccineId;
+            petVaccine.DateGiven = petVaccineForm.DateGiven;
+            petVaccine.ExpirationDate = petVaccineForm.ExpirationDate;
+            petVaccine.DocumentFilePath = petVaccineForm.DocumentFilePath;
+            petVaccine.Notes = petVaccineForm.Notes;
 
+            dbContext.PetVaccines.Add(petVaccine);
+            dbContext.SaveChanges();
 
-            try
-            {
-                dbContext.PetVaccines.Add( petVaccine );
-                dbContext.SaveChanges();
+            return RedirectToAction("Read", "Pets", new { petId = petVaccine.PetId });
 
-                return Content(pet.PetName + " and " + vaccine.VaccineName + " relationship was successfully created.");
-            }
-            catch (Exception ex) 
-            {
-                return Content(ex.Message);
-            }
         }
 
 
         // GET: PetVaccines/Read
-        // /PetVaccines/Read?petVaccineId=USE_EXISTING_PETVACCINE_ID
         public ActionResult Read(Guid petVaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            PetVaccineModel petVaccine = dbContext.PetVaccines.FirstOrDefault(x => x.PetVaccineId == petVaccineId);
-            if (petVaccine == null) { return Content("PetVaccine ID #" + petVaccineId + " does not exist."); }
+            PetVaccineModel petVaccine = dbContext.PetVaccines
+                .Include(x => x.Pet)
+                .Include(x => x.Vaccine)
+                .FirstOrDefault(x => x.PetVaccineId == petVaccineId);
 
-            string notesDisplay = string.IsNullOrWhiteSpace(petVaccine.Notes)
+            if (petVaccine == null)
+            {
+                return Content("PetVaccine ID #" + petVaccineId + " does not exist.");
+            }
+
+            PetVaccineDetailsVM petVaccineDetails = new PetVaccineDetailsVM();
+
+            petVaccineDetails.PetVaccineId = petVaccine.PetVaccineId;
+            petVaccineDetails.PetId = petVaccine.PetId;
+            petVaccineDetails.PetNameDisplay = petVaccine.Pet.PetName;
+            petVaccineDetails.VaccineNameDisplay = petVaccine.Vaccine.VaccineName;
+            petVaccineDetails.DateGivenDisplay = petVaccine.DateGiven.ToString("MM/dd/yyyy");
+            petVaccineDetails.ExpirationDateDisplay = petVaccine.ExpirationDate.ToString("MM/dd/yyyy");
+            petVaccineDetails.DocumentFilePath = petVaccine.DocumentFilePath;
+            petVaccineDetails.Notes = string.IsNullOrWhiteSpace(petVaccine.Notes)
                 ? "No notes"
                 : petVaccine.Notes;
 
-            return Content(
-                "PetVaccine ID #" + petVaccine.PetVaccineId +
-                "<br />Pet ID #" + petVaccine.PetId +
-                "<br />Vaccine ID #" + petVaccine.VaccineId +
-                "<br />Date Administered: " + petVaccine.DateGiven.ToString("MM/dd/yyyy") +
-                "<br />Expiration Date: " + petVaccine.ExpirationDate.ToString("MM/dd/yyyy") +
-                "<br />Document File Path: " + petVaccine.DocumentFilePath +
-                "<br />Notes: " + notesDisplay
-            );
+            return View(petVaccineDetails);
         }
 
 
         // GET: PetVaccines/Update
-        // /PetVaccines/Update?petVaccineId=USE_EXISTING_PETVACCINE_ID&petId=USE_EXISTING_PET_ID&vaccineId=USE_EXISTING_VACCINE_ID&dateGiven=2026-05-29&expirationDate=2027-05-29&documentFilePath=/documents/vaccines/rabies.pdf&notes=
-        public ActionResult Update(
-            Guid petVaccineId,
-            Guid petId,
-            Guid vaccineId,
-            DateTime dateGiven,
-            DateTime expirationDate,
-            string documentFilePath,
-            string notes
-        )
+        public ActionResult Update(Guid petVaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            PetVaccineModel petVaccine = dbContext.PetVaccines.FirstOrDefault(x => x.PetVaccineId == petVaccineId);
-            if (petVaccine == null) { return Content("PetVaccine ID #" + petVaccineId + " does not exist."); }
+            PetVaccineModel petVaccine = dbContext.PetVaccines
+                .Include(x => x.Pet)
+                .Include(x => x.Vaccine)
+                .FirstOrDefault(x => x.PetVaccineId == petVaccineId);
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) { return Content("Pet ID #" + petId + " does not exist."); }
-
-            VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
-            if (vaccine == null) { return Content("Vaccine ID #" + vaccineId + " does not exist."); }
-
-            if (expirationDate < dateGiven) { return Content("Expiration date cannot be before date given."); }
-
-            if (string.IsNullOrWhiteSpace(documentFilePath)) { return Content("A file path for documents is required."); }
-
-            petVaccine.PetId = petId;
-            petVaccine.VaccineId = vaccineId;
-            petVaccine.DateGiven = dateGiven;
-            petVaccine.ExpirationDate = expirationDate;
-            petVaccine.DocumentFilePath = documentFilePath;
-            petVaccine.Notes = notes;
-
-            try
+            if (petVaccine == null)
             {
-                dbContext.SaveChanges();
+                return Content("PetVaccine ID #" + petVaccineId + " does not exist.");
+            }
 
-                return Content("PetVaccine ID #" + petVaccine.PetVaccineId + " was successfully updated.");
-            }
-            catch (Exception ex)
+            PetVaccineFormVM petVaccineForm = new PetVaccineFormVM();
+
+            petVaccineForm.PetVaccineId = petVaccine.PetVaccineId;
+            petVaccineForm.PetId = petVaccine.PetId;
+            petVaccineForm.PetNameDisplay = petVaccine.Pet.PetName;
+            petVaccineForm.VaccineId = petVaccine.VaccineId;
+            petVaccineForm.VaccineOptions = BuildVaccineSelectList(petVaccine.PetId);
+            petVaccineForm.DateGiven = petVaccine.DateGiven;
+            petVaccineForm.ExpirationDate = petVaccine.ExpirationDate;
+            petVaccineForm.DocumentFilePath = petVaccine.DocumentFilePath;
+            petVaccineForm.Notes = petVaccine.Notes;
+
+            return View(petVaccineForm);
+        }
+
+
+        // POST: PetVaccines/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(PetVaccineFormVM petVaccineForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetVaccineModel petVaccine = dbContext.PetVaccines
+                .Include(x => x.Pet)
+                .FirstOrDefault(x => x.PetVaccineId == petVaccineForm.PetVaccineId);
+
+            if (petVaccine == null)
             {
-                return Content(ex.Message);
+                return Content("PetVaccine ID #" + petVaccineForm.PetVaccineId + " does not exist.");
+
             }
+
+            PetModel pet = petVaccine.Pet;
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petVaccineForm.PetId + " does not exist.");
+            }
+
+            if (petVaccineForm.VaccineId == Guid.Empty)
+            {
+                ModelState.AddModelError("VaccineId", "Please select a vaccine.");
+            }
+
+            VaccineModel vaccine = null;
+
+            if (petVaccineForm.VaccineId != Guid.Empty)
+            {
+                vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == petVaccineForm.VaccineId);
+
+                if (vaccine == null)
+                {
+                    ModelState.AddModelError("VaccineId", "The selected vaccine does not exist.");
+                }
+                else if (pet.Species != vaccine.Species)
+                {
+                    ModelState.AddModelError("VaccineId", "The selected vaccine does not match the pet's species.");
+                }
+            }
+
+            if (petVaccineForm.ExpirationDate < petVaccineForm.DateGiven)
+            {
+                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before date given.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                petVaccineForm.PetId = petVaccine.PetId;
+                petVaccineForm.PetNameDisplay = pet.PetName;
+                petVaccineForm.VaccineOptions = BuildVaccineSelectList(petVaccineForm.PetId);
+
+                return View(petVaccineForm);
+            }
+
+            petVaccine.VaccineId = petVaccineForm.VaccineId;
+            petVaccine.DateGiven = petVaccineForm.DateGiven;
+            petVaccine.ExpirationDate = petVaccineForm.ExpirationDate;
+            petVaccine.DocumentFilePath = petVaccineForm.DocumentFilePath;
+            petVaccine.Notes = petVaccineForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Pets", new { petId = petVaccine.PetId });
+
         }
 
 
         // GET: PetVaccines/Delete
-        // /PetVaccines/Delete?petVaccineId=USE_EXISTING_PETVACCINE_ID
         public ActionResult Delete(Guid petVaccineId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            PetVaccineModel petVaccine = dbContext.PetVaccines.FirstOrDefault(x => x.PetVaccineId == petVaccineId);
-            if (petVaccine == null) { return Content("PetVaccine ID #" + petVaccineId + " does not exist."); }
+            PetVaccineModel petVaccine = dbContext.PetVaccines
+                .Include(x => x.Pet)
+                .Include(x => x.Vaccine)
+                .FirstOrDefault(x => x.PetVaccineId == petVaccineId);
 
-            try
+            if (petVaccine == null)
             {
-                dbContext.PetVaccines.Remove(petVaccine);
-                dbContext.SaveChanges();
-                return Content("PetVaccine ID #" + petVaccine.PetVaccineId + " was successfully deleted.");
+                return Content("PetVaccine ID #" + petVaccineId + " does not exist.");
             }
-            catch (Exception ex)
+
+            PetVaccineDeleteVM petVaccineDelete = new PetVaccineDeleteVM();
+
+            petVaccineDelete.PetVaccineId = petVaccine.PetVaccineId;
+            petVaccineDelete.VaccineNameDisplay = petVaccine.Vaccine.VaccineName;
+            petVaccineDelete.PetId = petVaccine.PetId;
+            petVaccineDelete.PetNameDisplay = petVaccine.Pet.PetName;
+            petVaccineDelete.DateGivenDisplay = petVaccine.DateGiven.ToString("MM/dd/yyyy");
+            petVaccineDelete.ExpirationDateDisplay = petVaccine.ExpirationDate.ToString("MM/dd/yyyy");
+            petVaccineDelete.DocumentFilePath = petVaccine.DocumentFilePath;
+            petVaccineDelete.Notes = string.IsNullOrWhiteSpace(petVaccine.Notes)
+                ? "No notes"
+                : petVaccine.Notes;
+
+            return View(petVaccineDelete);
+
+        }
+
+
+        // POST: PetVaccines/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(PetVaccineDeleteVM petVaccineDelete)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetVaccineModel petVaccine = dbContext.PetVaccines
+                .Include(x => x.Pet)
+                .Include(x => x.Vaccine)
+                .FirstOrDefault(x => x.PetVaccineId == petVaccineDelete.PetVaccineId);
+
+            if (petVaccine == null)
             {
-                return Content(ex.Message);
+                return Content("PetVaccine ID #" + petVaccineDelete.PetVaccineId + " does not exist.");
             }
+
+            Guid petId = petVaccine.PetId;
+
+            dbContext.PetVaccines.Remove(petVaccine);
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", "Pets", new { petId = petId });
+
+        }
+
+
+        private List<SelectListItem> BuildVaccineSelectList(Guid petId)
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
+
+            if (pet == null) 
+            { 
+                return new List<SelectListItem>(); 
+            }
+
+            List<SelectListItem> vaccineOptions = dbContext.Vaccines
+                .Where(x => x.Species == pet.Species)
+                .OrderBy(x => x.VaccineName)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.VaccineId.ToString(),
+                    Text = x.VaccineName + " - " + x.Species 
+                })
+                .ToList();
+
+            return vaccineOptions;
+
         }
     }
 }

@@ -1,0 +1,70 @@
+﻿@model JamesPetBoarding.ViewModels.PetVaccineFormVM
+@{
+    ViewBag.Title = "Create Pet-Vaccine";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Create Pet Vaccination Record</h2>
+    <p class="lead">
+        Enter a vaccine record for this pet.
+    </p>
+</div>
+
+@using (Html.BeginForm("Create", "PetVaccines", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.PetId)
+
+    @Html.HiddenFor(x => x.PetVaccineId)
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Vaccine</label>
+        @Html.DropDownListFor(x => x.VaccineId, Model.VaccineOptions, "Select a vaccine...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VaccineId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Date Given</label>
+        @Html.TextBoxFor(x => x.DateGiven, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.DateGiven, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Expiration Date</label>
+        @Html.TextBoxFor(x => x.ExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.ExpirationDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Document File Path</label>
+        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.DocumentFilePath, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-success me-2">Create Vaccination Record</button>
+
+        @Html.ActionLink(
+             "Cancel",
+             "Read",
+             "Pets",
+            new { petId = Model.PetId },
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}

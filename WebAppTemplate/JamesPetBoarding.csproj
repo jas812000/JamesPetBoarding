@@ -405,6 +405,7 @@
     <Compile Include="ViewModels\PetReportVM.cs" />
     <Compile Include="ViewModels\PetSearchVM.cs" />
     <Compile Include="ViewModels\PetSummaryVM.cs" />
+    <Compile Include="ViewModels\PetVaccineDeleteVM.cs" />
     <Compile Include="ViewModels\PetVaccineDetailsVM.cs" />
     <Compile Include="ViewModels\PetVaccineFormVM.cs" />
     <Compile Include="ViewModels\PetVaccineSummaryVM.cs" />
@@ -549,6 +550,10 @@
     <Content Include="Views\Vaccines\Read.cshtml" />
     <Content Include="Views\Vaccines\Update.cshtml" />
     <Content Include="Views\Vaccines\Delete.cshtml" />
+    <Content Include="Views\PetVaccines\Update.cshtml" />
+    <Content Include="Views\PetVaccines\Read.cshtml" />
+    <Content Include="Views\PetVaccines\Create.cshtml" />
+    <Content Include="Views\PetVaccines\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -560,7 +565,6 @@
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
     <Folder Include="Views\Payments\" />
-    <Folder Include="Views\PetVaccines\" />
     <Folder Include="Views\Services\" />
     <Folder Include="Views\Veterinarians\" />
   </ItemGroup>

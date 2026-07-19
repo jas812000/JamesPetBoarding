@@ -1,0 +1,68 @@
+﻿@model JamesPetBoarding.ViewModels.PetVaccineDetailsVM
+@{
+    ViewBag.Title = "Read Pet-Vaccine";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Pet Vaccination Record</h2>
+    <p class="lead">
+        View the vaccination record for this pet.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Vaccine Name</label>
+        @Html.TextBoxFor(x => x.VaccineNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Date Given</label>
+        @Html.TextBoxFor(x => x.DateGivenDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Expiration Date</label>
+        @Html.TextBoxFor(x => x.ExpirationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Document File Path</label>
+        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+
+        @Html.ActionLink(
+            "Update Vaccination Record",
+            "Update",
+            "PetVaccines",
+            new { petVaccineId = Model.PetVaccineId },
+            new { @class = "btn btn-primary me-2" })
+
+        @Html.ActionLink(
+            "Delete Vaccination Record",
+            "Delete",
+            "PetVaccines",
+            new { petVaccineId = Model.PetVaccineId },
+            new { @class = "btn btn-danger me-2" })
+
+        @Html.ActionLink(
+            "Back to Pet Profile", "Read", "Pets",
+            new { petId = Model.PetId },
+            new { @class = "btn btn-secondary" })
+    </div>
+
+</div>
