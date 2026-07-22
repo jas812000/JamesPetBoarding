@@ -55,11 +55,14 @@
     </div>
 
     <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Delete</button>
+        <button type="submit" class="btn btn-danger me-2">Delete Vaccine Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "Vaccines",
-             new { vaccineId = Model.VaccineId },
-             new { @class = "btn btn-secondary ms-2" }
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "Vaccines",
+            new { vaccineId = Model.VaccineId },
+            new { @class = "btn btn-secondary ms-2" }
          )
     </div>
 

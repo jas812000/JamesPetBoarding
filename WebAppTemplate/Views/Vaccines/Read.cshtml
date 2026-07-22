@@ -40,7 +40,23 @@
 
     <div class="col-md-10 text-center mt-3">
         @Html.ActionLink(
-            "Back to Search", "Search", "Vaccines",
+            "Update Vaccine",
+            "Update",
+            "Vaccines",
+            new { vaccineId = Model.VaccineId },
+            new { @class = "btn btn-primary me-2" })
+
+        @Html.ActionLink(
+            "Delete Vaccine",
+            "Delete",
+            "Vaccines",
+            new { vaccineId = Model.VaccineId },
+            new { @class = "btn btn-danger me-2" })
+
+        @Html.ActionLink(
+            "Back to Search", 
+            "Search", 
+            "Vaccines",
             null,
             new { @class = "btn btn-secondary" })
     </div>

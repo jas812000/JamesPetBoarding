@@ -11,7 +11,9 @@ namespace JamesPetBoarding.ViewModels
     {
         public VaccineSearchVM() 
         {
-            VaccineSummary = new List<VaccineSummaryVM>(); 
+
+            VaccineSummaryResults = new List<VaccineSummaryVM>(); 
+
         }
 
         public string VaccineName { get; set; }
@@ -20,6 +22,7 @@ namespace JamesPetBoarding.ViewModels
 
         public bool? RequiredFlag { get; set; }
 
-        public List<VaccineSummaryVM> VaccineSummary { get; set; }
+        public List<VaccineSummaryVM> VaccineSummaryResults { get; set; }
+
     }
 }

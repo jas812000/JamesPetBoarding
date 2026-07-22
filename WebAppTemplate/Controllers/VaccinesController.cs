@@ -59,11 +59,12 @@ namespace JamesPetBoarding.Controllers
                     .ToList();
             }
 
-            vaccineSearch.VaccineSummary.Clear();
+            vaccineSearch.VaccineSummaryResults.Clear();
 
             foreach (VaccineModel vaccine in vaccines)
             {
-                vaccineSearch.VaccineSummary.Add(new VaccineSummaryVM
+                vaccineSearch.VaccineSummaryResults.Add(new VaccineSummaryVM
+
                 { 
                     VaccineId = vaccine.VaccineId,
                     VaccineName = vaccine.VaccineName,
@@ -100,6 +101,7 @@ namespace JamesPetBoarding.Controllers
 
                 return View(vaccineForm);
             }
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VaccineModel existingVaccine = dbContext.Vaccines

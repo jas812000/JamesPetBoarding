@@ -76,11 +76,11 @@ namespace JamesPetBoarding.Controllers
                     .ToList(); 
             }
 
-            customerSearch.Customers.Clear();
+            customerSearch.CustomerSearchResults.Clear();
 
             foreach (CustomerModel customer in customers) 
             { 
-                customerSearch.Customers.Add(new CustomerSearchResultVM 
+                customerSearch.CustomerSearchResults.Add(new CustomerSearchResultVM 
                 { 
                     CustomerId = customer.CustomerId,
                     CustomerNameDisplay = customer.LastName + ", " + customer.FirstName,

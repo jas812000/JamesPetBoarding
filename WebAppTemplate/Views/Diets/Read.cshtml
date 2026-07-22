@@ -50,7 +50,9 @@
 
     <div class="col-md-10 text-center mt-3">
         @Html.ActionLink(
-            "Back to Pet Profile", "Read", "Pets",
+            "Back to Pet Profile", 
+            "Read", 
+            "Pets",
             new { petId = Model.PetId },
             new { @class = "btn btn-secondary" })
     </div>

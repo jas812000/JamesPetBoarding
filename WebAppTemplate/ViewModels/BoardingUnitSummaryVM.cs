@@ -1,19 +1,17 @@
-﻿using JamesPetBoarding.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class BoardingUnitDetailsVM
+    public class BoardingUnitSummaryVM
     {
         public Guid BoardingUnitId { get; set; }
 
-        public string UnitTypeDisplay { get; set; }
-
         public string FullUnitNameDisplay { get; set; }
+
+        public string UnitTypeDisplay { get; set; }
 
         public string SpeciesAllowedDisplay { get; set; }
 
@@ -22,7 +20,5 @@ namespace JamesPetBoarding.ViewModels
         public bool IsActive { get; set; }
 
         public string ActiveStatusDisplay { get; set; }
-
-        public string Notes { get; set; }
     }
 }

@@ -53,13 +53,13 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update Vaccine</button>
+        <button type="submit" class="btn btn-success me-2">Update Vaccine Profile</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Vaccines",
-           new { vaccineId = Model.VaccineId },
+            new { vaccineId = Model.VaccineId },
             new { @class = "btn btn-secondary ms-2" })
     </div>
 

@@ -60,7 +60,9 @@
             new { @class = "btn btn-danger me-2" })
 
         @Html.ActionLink(
-            "Back to Pet Profile", "Read", "Pets",
+            "Back to Pet Profile", 
+            "Read", 
+            "Pets",
             new { petId = Model.PetId },
             new { @class = "btn btn-secondary" })
     </div>

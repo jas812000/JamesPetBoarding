@@ -88,9 +88,12 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Reactivate</button>
+        <button type="submit" class="btn btn-success me-2">Reactivate Customer Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "Customers",
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "Customers",
             new { customerId = Model.CustomerId },
             new { @class = "btn btn-secondary ms-2" }
         )

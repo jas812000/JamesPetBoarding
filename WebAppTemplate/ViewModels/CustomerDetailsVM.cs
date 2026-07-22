@@ -11,6 +11,7 @@ namespace JamesPetBoarding.ViewModels
         public CustomerDetailsVM() 
         { 
             EmergencyContacts = new List<EmergencyContactSummaryVM>(); 
+
             CustomerPets = new List<CustomerPetSummaryVM>(); 
         }
 

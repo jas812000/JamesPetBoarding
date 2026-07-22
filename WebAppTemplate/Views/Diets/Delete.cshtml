@@ -60,11 +60,14 @@
     </div>
 
     <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Delete</button>
+        <button type="submit" class="btn btn-danger me-2">Delete Diet Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "Pets",
-             new { petId = Model.PetId },
-             new { @class = "btn btn-secondary ms-2" }
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "Pets",
+            new { petId = Model.PetId },
+            new { @class = "btn btn-secondary ms-2" }
          )
     </div>
 

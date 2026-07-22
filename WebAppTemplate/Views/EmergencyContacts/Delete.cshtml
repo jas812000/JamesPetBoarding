@@ -91,9 +91,12 @@
     </div>
 
     <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Deactivate</button>
+        <button type="submit" class="btn btn-danger me-2">Deactivate Emergency Contact Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "EmergencyContacts",
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "EmergencyContacts",
             new { emergencyContactId = Model.EmergencyContactId },
             new { @class = "btn btn-secondary ms-2" }
         )

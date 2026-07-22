@@ -81,9 +81,12 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Save</button>
+        <button type="submit" class="btn btn-primary me-2">Update Customer Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "Customers",
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "Customers",
             new { customerId = Model.CustomerId },
             new { @class = "btn btn-secondary ms-2" }
         )

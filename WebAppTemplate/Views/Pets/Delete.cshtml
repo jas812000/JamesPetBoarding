@@ -84,9 +84,12 @@
     </div>
 
     <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Deactivate</button>
+        <button type="submit" class="btn btn-danger me-2">Deactivate Pet Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "Pets",
+        @Html.ActionLink(
+            "Cancel", 
+            "Read", 
+            "Pets",
             new { petId = Model.PetId },
             new { @class = "btn btn-secondary ms-2" }
         )

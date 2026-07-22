@@ -53,17 +53,22 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search</button>
+        <button type="submit" class="btn btn-primary me-2">Search Customers</button>
 
-        @Html.ActionLink("Cancel", "Index", "Customers", null, new { @class = "btn btn-secondary ms-2" })
+        @Html.ActionLink(
+            "Cancel", 
+            "Index", 
+            "Customers", 
+            null, 
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 
 }
 
-@if (Model.Customers != null && Model.Customers.Any())
+@if (Model.CustomerSearchResults != null && Model.CustomerSearchResults.Any())
 {
     <h4 class="mt-4">
-        Results Found: @Model.Customers.Count
+        Results Found: @Model.CustomerSearchResults.Count
     </h4>
 
     <div class="mt-3">
@@ -81,7 +86,7 @@
 
             <tbody>
 
-                @foreach (var customer in Model.Customers)
+                @foreach (var customer in Model.CustomerSearchResults)
                 {
                     <tr>
                         <td>@customer.CustomerNameDisplay</td>
@@ -117,11 +122,11 @@
                             @if (customer.IsActive)
                             {
                                 @Html.ActionLink(
-                                "Deactivate",
-                                "Delete",
-                                "Customers",
-                                new { customerId = customer.CustomerId },
-                                new { @class = "btn btn-danger btn-sm" })
+                                    "Deactivate",
+                                    "Delete",
+                                    "Customers",
+                                    new { customerId = customer.CustomerId },
+                                    new { @class = "btn btn-danger btn-sm" })
                             }
                             else
                             {
@@ -141,7 +146,7 @@
     </div>
 }
 
-@if (Model.Customers != null && !Model.Customers.Any())
+@if (Model.CustomerSearchResults != null && !Model.CustomerSearchResults.Any())
 {
     <div class="alert alert-info mt-4">
         No customers matched the search criteria.

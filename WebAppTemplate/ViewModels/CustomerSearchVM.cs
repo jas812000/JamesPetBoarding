@@ -9,6 +9,10 @@ namespace JamesPetBoarding.ViewModels
 {
     public class CustomerSearchVM
     {
+        public CustomerSearchVM() 
+        { 
+            CustomerSearchResults = new List<CustomerSearchResultVM>(); 
+        }
 
         [MaxLength(50)]
         public string LastName { get; set; }
@@ -24,8 +28,7 @@ namespace JamesPetBoarding.ViewModels
 
         public bool? IsActive { get; set; }
 
-        public List<CustomerSearchResultVM> Customers { get; set; } = new List<CustomerSearchResultVM>();
-
+        public List<CustomerSearchResultVM> CustomerSearchResults { get; set; } 
 
     }
 }

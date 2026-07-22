@@ -80,13 +80,13 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update Medication</button>
+        <button type="submit" class="btn btn-success me-2">Update Medication Profile</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Pets",
-           new { petId = Model.PetId },
+            new { petId = Model.PetId },
             new { @class = "btn btn-secondary ms-2" })
     </div>
 }

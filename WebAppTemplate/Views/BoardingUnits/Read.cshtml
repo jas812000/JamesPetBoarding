@@ -1,0 +1,74 @@
+﻿@model JamesPetBoarding.ViewModels.BoardingUnitDetailsVM
+@{
+    ViewBag.Title = "Read Boarding Unit";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Boarding Unit Profile</h2>
+    <p class="lead">
+        View boarding unit profile information.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-6">
+        <label class="form-label">Boarding Unit ID</label>
+        @Html.TextBoxFor(x => x.BoardingUnitId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Full Unit Name</label>
+        @Html.TextBoxFor(x => x.FullUnitNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Unit Type</label>
+        @Html.TextBoxFor(x => x.UnitTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Species Allowed</label>
+        @Html.TextBoxFor(x => x.SpeciesAllowedDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Size Category</label>
+        @Html.TextBoxFor(x => x.SizeCategoryDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Update Boarding Unit",
+            "Update",
+            "BoardingUnits",
+            new { boardingUnitId = Model.BoardingUnitId },
+            new { @class = "btn btn-primary me-2" })
+
+        @Html.ActionLink(
+            "Delete Boarding Unit",
+            "Delete",
+            "BoardingUnits",
+            new { boardingUnitId = Model.BoardingUnitId },
+            new { @class = "btn btn-danger me-2" })
+
+        @Html.ActionLink(
+            "Back to Search", 
+            "Search", 
+            "BoardingUnits",
+            null,
+            new { @class = "btn btn-secondary" })
+    </div>
+
+</div>

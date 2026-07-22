@@ -26,9 +26,6 @@ namespace JamesPetBoarding.ViewModels
         [Required]
         public SizeCategoryEnum SizeCategory { get; set; }
 
-        [Required]
-        public bool IsActive { get; set; } = true;
-
         [MaxLength(2000)]
         public string Notes { get; set; }
     }

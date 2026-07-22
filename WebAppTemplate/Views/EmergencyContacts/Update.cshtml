@@ -93,11 +93,14 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Save</button>
+        <button type="submit" class="btn btn-primary me-2">Update Emergency Contact Profile</button>
 
-        @Html.ActionLink("Cancel", "Read", "EmergencyContacts",
-            new { emergencyContactId = Model.EmergencyContactId },
-            new { @class = "btn btn-secondary ms-2" }
+        @Html.ActionLink(
+           "Cancel", 
+           "Read", 
+           "EmergencyContacts",
+           new { emergencyContactId = Model.EmergencyContactId },
+           new { @class = "btn btn-secondary ms-2" }
         )
     </div>
 

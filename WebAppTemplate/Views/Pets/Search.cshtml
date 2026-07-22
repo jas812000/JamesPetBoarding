@@ -58,9 +58,15 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search</button>
+        <button type="submit" class="btn btn-primary me-2">Search Pets</button>
 
-        @Html.ActionLink("Cancel", "Index", "Pets", null, new { @class = "btn btn-secondary ms-2" })
+        @Html.ActionLink(
+            "Cancel", 
+            "Index", 
+            "Pets", 
+            null, 
+            new { @class = "btn btn-secondary ms-2" })
+
     </div>
 
 }

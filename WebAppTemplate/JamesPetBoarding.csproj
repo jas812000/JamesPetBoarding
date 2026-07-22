@@ -332,6 +332,9 @@
     <Compile Include="Models\InvoiceItemModel.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\MedicationModel.cs" />
+    <Compile Include="ViewModels\BoardingUnitDeleteVM.cs" />
+    <Compile Include="ViewModels\BoardingUnitSearchVM.cs" />
+    <Compile Include="ViewModels\BoardingUnitSummaryVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportFilterVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportRowVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportVM.cs" />
@@ -554,12 +557,16 @@
     <Content Include="Views\PetVaccines\Read.cshtml" />
     <Content Include="Views\PetVaccines\Create.cshtml" />
     <Content Include="Views\PetVaccines\Delete.cshtml" />
+    <Content Include="Views\BoardingUnits\Search.cshtml" />
+    <Content Include="Views\BoardingUnits\Create.cshtml" />
+    <Content Include="Views\BoardingUnits\Read.cshtml" />
+    <Content Include="Views\BoardingUnits\Update.cshtml" />
+    <Content Include="Views\BoardingUnits\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Boardings\" />
-    <Folder Include="Views\BoardingUnits\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\Employees\" />
     <Folder Include="Views\InvoiceItems\" />
