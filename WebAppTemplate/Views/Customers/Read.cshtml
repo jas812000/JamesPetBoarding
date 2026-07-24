@@ -60,35 +60,35 @@
         </div>
 
         <div class="col-md-4">
-            <label class="form-label">Inactive Reason</label>
-            @Html.TextBoxFor(x => x.InactiveReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+            <label class="form-label">Inactivation Reason</label>
+            @Html.TextBoxFor(x => x.InactivationReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
         </div>
 
         <div class="col-md-4">
-            <label class="form-label">Inactivated Date</label>
-            @Html.TextBoxFor(x => x.InactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+            <label class="form-label">Inactivation Date</label>
+            @Html.TextBoxFor(x => x.InactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
         </div>
 
         <div class="col-md-8">
-            <label class="form-label">Inactive Notes</label>
+            <label class="form-label">Inactivation Notes</label>
             @Html.TextAreaFor(x => x.InactiveNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
         </div>
     }
 
-    @if (Model.ReactivatedDateDisplay != "Not Applicable")
+    @if (Model.ReactivationDateDisplay != "Not Applicable")
     {
         <div class="col-md-8">
             <h4 class="mt-4">Reactivation Information</h4>
         </div>
 
         <div class="col-md-4">
-            <label class="form-label">Reactivated Date</label>
-            @Html.TextBoxFor(x => x.ReactivatedDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+            <label class="form-label">Reactivation Date</label>
+            @Html.TextBoxFor(x => x.ReactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
         </div>
 
         <div class="col-md-8">
-            <label class="form-label">Reactivated Notes</label>
-            @Html.TextAreaFor(x => x.ReactivatedNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+            <label class="form-label">Reactivation Notes</label>
+            @Html.TextAreaFor(x => x.ReactivationNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
         </div>
     }
 

@@ -7,7 +7,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class EmployeeDetailsVM
+    public class EmployeeReactivateVM
     {
         public Guid EmployeeId { get; set; }
 
@@ -15,11 +15,9 @@ namespace JamesPetBoarding.ViewModels
 
         public string RoleDisplay { get; set; }
 
-        public string EmailDisplay { get; set; }
-
         public string PhoneDisplay { get; set; }
 
-        public bool IsActive { get; set; }
+        public string EmailDisplay { get; set; }
 
         public string ActiveStatusDisplay { get; set; }
 
@@ -29,11 +27,7 @@ namespace JamesPetBoarding.ViewModels
 
         public string InactivationNotesDisplay { get; set; }
 
-        public string ReactivationDateDisplay { get; set; }
-
-        public string ReactivationNotesDisplay { get; set; }
-
-        public string NotesDisplay { get; set; }
-
+        [MaxLength(500)]
+        public string ReactivationNotes { get; set; }
     }
 }

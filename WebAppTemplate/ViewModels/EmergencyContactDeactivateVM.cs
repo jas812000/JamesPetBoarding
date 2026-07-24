@@ -7,7 +7,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class EmergencyContactDeleteVM
+    public class EmergencyContactDeactivateVM
     {
         public Guid EmergencyContactId { get; set; }
 
@@ -32,9 +32,9 @@ namespace JamesPetBoarding.ViewModels
         public string StatusDisplay { get; set; }
 
         [Required]
-        public InactivatedReasonEnum InactivatedReason { get; set; }
+        public InactivationReasonEnum InactivationReason { get; set; }
 
         [MaxLength(500)]
-        public string InactivatedNotes { get; set; }
+        public string InactivationNotes { get; set; }
     }
 }

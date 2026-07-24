@@ -11,9 +11,7 @@ namespace JamesPetBoarding.ViewModels
     {
         public VaccineSearchVM() 
         {
-
             VaccineSummaryResults = new List<VaccineSummaryVM>(); 
-
         }
 
         public string VaccineName { get; set; }

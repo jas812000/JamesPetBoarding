@@ -23,15 +23,16 @@ namespace JamesPetBoarding.ViewModels
 
         public string NotesDisplay { get; set; }
 
-        public string InactiveReasonDisplay { get; set; }
+        public string InactivationReasonDisplay { get; set; }
 
-        public string InactivatedDateDisplay { get; set; }
+        public string InactivationDateDisplay { get; set; }
 
         public string InactiveNotesDisplay { get; set; }
 
-        public DateTime? ReactivatedDate { get; set; }
+        public DateTime? ReactivationDate { get; set; }
 
         [MaxLength(500)]
-        public string ReactivatedNotes { get; set; }
+        public string ReactivationNotes { get; set; }
+
     }
 }

@@ -319,6 +319,10 @@
     <Compile Include="Migrations\202607052357213_AddPetReactivationFields.Designer.cs">
       <DependentUpon>202607052357213_AddPetReactivationFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607140203383_UpdateEmployeeAndInactivationWorkflows.cs" />
+    <Compile Include="Migrations\202607140203383_UpdateEmployeeAndInactivationWorkflows.Designer.cs">
+      <DependentUpon>202607140203383_UpdateEmployeeAndInactivationWorkflows.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -338,7 +342,7 @@
     <Compile Include="ViewModels\BoardingUtilizationReportFilterVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportRowVM.cs" />
     <Compile Include="ViewModels\BoardingUtilizationReportVM.cs" />
-    <Compile Include="ViewModels\CustomerDeleteVM.cs" />
+    <Compile Include="ViewModels\CustomerDeactivateVM.cs" />
     <Compile Include="ViewModels\CustomerReactivateVM.cs" />
     <Compile Include="ViewModels\CustomerReportFilterVM.cs" />
     <Compile Include="ViewModels\CustomerReportRowVM.cs" />
@@ -346,8 +350,14 @@
     <Compile Include="ViewModels\CustomerSearchResultVM.cs" />
     <Compile Include="ViewModels\CustomerSearchVM.cs" />
     <Compile Include="ViewModels\DietDeleteVM.cs" />
-    <Compile Include="ViewModels\EmergencyContactDeleteVM.cs" />
+    <Compile Include="ViewModels\EmergencyContactDeactivateVM.cs" />
     <Compile Include="ViewModels\EmergencyContactReactivateVM.cs" />
+    <Compile Include="ViewModels\EmployeeDeactivateVM.cs" />
+    <Compile Include="ViewModels\EmployeeProfileUpdateVM.cs" />
+    <Compile Include="ViewModels\EmployeeProfileVM.cs" />
+    <Compile Include="ViewModels\EmployeeReactivateVM.cs" />
+    <Compile Include="ViewModels\EmployeeSearchVM.cs" />
+    <Compile Include="ViewModels\EmployeeSummaryVM.cs" />
     <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
     <Compile Include="ViewModels\InvoiceFormVM.cs" />
     <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
@@ -399,7 +409,7 @@
     <Compile Include="ViewModels\PaymentReportRowVM.cs" />
     <Compile Include="ViewModels\PaymentReportVM.cs" />
     <Compile Include="ViewModels\PaymentSummaryVM.cs" />
-    <Compile Include="ViewModels\PetDeleteVM.cs" />
+    <Compile Include="ViewModels\PetDeactivateVM.cs" />
     <Compile Include="ViewModels\PetDetailsVM.cs" />
     <Compile Include="ViewModels\PetFormVM.cs" />
     <Compile Include="ViewModels\PetReactivateVM.cs" />
@@ -562,13 +572,20 @@
     <Content Include="Views\BoardingUnits\Read.cshtml" />
     <Content Include="Views\BoardingUnits\Update.cshtml" />
     <Content Include="Views\BoardingUnits\Delete.cshtml" />
+    <Content Include="Views\Employees\Search.cshtml" />
+    <Content Include="Views\Employees\Create.cshtml" />
+    <Content Include="Views\Employees\Read.cshtml" />
+    <Content Include="Views\Employees\Update.cshtml" />
+    <Content Include="Views\Employees\Delete.cshtml" />
+    <Content Include="Views\Employees\Reactivate.cshtml" />
+    <Content Include="Views\Employees\MyProfile.cshtml" />
+    <Content Include="Views\Employees\UpdateMyProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Boardings\" />
     <Folder Include="Views\Dashboard\" />
-    <Folder Include="Views\Employees\" />
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
     <Folder Include="Views\Payments\" />
@@ -653,6 +670,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607052357213_AddPetReactivationFields.resx">
       <DependentUpon>202607052357213_AddPetReactivationFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607140203383_UpdateEmployeeAndInactivationWorkflows.resx">
+      <DependentUpon>202607140203383_UpdateEmployeeAndInactivationWorkflows.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

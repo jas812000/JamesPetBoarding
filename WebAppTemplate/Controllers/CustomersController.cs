@@ -171,25 +171,25 @@ namespace JamesPetBoarding.Controllers
                 ? "Active"
                 : "Inactive";
 
-            customerDetails.InactiveReasonDisplay = customer.InactiveReason.HasValue
-                ? customer.InactiveReason.ToString()
+            customerDetails.InactivationReasonDisplay = customer.InactivationReason.HasValue
+                ? customer.InactivationReason.ToString()
                 : "Not Applicable";
 
-            customerDetails.InactivatedDateDisplay = customer.InactivatedDate.HasValue
-                ? customer.InactivatedDate.Value.ToShortDateString()
+            customerDetails.InactivationDateDisplay = customer.InactivationDate.HasValue
+                ? customer.InactivationDate.Value.ToShortDateString()
                 : "Not Applicable";
 
-            customerDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
-                ? "No inactive notes"
-                : customer.InactiveNotes;
+            customerDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactivationNotes)
+                ? "No Inactivation notes"
+                : customer.InactivationNotes;
 
-            customerDetails.ReactivatedDateDisplay = customer.ReactivatedDate.HasValue
-                ? customer.ReactivatedDate.Value.ToShortDateString()
+            customerDetails.ReactivationDateDisplay = customer.ReactivationDate.HasValue
+                ? customer.ReactivationDate.Value.ToShortDateString()
                 : "Not Applicable";
 
-            customerDetails.ReactivatedNotesDisplay = string.IsNullOrWhiteSpace(customer.ReactivatedNotes)
+            customerDetails.ReactivationNotesDisplay = string.IsNullOrWhiteSpace(customer.ReactivationNotes)
                 ? "No reactivation notes"
-                : customer.ReactivatedNotes;
+                : customer.ReactivationNotes;
 
             List<EmergencyContactModel> emergencyContacts = dbContext.EmergencyContacts
                 .Where(x => x.CustomerId == customerId)
@@ -330,7 +330,7 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + customerId + " does not exist.");
             }
 
-            CustomerDeleteVM customerDelete = new CustomerDeleteVM();
+            CustomerDeactivateVM customerDelete = new CustomerDeactivateVM();
 
             customerDelete.CustomerId = customer.CustomerId;
             customerDelete.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
@@ -350,7 +350,7 @@ namespace JamesPetBoarding.Controllers
         // POST: Customers/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(CustomerDeleteVM customerDelete)
+        public ActionResult Delete(CustomerDeactivateVM customerDelete)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
@@ -378,9 +378,13 @@ namespace JamesPetBoarding.Controllers
             }
 
             customer.IsActive = false;
-            customer.InactiveReason = customerDelete.InactiveReason;
-            customer.InactivatedDate = DateTime.Now;
-            customer.InactiveNotes = customerDelete.InactiveNotes;
+            customer.InactivationReason = customerDelete.InactivationReason;
+            customer.InactivationDate = DateTime.Now;
+            customer.InactivationNotes = customerDelete.InactivationNotes;
+
+            customer.ReactivationDate = null;
+            customer.ReactivationNotes = null;
+
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { customerId = customer.CustomerId });
@@ -414,17 +418,17 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : customer.Notes;
 
-            customerReactivate.InactiveReasonDisplay = customer.InactiveReason.HasValue
-                ? customer.InactiveReason.ToString()
+            customerReactivate.InactivationReasonDisplay = customer.InactivationReason.HasValue
+                ? customer.InactivationReason.ToString()
                 : "Not Applicable";
 
-            customerReactivate.InactivatedDateDisplay = customer.InactivatedDate.HasValue
-                ? customer.InactivatedDate.Value.ToShortDateString()
+            customerReactivate.InactivationDateDisplay = customer.InactivationDate.HasValue
+                ? customer.InactivationDate.Value.ToShortDateString()
                 : "Not Applicable";
 
-            customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
-                ? "No inactive notes"
-                : customer.InactiveNotes;
+            customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactivationNotes)
+                ? "No Inactivation notes"
+                : customer.InactivationNotes;
 
             return View(customerReactivate);
 
@@ -458,27 +462,27 @@ namespace JamesPetBoarding.Controllers
                     ? "No notes"
                     : customer.Notes;
 
-                customerReactivate.InactiveReasonDisplay = customer.InactiveReason.HasValue
-                    ? customer.InactiveReason.ToString()
+                customerReactivate.InactivationReasonDisplay = customer.InactivationReason.HasValue
+                    ? customer.InactivationReason.ToString()
                     : "Not Applicable";
 
-                customerReactivate.InactivatedDateDisplay = customer.InactivatedDate.HasValue
-                    ? customer.InactivatedDate.Value.ToShortDateString()
+                customerReactivate.InactivationDateDisplay = customer.InactivationDate.HasValue
+                    ? customer.InactivationDate.Value.ToShortDateString()
                     : "Not Applicable";
 
-                customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactiveNotes)
-                    ? "No inactive notes"
-                    : customer.InactiveNotes;
+                customerReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(customer.InactivationNotes)
+                    ? "No Inactivation notes"
+                    : customer.InactivationNotes;
 
                 return View(customerReactivate);
             }
 
             customer.IsActive = true;
-            customer.ReactivatedDate = DateTime.Now;
-            customer.ReactivatedNotes = customerReactivate.ReactivatedNotes;
-            customer.InactiveReason = null;
-            customer.InactivatedDate = null;
-            customer.InactiveNotes = null;
+            customer.ReactivationDate = DateTime.Now;
+            customer.ReactivationNotes = customerReactivate.ReactivationNotes;
+            customer.InactivationReason = null;
+            customer.InactivationDate = null;
+            customer.InactivationNotes = null;
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { customerId = customer.CustomerId });

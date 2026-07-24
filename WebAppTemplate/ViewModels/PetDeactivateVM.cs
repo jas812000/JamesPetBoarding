@@ -7,7 +7,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class PetReactivateVM
+    public class PetDeactivateVM
     {
         public Guid PetId { get; set; }
 
@@ -24,19 +24,11 @@ namespace JamesPetBoarding.ViewModels
         public string AgeDisplay { get; set; }
 
         public string ActiveStatusDisplay { get; set; }
-
         public string NotesDisplay { get; set; }
 
-        public string InactivationReasonDisplay { get; set; }
-
-        public string InactivationDateDisplay { get; set; }
-
-        public string InactivationNotesDisplay { get; set; }
-
-        public DateTime? ReactivationDate { get; set; }
+        public InactivationReasonEnum? InactivationReason { get; set; }
 
         [MaxLength(500)]
-        public string ReactivationNotes { get; set; }
-
+        public string InactivationNotes { get; set; }
     }
 }

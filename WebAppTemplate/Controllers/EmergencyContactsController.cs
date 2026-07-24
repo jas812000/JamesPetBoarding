@@ -222,7 +222,7 @@ namespace JamesPetBoarding.Controllers
 
             }
 
-            EmergencyContactDeleteVM emergencyContactDelete = new EmergencyContactDeleteVM();
+            EmergencyContactDeactivateVM emergencyContactDelete = new EmergencyContactDeactivateVM();
 
             emergencyContactDelete.EmergencyContactId = emergencyContact.EmergencyContactId;
             emergencyContactDelete.CustomerId = emergencyContact.CustomerId;
@@ -248,7 +248,7 @@ namespace JamesPetBoarding.Controllers
         // POST: EmergencyContacts/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(EmergencyContactDeleteVM emergencyContactDelete)
+        public ActionResult Delete(EmergencyContactDeactivateVM emergencyContactDelete)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
@@ -283,9 +283,13 @@ namespace JamesPetBoarding.Controllers
             }
 
             emergencyContact.IsActive = false;
-            emergencyContact.InactivatedReason = emergencyContactDelete.InactivatedReason;
-            emergencyContact.InactivatedDate = DateTime.Now;
-            emergencyContact.InactivatedNotes = emergencyContactDelete.InactivatedNotes;
+            emergencyContact.InactivationReason = emergencyContactDelete.InactivationReason;
+            emergencyContact.InactivationDate = DateTime.Now;
+            emergencyContact.InactivationNotes = emergencyContactDelete.InactivationNotes;
+
+            emergencyContact.ReactivationDate = null;
+            emergencyContact.ReactivationNotes = null;
+
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", "Customers", new { customerId = emergencyContact.CustomerId });
@@ -329,17 +333,17 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : emergencyContact.Notes;
 
-            emergencyContactReactivate.InactivatedReasonDisplay = emergencyContact.InactivatedReason.HasValue
-                ? emergencyContact.InactivatedReason.ToString()
+            emergencyContactReactivate.InactivationReasonDisplay = emergencyContact.InactivationReason.HasValue
+                ? emergencyContact.InactivationReason.ToString()
                 : "Not Applicable";
 
-            emergencyContactReactivate.InactivatedDateDisplay = emergencyContact.InactivatedDate.HasValue
-                ? emergencyContact.InactivatedDate.Value.ToShortDateString()
+            emergencyContactReactivate.InactivationDateDisplay = emergencyContact.InactivationDate.HasValue
+                ? emergencyContact.InactivationDate.Value.ToShortDateString()
                 : "Not Applicable";
 
-            emergencyContactReactivate.InactivatedNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivatedNotes)
+            emergencyContactReactivate.InactivationNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivationNotes)
                 ? "No inactive notes"
-                : emergencyContact.InactivatedNotes;
+                : emergencyContact.InactivationNotes;
 
             return View(emergencyContactReactivate);
         }
@@ -383,27 +387,27 @@ namespace JamesPetBoarding.Controllers
                     ? "No notes"
                     : emergencyContact.Notes;
 
-                emergencyContactReactivate.InactivatedReasonDisplay = emergencyContact.InactivatedReason.HasValue
-                    ? emergencyContact.InactivatedReason.ToString()
+                emergencyContactReactivate.InactivationReasonDisplay = emergencyContact.InactivationReason.HasValue
+                    ? emergencyContact.InactivationReason.ToString()
                     : "Not Applicable";
 
-                emergencyContactReactivate.InactivatedDateDisplay = emergencyContact.InactivatedDate.HasValue
-                    ? emergencyContact.InactivatedDate.Value.ToShortDateString()
+                emergencyContactReactivate.InactivationDateDisplay = emergencyContact.InactivationDate.HasValue
+                    ? emergencyContact.InactivationDate.Value.ToShortDateString()
                     : "Not Applicable";
 
-                emergencyContactReactivate.InactivatedNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivatedNotes)
+                emergencyContactReactivate.InactivationNotesDisplay = string.IsNullOrWhiteSpace(emergencyContact.InactivationNotes)
                     ? "No inactive notes"
-                    : emergencyContact.InactivatedNotes;
+                    : emergencyContact.InactivationNotes;
 
                 return View(emergencyContactReactivate);
             }
 
             emergencyContact.IsActive = true;
-            emergencyContact.ReactivatedDate = DateTime.Now;
-            emergencyContact.ReactivatedNotes = emergencyContactReactivate.ReactivatedNotes;
-            emergencyContact.InactivatedReason = null;
-            emergencyContact.InactivatedDate = null;
-            emergencyContact.InactivatedNotes = null;
+            emergencyContact.ReactivationDate = DateTime.Now;
+            emergencyContact.ReactivationNotes = emergencyContactReactivate.ReactivationNotes;
+            emergencyContact.InactivationReason = null;
+            emergencyContact.InactivationDate = null;
+            emergencyContact.InactivationNotes = null;
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", "Customers", new { customerId = emergencyContact.CustomerId });

@@ -16,6 +16,9 @@ namespace JamesPetBoarding.Models
         public EmployeeModel()
         {
             EmployeeId = Guid.NewGuid();
+            CheckedInBoardings = new List<BoardingModel>();
+            CheckedOutBoardings = new List<BoardingModel>();
+            CancelledBoardings = new List<BoardingModel>();
         }
 
         [Required, MaxLength(50)]
@@ -35,6 +38,21 @@ namespace JamesPetBoarding.Models
 
         [Required]
         public bool IsActive { get; set; } = true;
+
+        public InactivationReasonEnum? InactivationReason { get; set; }
+
+        public DateTime? InactivationDate { get; set; }
+
+        [MaxLength(500)]
+        public string InactivationNotes { get; set; }
+
+        public DateTime? ReactivationDate { get; set; }
+
+        [MaxLength(500)]
+        public string ReactivationNotes { get; set; }
+
+        [MaxLength(500)]
+        public string Notes { get; set; }
 
         [InverseProperty("CheckedInByEmployee")]
         public List<BoardingModel> CheckedInBoardings { get; set; }

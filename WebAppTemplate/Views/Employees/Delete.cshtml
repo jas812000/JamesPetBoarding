@@ -1,0 +1,86 @@
+﻿@model JamesPetBoarding.ViewModels.EmployeeDeactivateVM
+@{
+    ViewBag.Title = "Deactivate Employee";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Deactivate Employee Profile</h2>
+    <p class="lead">
+        View employee profile information before deactivation.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("Delete", "Employees", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.EmployeeId)
+
+
+    <div class="col-md-6">
+        <label class="form-label">Employee ID</label>
+        @Html.TextBoxFor(x => x.EmployeeId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Employee Name</label>
+        @Html.TextBoxFor(x => x.EmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Role</label>
+        @Html.TextBoxFor(x => x.RoleDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Email Address</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Phone Number</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Inactivation Reason</label>
+        @Html.EnumDropDownListFor(x => x.InactivationReason, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InactivationReason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Inactivation Notes</label>
+        @Html.TextAreaFor(x => x.InactivationNotes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.InactivationNotes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-12">
+        <div class="alert alert-warning">
+            This action will deactivate this employee profile.
+        </div>
+    </div>
+
+    <div class="col-md-12 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Deactivate Employee Profile</button>
+
+        @Html.ActionLink(
+            "Cancel",
+            "Read",
+            "Employees",
+            new { employeeId = Model.EmployeeId },
+            new { @class = "btn btn-secondary ms-2" }
+         )
+    </div>
+
+}
+

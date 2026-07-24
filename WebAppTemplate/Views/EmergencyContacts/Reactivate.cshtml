@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.EmergencyContactReactivateVM
+﻿@model JamesPetBoarding.ViewModels.EmergencyContactReactivationVM
 @{
     ViewBag.Title = "Reactivate Emergency Contact";
 }
@@ -69,22 +69,22 @@
     </div>
 
     <div class="col-md-8">
-        <h4>Inactive History</h4>
+        <h4>Inactivation History</h4>
     </div>
 
     <div class="col-md-4">
-        <label class="form-label">Inactive Reason</label>
-        @Html.TextBoxFor(x => x.InactivatedReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        <label class="form-label">Inactivation Reason</label>
+        @Html.TextBoxFor(x => x.InactivationReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
     </div>
 
     <div class="col-md-8">
-        <label class="form-label">Inactivated Date</label>
-        @Html.TextAreaFor(x => x.InactivatedDateDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        <label class="form-label">Inactivation Date</label>
+        @Html.TextAreaFor(x => x.InactivationDateDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
     </div>
 
     <div class="col-md-8">
-        <label class="form-label">Inactive Notes</label>
-        @Html.TextAreaFor(x => x.InactivatedNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        <label class="form-label">Inactivation Notes</label>
+        @Html.TextAreaFor(x => x.InactivationNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
     </div>
 
     <div class="col-md-8">
@@ -94,9 +94,9 @@
     </div>
 
     <div class="col-md-8">
-        <label class="form-label">Reactivated Notes</label>
-        @Html.TextAreaFor(x => x.ReactivatedNotes, new { @class = "form-control", rows = "3", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.ReactivatedNotes, "", new { @class = "text-danger" })
+        <label class="form-label">Reactivation Notes</label>
+        @Html.TextAreaFor(x => x.ReactivationNotes, new { @class = "form-control", rows = "3", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.ReactivationNotes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-md-10 text-center mt-4">

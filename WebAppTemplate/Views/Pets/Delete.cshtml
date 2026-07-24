@@ -72,14 +72,14 @@
     </div>
 
     <div class="col-md-6">
-        <label class="form-label">Inactive Reason</label>
-        @Html.EnumDropDownListFor(x => x.InactiveReason, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InactiveReason, "", new { @class = "text-danger" })
+        <label class="form-label">Inactivation Reason</label>
+        @Html.EnumDropDownListFor(x => x.InactivationReason, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InactivationReason, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-md-8">
-        <label class="form-label">Inactive Notes</label>
-        @Html.TextAreaFor(x => x.InactiveNotes, new { @class = "form-control", rows = "3", placeholder = "Enter inactive notes" })
+        <label class="form-label">Inactivation Notes</label>
+        @Html.TextAreaFor(x => x.InactiveNotes, new { @class = "form-control", rows = "3", placeholder = "Enter Inactivation notes" })
         @Html.ValidationMessageFor(x => x.InactiveNotes, "", new { @class = "text-danger" })
     </div>
 

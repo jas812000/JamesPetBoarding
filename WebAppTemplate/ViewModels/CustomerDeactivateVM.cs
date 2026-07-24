@@ -7,7 +7,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CustomerDeleteVM
+    public class CustomerDeactivateVM
     {
         public Guid CustomerId { get; set; }
 
@@ -27,10 +27,10 @@ namespace JamesPetBoarding.ViewModels
 
         public string StatusDisplay { get; set; }
 
-        public InactivatedReasonEnum? InactiveReason { get; set; }
+        public InactivationReasonEnum? InactivationReason { get; set; }
 
         [MaxLength(500)]
-        public string InactiveNotes { get; set; }
+        public string InactivationNotes { get; set; }
 
     }
 }

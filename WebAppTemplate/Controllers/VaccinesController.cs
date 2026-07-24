@@ -98,7 +98,6 @@ namespace JamesPetBoarding.Controllers
 
             if (!ModelState.IsValid)
             {
-
                 return View(vaccineForm);
             }
 

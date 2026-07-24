@@ -189,25 +189,25 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : pet.Notes;
 
-            petDetails.InactiveReasonDisplay = pet.InactiveReason.HasValue
-                ? pet.InactiveReason.ToString()
+            petDetails.InactivationReasonDisplay = pet.InactivationReason.HasValue
+                ? pet.InactivationReason.ToString()
                 : "Not Applicable";
 
-            petDetails.InactivatedDateDisplay = pet.InactivatedDate.HasValue
-                ? pet.InactivatedDate.Value.ToString("MM/dd/yyyy")
+            petDetails.InactivationDateDisplay = pet.InactivationDate.HasValue
+                ? pet.InactivationDate.Value.ToString("MM/dd/yyyy")
                 : "Not Applicable";
 
-            petDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
-                ? "No inactive notes"
-                : pet.InactiveNotes;
+            petDetails.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactivationNotes)
+                ? "No Inactivation notes"
+                : pet.InactivationNotes;
 
-            petDetails.ReactivatedDateDisplay = pet.ReactivatedDate.HasValue
-                ? pet.ReactivatedDate.Value.ToString("MM/dd/yyyy")
+            petDetails.ReactivationDateDisplay = pet.ReactivationDate.HasValue
+                ? pet.ReactivationDate.Value.ToString("MM/dd/yyyy")
                 : "Not Applicable";
 
-            petDetails.ReactivatedNotesDisplay = string.IsNullOrWhiteSpace(pet.ReactivatedNotes)
+            petDetails.ReactivationNotesDisplay = string.IsNullOrWhiteSpace(pet.ReactivationNotes)
                 ? "No reactivation notes"
-                : pet.ReactivatedNotes;
+                : pet.ReactivationNotes;
 
             if (pet.VetId.HasValue)
             {
@@ -386,24 +386,29 @@ namespace JamesPetBoarding.Controllers
                 age--;
             }
 
-            PetDeleteVM petDelete = new PetDeleteVM();
+            PetDeactivateVM petDeactivate = new PetDeactivateVM();
 
+            petDeactivate.PetId = pet.PetId;
 
+            petDeactivate.PetNameDisplay = pet.PetName;
 
-            petDelete.PetId = pet.PetId;
-            petDelete.PetNameDisplay = pet.PetName;
-            petDelete.SpeciesDisplay = pet.Species.ToString();
-            petDelete.BreedDisplay = pet.Breed;
-            petDelete.SexDisplay = pet.Sex.ToString();
-            petDelete.BirthDateDisplay = pet.BirthDate.ToShortDateString();
-            petDelete.AgeDisplay = age.ToString();
-            petDelete.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+            petDeactivate.SpeciesDisplay = pet.Species.ToString();
 
-            petDelete.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+            petDeactivate.BreedDisplay = pet.Breed;
+
+            petDeactivate.SexDisplay = pet.Sex.ToString();
+
+            petDeactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+
+            petDeactivate.AgeDisplay = age.ToString();
+
+            petDeactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+            petDeactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
                 ? "No notes"
                 : pet.Notes;
 
-            return View(petDelete);
+            return View(petDeactivate);
  
         }
 
@@ -411,15 +416,16 @@ namespace JamesPetBoarding.Controllers
         // POST: Pets/Delete
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(PetDeleteVM petDelete)
+        public ActionResult Deactivate(PetDeactivateVM petDeactivate)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petDelete.PetId);
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petDeactivate.PetId);
 
             if (pet == null)
             {
-                return Content("Pet ID #" + petDelete.PetId + " does not exist.");
+                return Content("Pet ID #" + petDeactivate.PetId + " does not exist.");
+
             }
 
             int age = DateTime.Today.Year - pet.BirthDate.Year;
@@ -431,36 +437,47 @@ namespace JamesPetBoarding.Controllers
             if (!ModelState.IsValid) 
             {
 
-                petDelete.PetId = pet.PetId;
-                petDelete.PetNameDisplay = pet.PetName;
-                petDelete.SpeciesDisplay = pet.Species.ToString();
-                petDelete.BreedDisplay = pet.Breed;
-                petDelete.SexDisplay = pet.Sex.ToString();
-                petDelete.BirthDateDisplay = pet.BirthDate.ToShortDateString();
-                petDelete.AgeDisplay = age.ToString();
-                petDelete.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
-                petDelete.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
+                petDeactivate.PetId = pet.PetId;
+
+                petDeactivate.PetNameDisplay = pet.PetName;
+
+                petDeactivate.SpeciesDisplay = pet.Species.ToString();
+
+                petDeactivate.BreedDisplay = pet.Breed;
+
+                petDeactivate.SexDisplay = pet.Sex.ToString();
+
+                petDeactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+
+                petDeactivate.AgeDisplay = age.ToString();
+
+                petDeactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
+
+                petDeactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
                     ? "No notes"
                     : pet.Notes;
 
-                return View(petDelete); 
+                return View(petDeactivate); 
             }
 
             pet.IsActive = false;
-            pet.InactiveReason = petDelete.InactiveReason;
-            pet.InactivatedDate = DateTime.Now;
-            pet.InactiveNotes = petDelete.InactiveNotes;
+
+            pet.InactivationReason = petDeactivate.InactivationReason;
+
+            pet.InactivationDate = DateTime.Now;
+
+            pet.InactivationNotes = petDeactivate.InactivationNotes;
+
+            pet.ReactivationDate = null;
+
+            pet.ReactivationNotes = null;
+
+          
             dbContext.SaveChanges();
 
-            return RedirectToAction("Read",
-                new
-                {
-                    petId = pet.PetId
-                }
-            );
+            return RedirectToAction("Read", new { petId = pet.PetId });
 
         }
-
 
 
         // GET: Pets/Reactivate
@@ -497,17 +514,17 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : pet.Notes;
 
-            petReactivate.InactiveReasonDisplay = pet.InactiveReason.HasValue
-                ? pet.InactiveReason.ToString()
+            petReactivate.InactivationReasonDisplay = pet.InactivationReason.HasValue
+                ? pet.InactivationReason.ToString()
                 : "Not Applicable";
 
-            petReactivate.InactivatedDateDisplay = pet.InactivatedDate.HasValue
-                ? pet.InactivatedDate.Value.ToShortDateString()
+            petReactivate.InactivationDateDisplay = pet.InactivationDate.HasValue
+                ? pet.InactivationDate.Value.ToShortDateString()
                 : "Not Applicable";
 
-            petReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
-                ? "No inactive notes"
-                : pet.InactiveNotes;
+            petReactivate.InactivationNotesDisplay = string.IsNullOrWhiteSpace(pet.InactivationNotes)
+                ? "No Inactivation notes"
+                : pet.InactivationNotes;
 
             return View(petReactivate);
 
@@ -539,40 +556,46 @@ namespace JamesPetBoarding.Controllers
             {
 
                 petReactivate.PetId = pet.PetId;
+
                 petReactivate.PetNameDisplay = pet.PetName;
+
                 petReactivate.SpeciesDisplay = pet.Species.ToString();
+
                 petReactivate.BreedDisplay = pet.Breed;
+
                 petReactivate.SexDisplay = pet.Sex.ToString();
+
                 petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+
                 petReactivate.AgeDisplay = age.ToString();
+
                 petReactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
 
                 petReactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)
                     ? "No notes"
                     : pet.Notes;
 
-                petReactivate.InactiveReasonDisplay = pet.InactiveReason.HasValue
-                    ? pet.InactiveReason.ToString()
+                petReactivate.InactivationReasonDisplay = pet.InactivationReason.HasValue
+                    ? pet.InactivationReason.ToString()
                     : "Not Applicable";
 
-                petReactivate.InactivatedDateDisplay = pet.InactivatedDate.HasValue
-                    ? pet.InactivatedDate.Value.ToShortDateString()
+                petReactivate.InactivationDateDisplay = pet.InactivationDate.HasValue
+                    ? pet.InactivationDate.Value.ToShortDateString()
                     : "Not Applicable";
 
-                petReactivate.InactiveNotesDisplay = string.IsNullOrWhiteSpace(pet.InactiveNotes)
-                    ? "No inactive notes"
-                    : pet.InactiveNotes;
+                petReactivate.InactivationNotesDisplay = string.IsNullOrWhiteSpace(pet.InactivationNotes)
+                    ? "No Inactivation notes"
+                    : pet.InactivationNotes;
 
                 return View(petReactivate);
             }
 
             pet.IsActive = true;
-            pet.ReactivatedDate = DateTime.Now;
-            pet.ReactivatedNotes = petReactivate.ReactivatedNotes;
 
-            pet.InactiveReason = null;
-            pet.InactivatedDate = null;
-            pet.InactiveNotes = null;
+            pet.ReactivationDate = DateTime.Now;
+
+            pet.ReactivationNotes = petReactivate.ReactivationNotes;
+
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { petId = pet.PetId });

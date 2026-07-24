@@ -44,15 +44,15 @@ namespace JamesPetBoarding.ViewModels
 
         public string ActiveStatusDisplay { get; set; }
 
-        public string InactiveReasonDisplay { get; set; }
+        public string InactivationReasonDisplay { get; set; }
 
-        public string InactivatedDateDisplay { get; set; }
+        public string InactivationDateDisplay { get; set; }
 
         public string InactiveNotesDisplay { get; set; }
 
-        public string ReactivatedDateDisplay { get; set; }
+        public string ReactivationDateDisplay { get; set; }
 
-        public string ReactivatedNotesDisplay { get; set; }
+        public string ReactivationNotesDisplay { get; set; }
 
         public string NotesDisplay { get; set; }
 
