@@ -1,0 +1,64 @@
+﻿@model JamesPetBoarding.ViewModels.ServiceFormVM
+@{
+    ViewBag.Title = "Update Service";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Update Service Profile</h2>
+    <p class="lead">
+        Update service profile information and profile details.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("Update", "Services", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.ServiceId)
+
+    <div class="col-md-6">
+        <label class="form-label">Service Name</label>
+        @Html.EnumDropDownListFor(x => x.ServiceName, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.ServiceName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Species</label>
+        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Base Price</label>
+        @Html.TextBoxFor(x => x.BasePrice, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.BasePrice, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pricing Type</label>
+        @Html.EnumDropDownListFor(x => x.PricingType, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PricingType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-success me-2">Update Service Profile</button>
+
+        @Html.ActionLink(
+            "Cancel",
+            "Read",
+            "Services",
+            new { serviceId = Model.ServiceId },
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
+}

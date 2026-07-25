@@ -71,11 +71,12 @@ namespace JamesPetBoarding.Controllers
                     .ToList();
             }
 
-            petSearch.Pets.Clear();
+            petSearch.PetSummaryResults.Clear();
 
             foreach (PetModel pet in pets)
             {
-                petSearch.Pets.Add(new PetSummaryVM
+                petSearch.PetSummaryResults.Add(new PetSummaryVM
+
                 {
                     PetId = pet.PetId,
                     PetNameDisplay = pet.PetName,
@@ -502,12 +503,19 @@ namespace JamesPetBoarding.Controllers
             PetReactivateVM petReactivate = new PetReactivateVM();
 
             petReactivate.PetId = pet.PetId;
+
             petReactivate.PetNameDisplay = pet.PetName;
+
             petReactivate.SpeciesDisplay = pet.Species.ToString();
+
             petReactivate.BreedDisplay = pet.Breed;
+
             petReactivate.SexDisplay = pet.Sex.ToString();
+
             petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
+
             petReactivate.AgeDisplay = age.ToString();
+
             petReactivate.ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive";
 
             petReactivate.NotesDisplay = string.IsNullOrWhiteSpace(pet.Notes)

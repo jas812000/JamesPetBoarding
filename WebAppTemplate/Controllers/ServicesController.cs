@@ -1,10 +1,14 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Services.Description;
 
 namespace JamesPetBoarding.Controllers
 {
@@ -17,241 +21,248 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-        // GET: Services/Create
-        // /Services/Create?serviceName=MedicationAdministration&basePrice=10.00&pricingType=PerService&notes=
-        public ActionResult Create(
-            ServiceNameEnum serviceName,
-            decimal basePrice,
-            PricingTypeEnum pricingType,
-            string notes
-        )
-        {
-           
+        // GET: Services/Search
+        public ActionResult Search() 
+        { 
+
+            ServiceSearchVM serviceSearch = new ServiceSearchVM();
+
+            return View(serviceSearch);
+        
+        }
+
+
+        // POST: Services/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(ServiceSearchVM serviceSearch) 
+        { 
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            if (basePrice <= 0) 
-            { 
-                return Content("Base price must be greater than zero."); 
+            List<ServiceModel> services = dbContext.Services.ToList();
+
+            if (serviceSearch.ServiceName.HasValue)
+            {
+                services = services
+                    .Where(x => x.ServiceName == serviceSearch.ServiceName.Value)
+                    .ToList();
             }
 
-            ServiceModel existingService = dbContext.Services.FirstOrDefault(x => x.ServiceName == serviceName);
-
-            if (existingService != null)
+            if (serviceSearch.Species.HasValue)
             {
-                return Content(serviceName + " already exists.");
+                services = services
+                    .Where(x => x.Species == serviceSearch.Species.Value)
+                    .ToList();
+            }
+
+            if (serviceSearch.PricingType.HasValue)
+            {
+                services = services
+                    .Where(x => x.PricingType == serviceSearch.PricingType.Value)
+                    .ToList();
+            }
+
+            serviceSearch.ServiceSummaryResults.Clear();
+
+            foreach (ServiceModel service in services)
+            {
+                serviceSearch.ServiceSummaryResults.Add(new ServiceSummaryVM
+                {
+                    ServiceId = service.ServiceId,
+                    ServiceNameDisplay = service.ServiceName.ToString(),
+                    SpeciesDisplay = service.Species.ToString(),
+                    BasePriceDisplay = service.BasePrice.ToString("C"),
+                    PricingTypeDisplay = service.PricingType.ToString()
+                });
+            }
+
+            return View(serviceSearch);
+
+        }
+
+
+        // GET: Services/Create
+        public ActionResult Create() 
+        {
+            
+            ServiceFormVM serviceForm = new ServiceFormVM();
+
+            return View(serviceForm);
+
+        }
+
+
+        // POST: Services/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(ServiceFormVM serviceForm) 
+        {
+            
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            if (!ModelState.IsValid)
+            {
+                return View(serviceForm);
             }
 
             ServiceModel service = new ServiceModel();
 
-            service.ServiceName = serviceName;
-            service.BasePrice = basePrice;
-            service.PricingType = pricingType;
-            service.Notes = notes;
+            service.ServiceName = serviceForm.ServiceName;
+            service.Species = serviceForm.Species;
+            service.BasePrice = serviceForm.BasePrice;
+            service.PricingType = serviceForm.PricingType;
+            service.Notes = serviceForm.Notes;
 
-            try
-            {
-                dbContext.Services.Add(service);
-                dbContext.SaveChanges();
+            dbContext.Services.Add(service);
+            dbContext.SaveChanges();
 
-                return Content(service.ServiceName + " was successfully created.");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+            return RedirectToAction("Search");
+
         }
-        
+
+
+
+
+
+
 
         // GET: Services/Read
-        // /Services/Read?serviceId=USE_EXISTING_SERVICE_ID
         public ActionResult Read(Guid serviceId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
 
-            if (service == null) { return Content("Service Id #" + serviceId + " does not exist."); }
+            if (service == null) 
+            { 
+                return Content("Service Id #" + serviceId + " does not exist."); 
+            }
 
-            string notesDisplay = string.IsNullOrWhiteSpace(service.Notes) 
+            ServiceDetailsVM serviceDetails = new ServiceDetailsVM();
+
+            serviceDetails.ServiceId = service.ServiceId;
+            serviceDetails.ServiceNameDisplay = service.ServiceName.ToString();
+            serviceDetails.SpeciesDisplay = service.Species.ToString();
+            serviceDetails.BasePriceDisplay = service.BasePrice.ToString("C");
+            serviceDetails.PricingTypeDisplay = service.PricingType.ToString();
+            serviceDetails.NotesDisplay = string.IsNullOrWhiteSpace(service.Notes) 
                 ? "No notes" 
                 : service.Notes;
 
-            string serviceNameDisplay = service.ServiceName.ToString();
-
-            switch (service.ServiceName) 
-            {
-                case ServiceNameEnum.FullGrooming:
-                    serviceNameDisplay = "Full Grooming";
-                    break;
-
-                case ServiceNameEnum.NailTrim:
-                    serviceNameDisplay = "Nail Trim";
-                    break;
-
-                case ServiceNameEnum.EarCleaning:
-                    serviceNameDisplay = "Ear Cleaning";
-                    break;
-
-                case ServiceNameEnum.TeethBrushing:
-                    serviceNameDisplay = "Teeth Brushing";
-                    break;
-
-                case ServiceNameEnum.HandFeeding:
-                    serviceNameDisplay = "Hand Feeding";
-                    break;
-
-                case ServiceNameEnum.FoodPreparation:
-                    serviceNameDisplay = "Food Preparation";
-                    break;
-
-                case ServiceNameEnum.MedicationAdministration:
-                    serviceNameDisplay = "Medication Administration";
-                    break;
-
-                case ServiceNameEnum.ExtraPlayTime:
-                    serviceNameDisplay = "Extra Play Time";
-                    break;
-
-                case ServiceNameEnum.ExtraWalk:
-                    serviceNameDisplay = "Extra Walk";
-                    break;
-
-                case ServiceNameEnum.OneOnOnePlay:
-                    serviceNameDisplay = "One on One Play";
-                    break;
-
-                case ServiceNameEnum.LatePickUp:
-                    serviceNameDisplay = "Late Pick Up";
-                    break;
-
-                case ServiceNameEnum.AfterHoursPickup:
-                    serviceNameDisplay = "After Hours Pick Up";
-                    break;
-
-                case ServiceNameEnum.EarlyDropOff:
-                    serviceNameDisplay = "Early Drop Off";
-                    break;
-
-                case ServiceNameEnum.BoardingUpgrade:
-                    serviceNameDisplay = "Boarding Upgrade";
-                    break;
-
-                case ServiceNameEnum.LuxurySuiteUpgrade:
-                    serviceNameDisplay = "Luxury Suite Upgrade";
-                    break;
-
-                case ServiceNameEnum.TrainingSession:
-                    serviceNameDisplay = "Training Session";
-                    break;
-
-                case ServiceNameEnum.BehavioralAssessment:
-                    serviceNameDisplay = "Behavioral Assessment";
-                    break;
-
-            }
-
-            string pricingTypeDisplay = service.PricingType.ToString();
-
-            switch (service.PricingType) 
-            {
-                case PricingTypeEnum.PerPet:
-                    pricingTypeDisplay = "Per Pet";
-                    break;
-
-                case PricingTypeEnum.PerNight:
-                    pricingTypeDisplay = "Per Night";
-                    break;
-
-                case PricingTypeEnum.PerDay:
-                    pricingTypeDisplay = "Per Day";
-                    break;
-
-                case PricingTypeEnum.PerHour:
-                    pricingTypeDisplay = "Per Hour";
-                    break;
-
-                case PricingTypeEnum.PerStay:
-                    pricingTypeDisplay = "Per Stay";
-                    break;
-
-                case PricingTypeEnum.PerService:
-                    pricingTypeDisplay = "Per Service";
-                    break;
-
-            }
-
-            return Content(
-                "Service ID #" + service.ServiceId +
-                "<br />Service Name: " + serviceNameDisplay +
-                "<br />Base Price: $" + service.BasePrice.ToString("F2") +
-                "<br />Pricing Type: " + pricingTypeDisplay +
-                "<br />Notes: " + notesDisplay
-            );
+            return View(serviceDetails);
         }
+
 
         // GET: Services/Update
-        // /Services/Update?serviceId=USE_EXISTING_SERVICE_ID&serviceName=MedicationAdministration&basePrice=9.99&pricingType=PerService&notes=
-        public ActionResult Update(
-            Guid serviceId,
-            ServiceNameEnum serviceName,
-            decimal basePrice,
-            PricingTypeEnum pricingType,
-            string notes
-        )
+        public ActionResult Update(Guid serviceId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
 
-            if (service == null) { return Content("Service ID #" + serviceId + " does not exist."); }
-
-            if (basePrice <= 0) { return Content("Base price must be greater than zero."); }
-
-            ServiceModel existingService = dbContext.Services.FirstOrDefault(x => x.ServiceId != serviceId && x.ServiceName == serviceName);
-
-            if (existingService != null)
-            {
-                return Content(serviceName + " already exists.");
+            if (service == null)
+            { 
+                return Content("Service ID #" + serviceId + " does not exist."); 
             }
 
-            service.ServiceName = serviceName;
-            service.BasePrice = basePrice;
-            service.PricingType = pricingType;
-            service.Notes = notes;
+            ServiceFormVM serviceForm = new ServiceFormVM();
 
-            try
-            {
-                dbContext.SaveChanges();
+            serviceForm.ServiceId = service.ServiceId;
+            serviceForm.ServiceName = service.ServiceName;
+            serviceForm.Species = service.Species;
+            serviceForm.BasePrice = service.BasePrice;
+            serviceForm.PricingType = service.PricingType;
+            serviceForm.Notes = service.Notes;
 
-                return Content("Service ID #" + service.ServiceId + " was successfully updated.");
-            }
-            catch (Exception ex )
-            {
-                return Content(ex.Message);
-            }
+            return View(serviceForm);
+         
         }
 
-        // GET: Services/Delete
-        // /Services/Delete?serviceId=USE_EXISTING_SERVICE_ID
-        public ActionResult Delete(Guid serviceId)
+
+        // POST: Services/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(ServiceFormVM serviceForm)
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceForm.ServiceId);
+
+            if (service == null)
+            {
+                return Content("Service ID #" + serviceForm.ServiceId + " does not exist.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(serviceForm);
+            }
+
+            service.ServiceName = serviceForm.ServiceName;
+            service.Species = serviceForm.Species;
+            service.BasePrice = serviceForm.BasePrice;
+            service.PricingType = serviceForm.PricingType;
+            service.Notes = serviceForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { serviceId = service.ServiceId });
+
+        }
+
+
+        // GET: Service/Delete
+        public ActionResult Delete(Guid serviceId) 
+        { 
+            
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
 
-            if (service == null) { return Content("Service ID #" + serviceId + " does not exist."); }
-
-            try
+            if (service == null)
             {
-                dbContext.Services.Remove(service);
-                dbContext.SaveChanges();
+                return Content("Service ID #" + serviceId + " does not exist.");
+            }
 
-                return Content("Service ID #" + service.ServiceId + " was successfully deleted.");
-            }
-            catch (Exception ex)
+            ServiceDeleteVM serviceDelete = new ServiceDeleteVM();
+
+            serviceDelete.ServiceId = service.ServiceId;
+            serviceDelete.ServiceNameDisplay = service.ServiceName.ToString();
+            serviceDelete.SpeciesDisplay = service.Species.ToString(); 
+            serviceDelete.BasePriceDisplay = service.BasePrice.ToString("C");
+            serviceDelete.PricingTypeDisplay = service.PricingType.ToString();
+            serviceDelete.NotesDisplay = string.IsNullOrWhiteSpace(service.Notes)
+                ? "No notes"
+                : service.Notes;
+
+            return View(serviceDelete);
+        }
+
+
+        // POST: Service/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(ServiceDeleteVM serviceDelete) 
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceDelete.ServiceId);
+
+            if (service == null)
             {
-                return Content(ex.Message);
+                return Content("Service ID #" + serviceDelete.ServiceId + " does not exist.");
             }
+
+            dbContext.Services.Remove(service);
+
+            dbContext.SaveChanges();
+
+
+            return RedirectToAction("Search"); 
+        
         }
     }
 }

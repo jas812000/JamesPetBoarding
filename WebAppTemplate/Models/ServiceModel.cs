@@ -16,6 +16,7 @@ namespace JamesPetBoarding.Models
         public ServiceModel()
         {
             ServiceId = Guid.NewGuid();
+            InvoiceItems = new List<InvoiceItemModel>();
         }
 
         [Required]

@@ -425,8 +425,11 @@
     <Compile Include="ViewModels\RevenueReportFilterVM.cs" />
     <Compile Include="ViewModels\RevenueReportRowVM.cs" />
     <Compile Include="ViewModels\RevenueReportVM.cs" />
+    <Compile Include="ViewModels\ServiceDeleteVM.cs" />
     <Compile Include="ViewModels\ServiceDetailsVM.cs" />
     <Compile Include="ViewModels\ServiceFormVM.cs" />
+    <Compile Include="ViewModels\ServiceSearchVM.cs" />
+    <Compile Include="ViewModels\ServiceSummaryVM.cs" />
     <Compile Include="ViewModels\VaccineDeleteVM.cs" />
     <Compile Include="ViewModels\VaccineDetailsVM.cs" />
     <Compile Include="ViewModels\VaccineFormVM.cs" />
@@ -580,6 +583,11 @@
     <Content Include="Views\Employees\Reactivate.cshtml" />
     <Content Include="Views\Employees\MyProfile.cshtml" />
     <Content Include="Views\Employees\UpdateMyProfile.cshtml" />
+    <Content Include="Views\Services\Search.cshtml" />
+    <Content Include="Views\Services\Create.cshtml" />
+    <Content Include="Views\Services\Read.cshtml" />
+    <Content Include="Views\Services\Update.cshtml" />
+    <Content Include="Views\Services\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -589,7 +597,6 @@
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
     <Folder Include="Views\Payments\" />
-    <Folder Include="Views\Services\" />
     <Folder Include="Views\Veterinarians\" />
   </ItemGroup>
   <ItemGroup>

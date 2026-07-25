@@ -23,7 +23,7 @@ namespace JamesPetBoarding.ViewModels
 
         public bool? IsActive { get; set; }
 
-        public List<PetSummaryVM> Pets { get; set; } = new List<PetSummaryVM>();
+        public List<PetSummaryVM> PetSummaryResults { get; set; } = new List<PetSummaryVM>();
 
     }
 }
