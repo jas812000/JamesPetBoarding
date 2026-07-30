@@ -24,13 +24,33 @@ namespace JamesPetBoarding.ViewModels
 
         public string BoardingUnitDisplay { get; set; }
 
+        public BoardingStatusEnum BoardingStatus { get; set; }
+
         public string StartDateTimeDisplay { get; set; }
 
         public string EndDateTimeDisplay { get; set; }
 
         public string StatusDisplay { get; set; }
 
-        public string Notes { get; set; }
+        public string ActualCheckInDateTimeDisplay { get; set; }
+
+        public string CheckedInByEmployeeNameDisplay { get; set; }
+
+        public string ActualCheckOutDateTimeDisplay { get; set; }
+
+        public string CheckedOutByEmployeeNameDisplay { get; set; }
+
+        public string CancelledDateTimeDisplay { get; set; }
+
+        public string CancelledByEmployeeNameDisplay { get; set; }
+
+        public string CancelledReasonDisplay { get; set; }
+
+        public string NoShowDateTimeDisplay { get; set; }
+
+        public string NoShowByEmployeeNameDisplay { get; set; }
+
+        public string NotesDisplay { get; set; }
 
     }
 }

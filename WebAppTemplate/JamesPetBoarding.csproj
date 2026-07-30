@@ -323,6 +323,10 @@
     <Compile Include="Migrations\202607140203383_UpdateEmployeeAndInactivationWorkflows.Designer.cs">
       <DependentUpon>202607140203383_UpdateEmployeeAndInactivationWorkflows.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607150538145_AddNoShowFieldsToBoarding.cs" />
+    <Compile Include="Migrations\202607150538145_AddNoShowFieldsToBoarding.Designer.cs">
+      <DependentUpon>202607150538145_AddNoShowFieldsToBoarding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -336,6 +340,9 @@
     <Compile Include="Models\InvoiceItemModel.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\MedicationModel.cs" />
+    <Compile Include="ViewModels\BoardingCancelVM.cs" />
+    <Compile Include="ViewModels\BoardingNoShowVM.cs" />
+    <Compile Include="ViewModels\BoardingSearchVM.cs" />
     <Compile Include="ViewModels\BoardingUnitDeleteVM.cs" />
     <Compile Include="ViewModels\BoardingUnitSearchVM.cs" />
     <Compile Include="ViewModels\BoardingUnitSummaryVM.cs" />
@@ -380,9 +387,8 @@
     <Compile Include="ViewModels\BoardingSummaryVM.cs" />
     <Compile Include="ViewModels\BoardingUnitDetailsVM.cs" />
     <Compile Include="ViewModels\BoardingUnitFormVM.cs" />
-    <Compile Include="ViewModels\CancelBoardingVM.cs" />
-    <Compile Include="ViewModels\CheckInBoardingVM.cs" />
-    <Compile Include="ViewModels\CheckOutBoardingVM.cs" />
+    <Compile Include="ViewModels\BoardingCheckInVM.cs" />
+    <Compile Include="ViewModels\BoardingCheckOutVM.cs" />
     <Compile Include="ViewModels\CustomerDetailsVM.cs" />
     <Compile Include="ViewModels\ContactUsSubmissionVM.cs" />
     <Compile Include="ViewModels\CustomerFormVM.cs" />
@@ -482,6 +488,11 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Boardings\Cancel.cshtml" />
+    <Content Include="Views\Boardings\CheckIn.cshtml" />
+    <Content Include="Views\Boardings\CheckOut.cshtml" />
+    <Content Include="Views\Boardings\NoShow.cshtml" />
+    <None Include="Views\Boardings\Update.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -573,7 +584,6 @@
     <Content Include="Views\BoardingUnits\Search.cshtml" />
     <Content Include="Views\BoardingUnits\Create.cshtml" />
     <Content Include="Views\BoardingUnits\Read.cshtml" />
-    <Content Include="Views\BoardingUnits\Update.cshtml" />
     <Content Include="Views\BoardingUnits\Delete.cshtml" />
     <Content Include="Views\Employees\Search.cshtml" />
     <Content Include="Views\Employees\Create.cshtml" />
@@ -588,11 +598,14 @@
     <Content Include="Views\Services\Read.cshtml" />
     <Content Include="Views\Services\Update.cshtml" />
     <Content Include="Views\Services\Delete.cshtml" />
+    <Content Include="Views\Boardings\Search.cshtml" />
+    <Content Include="Views\Boardings\Create.cshtml" />
+    <Content Include="Views\Boardings\Read.cshtml" />
+    <Content Include="Views\BoardingUnits\Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
-    <Folder Include="Views\Boardings\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Invoices\" />
@@ -680,6 +693,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607140203383_UpdateEmployeeAndInactivationWorkflows.resx">
       <DependentUpon>202607140203383_UpdateEmployeeAndInactivationWorkflows.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607150538145_AddNoShowFieldsToBoarding.resx">
+      <DependentUpon>202607150538145_AddNoShowFieldsToBoarding.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

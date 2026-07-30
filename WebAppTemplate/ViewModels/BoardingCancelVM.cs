@@ -7,19 +7,13 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class BoardingSummaryVM
+    public class BoardingCancelVM
     {
         public Guid BoardingId { get; set; }
 
-        public Guid CustomerId { get; set; }
-
         public string CustomerNameDisplay { get; set; }
 
-        public Guid PetId { get; set; }
-
         public string PetNameDisplay { get; set; }
-
-        public Guid BoardingUnitId { get; set; }
 
         public string BoardingUnitDisplay { get; set; }
 
@@ -31,5 +25,9 @@ namespace JamesPetBoarding.ViewModels
 
         public string StatusDisplay { get; set; }
 
+        [Required]
+        [MaxLength(1000)]
+        public string CancelledReason { get; set; }
     }
+    
 }

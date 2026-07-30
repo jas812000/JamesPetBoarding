@@ -9,14 +9,14 @@ namespace JamesPetBoarding.Models
 {
     public class BoardingUnitModel
     {
+        public BoardingUnitModel()
+        { 
+            BoardingUnitId = Guid.NewGuid(); 
+            Boardings = new List<BoardingModel>(); 
+        }
 
         [Key]
         public Guid BoardingUnitId { get; set; }
-
-        public BoardingUnitModel()
-        {
-            BoardingUnitId = Guid.NewGuid();
-        }
 
         [Required]
         public UnitTypeEnum UnitType { get; set; }

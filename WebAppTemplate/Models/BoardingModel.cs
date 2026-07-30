@@ -17,6 +17,7 @@ namespace JamesPetBoarding.Models
         public BoardingModel()
         {
             BoardingId = Guid.NewGuid();
+            InvoiceItems = new List<InvoiceItemModel>();
         }
 
         [Required]
@@ -66,6 +67,13 @@ namespace JamesPetBoarding.Models
 
         [MaxLength(1000)]
         public string CancelledReason { get; set; }
+
+        public DateTime? NoShowDateTime { get; set; }
+
+        public Guid? NoShowByEmployeeId { get; set; }
+
+        [ForeignKey("NoShowByEmployeeId")]
+        public EmployeeModel NoShowByEmployee { get; set; }
 
         [Required]
         public BoardingStatusEnum Status { get; set; }

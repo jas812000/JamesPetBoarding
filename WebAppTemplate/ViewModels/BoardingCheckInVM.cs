@@ -1,4 +1,5 @@
-﻿using JamesPetBoarding.Models;
+﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -8,7 +9,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CheckInBoardingVM
+    public class BoardingCheckInVM
     {
         public Guid BoardingId { get; set; }
 
@@ -24,13 +25,13 @@ namespace JamesPetBoarding.ViewModels
 
         public string BoardingUnitDisplay { get; set; }
 
-        [Required]
-        public DateTime? ActualCheckInDateTime { get; set; }
+        public BoardingStatusEnum BoardingStatus { get; set; }
 
-        [Required]
-        public Guid? CheckedInByEmployeeId { get; set; }
+        public string StartDateTimeDisplay { get; set; }
 
-        public string CheckedInByEmployeeNameDisplay { get; set; }
+        public string EndDateTimeDisplay { get; set; }
+
+        public string StatusDisplay { get; set; }
 
         [MaxLength(2000)]
         public string Notes { get; set; }

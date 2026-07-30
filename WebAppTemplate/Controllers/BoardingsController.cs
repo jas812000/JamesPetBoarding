@@ -7,6 +7,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using JamesPetBoarding.ViewModels;
+using JamesPetBoarding.Migrations;
 
 namespace JamesPetBoarding.Controllers
 {
@@ -18,407 +20,1051 @@ namespace JamesPetBoarding.Controllers
             return View();
         }
 
-        // GET: Boardings/Create
-        // /Boardings/Create?customerId=USE_EXISTING_CUSTOMER_ID&petId=USE_EXISTING_PET_ID&boardingUnitId=USE_EXISTING_BOARDING_UNIT_ID&startDateTime=2026-06-10%2008:00:00&endDateTime=2026-06-15%2017:00:00&notes=
-        public ActionResult Create(
-            Guid customerId,
-            Guid petId,
-            Guid boardingUnitId,
-            DateTime startDateTime,
-            DateTime endDateTime,
-            string notes
-        )
+
+        // GET: Boardings/Search
+        public ActionResult Search() 
+        { 
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingSearchVM boardingSearch = new BoardingSearchVM();
+
+            boardingSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
+            boardingSearch.PetSelectList = BuildPetSelectList(dbContext);
+            boardingSearch.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+            return View(boardingSearch);
+        
+        }
+
+
+        // POST: Boardings/Search
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Search(BoardingSearchVM boardingSearch) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) 
-            { 
-                return Content("Customer ID #" + customerId + " does not exist."); 
+            List<BoardingModel> boardingQuery = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .ToList();
+
+            if (boardingSearch.CustomerId.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.CustomerId == boardingSearch.CustomerId.Value)
+                    .ToList();
             }
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-            if (pet == null) 
-            { 
-                return Content("Pet ID #" + petId + " does not exist."); 
+            if (boardingSearch.PetId.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.PetId == boardingSearch.PetId.Value)
+                    .ToList();
             }
 
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == customerId && x.PetId == petId);
-
-            if (customerPet == null) 
-            { 
-                return Content("This customer is not associated with this pet."); 
+            if (boardingSearch.BoardingUnitId.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.BoardingUnitId == boardingSearch.BoardingUnitId.Value)
+                    .ToList();
             }
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
-            if (boardingUnit == null) 
-            { 
-                return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); 
+            if (boardingSearch.BoardingStatus.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.Status == boardingSearch.BoardingStatus.Value)
+                    .ToList();
             }
 
-            if (endDateTime < startDateTime) 
+            if (boardingSearch.StartDateTime.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.StartDateTime >= boardingSearch.StartDateTime.Value)
+                    .ToList();
+            }
+
+            if (boardingSearch.EndDateTime.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.EndDateTime <= boardingSearch.EndDateTime.Value)
+                    .ToList();
+            }
+
+            boardingSearch.BoardingSummaryResults = boardingQuery
+                .OrderByDescending(x => x.StartDateTime)
+                .Select(x => new BoardingSummaryVM
+                {
+                    BoardingId = x.BoardingId,
+
+                    CustomerId = x.CustomerId,
+                    CustomerNameDisplay = 
+                        x.Customer.LastName + ", " + 
+                        x.Customer.FirstName,
+                    
+                    PetId = x.PetId,
+                    PetNameDisplay = x.Pet.PetName,
+
+                    BoardingUnitId = x.BoardingUnitId,
+                    BoardingUnitDisplay = 
+                        x.BoardingUnit.UnitName + " - " + 
+                        x.BoardingUnit.UnitNumber + " - " + 
+                        x.BoardingUnit.UnitType,
+
+                    BoardingStatus = x.Status,
+                    StatusDisplay = x.Status.ToString(),
+
+                    StartDateTimeDisplay = x.StartDateTime.ToString("MM/dd/yyyy h:mm tt"),
+
+                    EndDateTimeDisplay = x.EndDateTime.ToString("MM/dd/yyyy h:mm tt")
+
+                })
+                .ToList();
+
+            boardingSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
+            boardingSearch.PetSelectList = BuildPetSelectList(dbContext);
+            boardingSearch.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+            return View(boardingSearch);
+
+        }
+
+
+        // GET: Boardings/Create
+        public ActionResult Create() 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingFormVM boardingForm = new BoardingFormVM();
+            boardingForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
+            boardingForm.PetSelectList = BuildPetSelectList(dbContext);
+            boardingForm.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+            return View (boardingForm);
+
+        }
+
+
+        // POST: Boardings/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(BoardingFormVM boardingForm)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            if (boardingForm.EndDateTime <= boardingForm.StartDateTime)
+            {
+                ModelState.AddModelError("EndDateTime", "End date and time must be later than the start date and time.");
+            }
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == boardingForm.CustomerId);
+            if (customer == null)
+            {
+                return Content("Customer ID #" + boardingForm.CustomerId + " does not exist.");
+            }
+
+            if (!customer.IsActive)
+            {
+                return Content("Customer ID #" + boardingForm.CustomerId + " is inactive.");
+            }
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == boardingForm.PetId);
+            if (pet == null)
+            {
+                return Content("Pet ID #" + boardingForm.PetId + " does not exist.");
+            }
+
+            if (!pet.IsActive)
+            {
+                return Content("Pet ID #" + boardingForm.PetId + " is inactive.");
+            }
+
+            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == boardingForm.CustomerId && x.PetId == boardingForm.PetId);
+
+            if (customerPet == null)
+            {
+                return Content("This customer is not associated with this pet.");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingForm.BoardingUnitId);
+            if (boardingUnit == null)
+            {
+                return Content("Boarding Unit ID #" + boardingForm.BoardingUnitId + " does not exist.");
+            }
+
+            if (!boardingUnit.IsActive)
+            {
+                return Content("Boarding Unit ID #" + boardingForm.BoardingUnitId + " is inactive.");
+            }
+
+            BoardingModel conflictingBoarding = dbContext.Boardings
+                .FirstOrDefault(x => 
+                    x.BoardingUnitId == boardingForm.BoardingUnitId && 
+                    x.Status != BoardingStatusEnum.Cancelled &&
+                    x.Status != BoardingStatusEnum.NoShow &&
+                    x.StartDateTime < boardingForm.EndDateTime && 
+                    x.EndDateTime > boardingForm.StartDateTime);
+
+            if (conflictingBoarding != null)
             { 
-                return Content("End date cannot be before start date."); 
+                ModelState.AddModelError(
+                    "BoardingUnitId", 
+                    "The boarding unit is not available for the selected dates and times."); 
+            }
+
+            if (!ModelState.IsValid)
+            {
+                boardingForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
+                boardingForm.PetSelectList = BuildPetSelectList(dbContext);
+                boardingForm.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+                return View(boardingForm);
             }
 
             BoardingModel boarding = new BoardingModel();
 
-            boarding.CustomerId = customerId;
-            boarding.PetId = petId;
-            boarding.BoardingUnitId = boardingUnitId;
-            boarding.StartDateTime = startDateTime;
-            boarding.EndDateTime = endDateTime;
-            boarding.ActualCheckInDateTime = null;
-            boarding.CheckedInByEmployeeId = null;
-            boarding.ActualCheckOutDateTime = null;
-            boarding.CheckedOutByEmployeeId = null;
-            boarding.CancelledDateTime = null;
-            boarding.CancelledByEmployeeId = null;
-            boarding.CancelledReason = null;
+            boarding.CustomerId = boardingForm.CustomerId;
+            boarding.PetId = boardingForm.PetId;
+            boarding.BoardingUnitId = boardingForm.BoardingUnitId;
+            boarding.StartDateTime = boardingForm.StartDateTime;
+            boarding.EndDateTime = boardingForm.EndDateTime;
+            boarding.Notes = boardingForm.Notes;
             boarding.Status = BoardingStatusEnum.Scheduled;
-            boarding.Notes = notes;
 
-            try
-            {
-                dbContext.Boardings.Add(boarding);
-                dbContext.SaveChanges();
+            dbContext.Boardings.Add(boarding);
+            dbContext.SaveChanges();
 
-                return Content("A Pet boarding was created.");
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
 
-            }
-            catch (Exception ex) 
-            {
-                return Content(ex.Message);
-            }
         }
 
+
         // GET: Boardings/Read
-        // /Boardings/Read?boardingId=USE_EXISTING_BOARDING_ID
-        public ActionResult Read(Guid boardingId)
-        {
+        public ActionResult Read(Guid boardingId) 
+        { 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingModel boarding = dbContext.Boardings.FirstOrDefault(x => x.BoardingId == boardingId);
-            if (boarding == null) { return Content("Boarding ID #" + boardingId + " does not exist."); }
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .Include(x => x.CheckedInByEmployee)
+                .Include(x => x.CheckedOutByEmployee)
+                .Include(x => x.CancelledByEmployee)
+                .Include(x => x.NoShowByEmployee)
+                .FirstOrDefault(x => x.BoardingId == boardingId);
 
-            string actualCheckInDateTimeDisplay = "Not checked in";
-            string checkedInEmployeeDisplay = "n/a";
-            string actualCheckOutDateTimeDisplay = "n/a";
-            string checkedOutEmployeeDisplay = "n/a";
-            string cancelledDateTimeDisplay = "n/a";
-            string cancelledByEmployeeDisplay = "n/a";
-            string cancelledReasonDisplay = "n/a";
-
-            string statusDisplay = boarding.Status.ToString();
-
-            switch (boarding.Status) 
+            if (boarding == null)
             {
-
-                case BoardingStatusEnum.Scheduled:
-                    statusDisplay = "Scheduled";
-                    break;
-
-                case BoardingStatusEnum.Confirmed:
-                    statusDisplay = "Confirmed";
-                    break;
-
-                case BoardingStatusEnum.NoShow:
-                    statusDisplay = "No Show";
-                    break;
-
-                case BoardingStatusEnum.CheckedIn:
-                    statusDisplay = "Checked In";
-                    actualCheckInDateTimeDisplay = boarding.ActualCheckInDateTime.Value.ToString("MM/dd/yyyy hh:mm tt");
-                    checkedInEmployeeDisplay = boarding.CheckedInByEmployeeId.Value.ToString();
-                    actualCheckOutDateTimeDisplay = "Not checked out";
-                    break;
-
-                case BoardingStatusEnum.CheckedOut:
-                    statusDisplay = "Checked Out";
-                    actualCheckInDateTimeDisplay = boarding.ActualCheckInDateTime.Value.ToString("MM/dd/yyyy hh:mm tt");
-                    checkedInEmployeeDisplay = boarding.CheckedInByEmployeeId.Value.ToString();
-                    actualCheckOutDateTimeDisplay = boarding.ActualCheckOutDateTime.Value.ToString("MM/dd/yyyy hh:mm tt");
-                    checkedOutEmployeeDisplay = boarding.CheckedOutByEmployeeId.Value.ToString();
-                    break;
-
-                case BoardingStatusEnum.Cancelled:
-                    statusDisplay = "Cancelled";
-                    cancelledDateTimeDisplay = boarding.CancelledDateTime.Value.ToString("MM/dd/yyyy hh:mm tt");
-                    cancelledByEmployeeDisplay = boarding.CancelledByEmployeeId.Value.ToString();
-                    cancelledReasonDisplay = boarding.CancelledReason;
-                    break;
-
-                default:
-                    break;
+                return Content("Boarding ID# " + boardingId + " does not exist.");
             }
 
-            string notesDisplay = string.IsNullOrWhiteSpace(boarding.Notes)
+            BoardingDetailsVM boardingDetails = new BoardingDetailsVM();
+
+            boardingDetails.BoardingId = boarding.BoardingId;
+
+            boardingDetails.CustomerId = boarding.CustomerId;
+
+            boardingDetails.CustomerNameDisplay = 
+                boarding.Customer.LastName + ", " + 
+                boarding.Customer.FirstName;
+
+            boardingDetails.PetId = boarding.PetId;
+
+            boardingDetails.PetNameDisplay = boarding.Pet.PetName;
+
+            boardingDetails.BoardingUnitId = boarding.BoardingUnitId;
+
+            boardingDetails.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
+
+            boardingDetails.BoardingStatus = boarding.Status;
+
+            boardingDetails.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingDetails.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingDetails.StatusDisplay = boarding.Status.ToString();
+
+            boardingDetails.ActualCheckInDateTimeDisplay = 
+                boarding.ActualCheckInDateTime.HasValue
+                    ? boarding.ActualCheckInDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                    : "Not checked in";
+
+            boardingDetails.CheckedInByEmployeeNameDisplay = 
+                boarding.CheckedInByEmployee == null 
+                    ? "Not checked in"
+                    : boarding.CheckedInByEmployee.FirstName + " " + boarding.CheckedInByEmployee.LastName;
+
+            boardingDetails.ActualCheckOutDateTimeDisplay = boarding.ActualCheckOutDateTime.HasValue
+                ? boarding.ActualCheckOutDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                : "Not checked out";
+
+            boardingDetails.CheckedOutByEmployeeNameDisplay = 
+                boarding.CheckedOutByEmployee == null   
+                    ? "Not checked out" 
+                    : boarding.CheckedOutByEmployee.FirstName + " " + boarding.CheckedOutByEmployee.LastName;
+
+            boardingDetails.CancelledDateTimeDisplay = boarding.CancelledDateTime.HasValue 
+                ? boarding.CancelledDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                : "Not cancelled";
+
+            boardingDetails.CancelledByEmployeeNameDisplay = 
+                boarding.CancelledByEmployee == null 
+                    ? "Not cancelled" 
+                    : boarding.CancelledByEmployee.FirstName + " " + boarding.CancelledByEmployee.LastName;
+
+            boardingDetails.CancelledReasonDisplay = 
+                string.IsNullOrWhiteSpace(boarding.CancelledReason) 
+                    ? "No cancellation reason"
+                    : boarding.CancelledReason;
+
+            boardingDetails.NoShowDateTimeDisplay = boarding.NoShowDateTime.HasValue
+                ? boarding.NoShowDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                : "Not marked as a no-show";
+
+            boardingDetails.NoShowByEmployeeNameDisplay =
+                boarding.NoShowByEmployee == null
+                    ? "Not marked as a no-show"
+                    : boarding.NoShowByEmployee.FirstName + " " + boarding.NoShowByEmployee.LastName;
+
+            boardingDetails.NotesDisplay = string.IsNullOrWhiteSpace(boarding.Notes)
                 ? "No notes"
                 : boarding.Notes;
 
-            return Content(
-            "Boarding ID #" + boarding.BoardingId +
-            "<br />Pet ID #" + boarding.PetId +
-            "<br />Customer ID #" + boarding.CustomerId +
-            "<br />Boarding Unit ID #" + boarding.BoardingUnitId +
-            "<br />Start Date/Time: " + boarding.StartDateTime.ToString("MM/dd/yyyy") + 
-            "<br />End Date/Time: " + boarding.EndDateTime.ToString("MM/dd/yyyy") +
-            "<br />Actual Check-In Date/Time: " + actualCheckInDateTimeDisplay +
-            "<br />Checked-In By Employee ID #" + checkedInEmployeeDisplay +
-            "<br />Actual Check-Out Date/Time: " + actualCheckOutDateTimeDisplay +
-            "<br />Checked-Out By Employee ID #" + checkedOutEmployeeDisplay +
-            "<br />Cancelled Date/Time: " + cancelledDateTimeDisplay +
-            "<br />Cancelled By Employee ID #" + cancelledByEmployeeDisplay +
-            "<br />Cancellation Reason: " + cancelledReasonDisplay +
-            "<br />Status: " + statusDisplay +
-            "<br />Notes: " + notesDisplay
-            );
+            return View(boardingDetails);
+
         }
 
 
         // GET: Boardings/Update
-        // /Boardings/Update?boardingId=USE_EXISTING_BOARDING_ID&customerId=USE_EXISTING_CUSTOMER_ID&petId=USE_EXISTING_PET_ID&boardingUnitId=USE_EXISTING_BOARDING_UNIT_ID&startDateTime=2026-06-10%2008:00:00&endDateTime=2026-06-15%2017:00:00&actualCheckInDateTime=2026-06-10%2008:15:00&checkedInByEmployeeId=USE_EXISTING_EMPLOYEE_ID&actualCheckOutDateTime=&checkedOutByEmployeeId=&cancelledDateTime=&cancelledByEmployeeId=&cancelledReason=&status=CheckedIn&notes=
-        public ActionResult Update(
-            Guid boardingId,
-            Guid customerId,
-            Guid petId,
-            Guid boardingUnitId,
-            DateTime startDateTime,
-            DateTime endDateTime,
-            DateTime? actualCheckInDateTime,
-            Guid? checkedInByEmployeeId,
-            DateTime? actualCheckOutDateTime,
-            Guid? checkedOutByEmployeeId,
-            DateTime? cancelledDateTime,
-            Guid? cancelledByEmployeeId,
-            string cancelledReason,
-            BoardingStatusEnum status,
-            string notes
-        )
-        {
-
+        public ActionResult Update(Guid boardingId) 
+        { 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingModel boarding = dbContext.Boardings.FirstOrDefault(x => x.BoardingId == boardingId);
-            if (boarding == null) 
-            { 
-                return Content("Boarding ID #" + boardingId +" does not exist."); 
-            }
+            BoardingModel boarding = dbContext.Boardings
+               .Include(x => x.Customer)
+               .Include(x => x.Pet)
+               .Include(x => x.BoardingUnit)
+               .FirstOrDefault(x => x.BoardingId == boardingId);
 
-            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-            if (customer == null) 
-            { 
-                return Content("Customer ID #" + customerId + " does not exist."); 
-            }
-
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
-
-            if (pet == null) 
-            { 
-                return Content("Pet ID #" + petId + " does not exist."); 
-            }
-
-            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == customerId && x.PetId == petId);
-
-            if (customerPet == null) 
-            { 
-                return Content("This customer is not associated with this pet."); 
-            }
-
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
-
-            if (boardingUnit == null) 
-            { 
-                return Content("Boarding Unit ID #" + boardingUnitId + " does not exist."); 
-            }
-
-            if (endDateTime < startDateTime) 
-            { 
-                return Content("End date cannot be before start date."); 
-            }
-
-            if (actualCheckInDateTime != null && 
-                actualCheckOutDateTime != null && 
-                actualCheckOutDateTime < actualCheckInDateTime) 
-            { 
-                return Content("Actual checkout date/time cannot be before actual checkin date/time."); 
-            }
-
-            if ((actualCheckInDateTime != null) && 
-                (checkedInByEmployeeId == null)) 
-            { 
-                return Content("An employee needs to be selected for check in."); 
-            }
-            
-            if (checkedInByEmployeeId != null)
-            { 
-                EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == checkedInByEmployeeId);
-
-                if (employee == null) 
-                {
-                    return Content("Checked-in employee ID #" + checkedInByEmployeeId + " does not exist.");
-                }
-            }  
-
-            if ((actualCheckOutDateTime != null) && 
-                (checkedOutByEmployeeId == null)) 
-            { 
-                return Content("An employee needs to be selected for check out."); 
-            }
-            
-            if (checkedOutByEmployeeId != null)
+            if (boarding == null)
             {
-                EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == checkedOutByEmployeeId);
-
-                if (employee == null)
-                {
-                    return Content("Checked-out employee ID #" + checkedOutByEmployeeId + " does not exist.");
-                }
-            }
-            
-            if ((cancelledDateTime != null) && 
-                (cancelledByEmployeeId == null)) 
-            { 
-                return Content("An employee needs to be selected for cancellation."); 
-            }
- 
-            if (cancelledByEmployeeId != null)
-            {
-                EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == cancelledByEmployeeId);
-
-                if (employee == null)
-                {
-                    return Content("Cancelled employee ID #" + cancelledByEmployeeId + " does not exist.");
-                }
-            }
-            
-            if (cancelledDateTime != null && 
-                string.IsNullOrWhiteSpace(cancelledReason)) 
-            {
-                return Content("A cancellation reason needs to be selected."); 
+                return Content("Boarding ID# " + boardingId + " does not exist.");
             }
 
-            if (status == BoardingStatusEnum.NoShow && 
-                boarding.Status != BoardingStatusEnum.Scheduled && 
-                boarding.Status != BoardingStatusEnum.Confirmed) 
-            { 
-                return Content("Only scheduled or confirmed boardings can be marked as no show."); 
-            }
+            BoardingFormVM boardingForm = new BoardingFormVM();
 
+            boardingForm.BoardingId = boarding.BoardingId;
 
-            if (status == BoardingStatusEnum.CheckedIn) 
-            {
-                if (actualCheckInDateTime == null) 
-                { 
-                    return Content("Check-in date and time are required."); 
-                }
+            boardingForm.CustomerId = boarding.CustomerId;
 
-                if (checkedInByEmployeeId == null) 
-                { 
-                    return Content("Must select check-in employee."); 
-                }
-            }
+            boardingForm.CustomerNameDisplay =
+                boarding.Customer.LastName + ", " +
+                boarding.Customer.FirstName;
 
-            if (status == BoardingStatusEnum.CheckedOut && 
-                boarding.Status != BoardingStatusEnum.CheckedIn) 
-            { 
-                return Content("Boarding must be checked in before it can be checked out."); 
-            }
+            boardingForm.PetId = boarding.PetId;
 
-            if (status == BoardingStatusEnum.CheckedOut)
-            {
-                if (actualCheckInDateTime == null) 
-                { 
-                    return Content("Check-in date and time are required."); 
-                }
+            boardingForm.PetNameDisplay = boarding.Pet.PetName;
 
-                if (checkedInByEmployeeId == null) 
-                { 
-                    return Content("Must select check-in employee."); 
-                }
+            boardingForm.BoardingUnitId = boarding.BoardingUnitId;
 
-                if (actualCheckOutDateTime == null) 
-                { 
-                    return Content("Check-out date and time are required."); 
-                }
+            boardingForm.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
 
-                if (checkedOutByEmployeeId == null) 
-                { 
-                    return Content("Must select check-out employee."); 
-                }
-            }
+            boardingForm.StartDateTime = boarding.StartDateTime;
 
-            if (status == BoardingStatusEnum.Cancelled)
-            {
-                if (cancelledDateTime == null) 
-                { 
-                    return Content("Cancellation date and time are required."); 
-                }
+            boardingForm.EndDateTime = boarding.EndDateTime; 
 
-                if (cancelledByEmployeeId == null) 
-                { 
-                    return Content("Must select cancellation employee."); 
-                }
+            boardingForm.Notes = boarding.Notes;
 
-                if (string.IsNullOrWhiteSpace(cancelledReason)) 
-                { 
-                    return Content("A cancellation reason is required."); 
-                }
-            }
+            boardingForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
 
-            boarding.CustomerId = customerId;
-            boarding.PetId = petId;
-            boarding.BoardingUnitId = boardingUnitId;
-            boarding.StartDateTime = startDateTime;
-            boarding.EndDateTime = endDateTime;
-            boarding.ActualCheckInDateTime = actualCheckInDateTime;
-            boarding.CheckedInByEmployeeId = checkedInByEmployeeId;
-            boarding.ActualCheckOutDateTime = actualCheckOutDateTime;
-            boarding.CheckedOutByEmployeeId = checkedOutByEmployeeId;
-            boarding.CancelledDateTime = cancelledDateTime;
-            boarding.CancelledByEmployeeId = cancelledByEmployeeId;
-            boarding.CancelledReason = cancelledReason;
-            boarding.Status = status;
-            boarding.Notes = notes;
+            boardingForm.PetSelectList = BuildPetSelectList(dbContext);
 
-            try
-            {
-                dbContext.SaveChanges();
-                return Content("Boarding ID #" + boarding.BoardingId + " was successfully updated.");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+            boardingForm.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+            return View(boardingForm);
+
         }
 
-        // GET: Boardings/Delete
-        // /Boardings/Delete?boardingId=USE_EXISTING_BOARDING_ID
-        public ActionResult Delete(Guid boardingId)
+
+        // POST: Boardings/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(BoardingFormVM boardingForm) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingModel boarding = dbContext.Boardings.FirstOrDefault(x =>  x.BoardingId == boardingId);
+            BoardingModel boarding = dbContext.Boardings
+               .FirstOrDefault(x => x.BoardingId == boardingForm.BoardingId);
 
-            if (boarding == null) { return Content("Boarding ID #" + boardingId + " does not exist."); }
-
-            List<InvoiceItemModel> invoiceItems = dbContext.InvoiceItems.Where(x => x.BoardingId == boardingId).ToList();
-
-            try
+            if (boarding == null)
             {
-                if (invoiceItems.Count > 0) 
-                { 
-                    return Content("This boarding has invoice records and cannot be deleted."); 
-                }
+                return Content("Boarding ID# " + boardingForm.BoardingId + " does not exist.");
+            }
 
-                dbContext.Boardings.Remove(boarding);
-                dbContext.SaveChanges();
-                return Content("Boarding ID #" + boarding.BoardingId + " was successfully deleted.");
-            }
-            catch (Exception ex)
+            if (boardingForm.EndDateTime <= boardingForm.StartDateTime)
             {
-                return Content(ex.Message);
+                ModelState.AddModelError(
+                    "EndDateTime", 
+                    "End date and time must be later than the start date and time.");
             }
+
+            CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == boardingForm.CustomerId);
+            if (customer == null)
+            {
+                return Content("Customer ID #" + boardingForm.CustomerId + " does not exist.");
+            }
+
+            if (!customer.IsActive)
+            {
+                return Content("Customer ID #" + boardingForm.CustomerId + " is inactive.");
+            }
+
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == boardingForm.PetId);
+            if (pet == null)
+            {
+                return Content("Pet ID #" + boardingForm.PetId + " does not exist.");
+            }
+
+            if (!pet.IsActive)
+            {
+                return Content("Pet ID #" + boardingForm.PetId + " is inactive.");
+            }
+
+            CustomerPetModel customerPet = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerId == boardingForm.CustomerId && x.PetId == boardingForm.PetId);
+
+            if (customerPet == null)
+            {
+                return Content("This customer is not associated with this pet.");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingForm.BoardingUnitId);
+            if (boardingUnit == null)
+            {
+                return Content("Boarding Unit ID #" + boardingForm.BoardingUnitId + " does not exist.");
+            }
+
+            if (!boardingUnit.IsActive)
+            {
+                return Content("Boarding Unit ID #" + boardingForm.BoardingUnitId + " is inactive.");
+            }
+
+            BoardingModel conflictingBoarding = dbContext.Boardings
+                .FirstOrDefault(x =>
+                    x.BoardingId == boardingForm.BoardingId &&
+                    x.BoardingUnitId == boardingForm.BoardingUnitId &&
+                    x.Status != BoardingStatusEnum.Cancelled &&
+                    x.Status != BoardingStatusEnum.NoShow &&
+                    x.StartDateTime < boardingForm.EndDateTime &&
+                    x.EndDateTime > boardingForm.StartDateTime);
+
+            if (conflictingBoarding != null)
+            {
+                ModelState.AddModelError(
+                    "BoardingUnitId",
+                    "The boarding unit is not available for the selected dates and times.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                boardingForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
+                boardingForm.PetSelectList = BuildPetSelectList(dbContext);
+                boardingForm.BoardingUnitSelectList = BuildBoardingUnitSelectList(dbContext);
+
+                return View(boardingForm);
+            }
+
+            boarding.CustomerId = boardingForm.CustomerId;
+            boarding.PetId = boardingForm.PetId;
+            boarding.BoardingUnitId = boardingForm.BoardingUnitId;
+            boarding.StartDateTime = boardingForm.StartDateTime;
+            boarding.EndDateTime = boardingForm.EndDateTime;
+            boarding.Notes = boardingForm.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+
+        }
+
+
+        // GET: Boardings/Cancel
+        public ActionResult Cancel(Guid boardingId) 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID# " + boardingId + " does not exist.");
+            }
+
+            if (boarding.Status == BoardingStatusEnum.Cancelled || 
+                boarding.Status == BoardingStatusEnum.CheckedOut || 
+                boarding.Status == BoardingStatusEnum.NoShow)
+            { 
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be cancelled."); 
+            }
+
+            BoardingCancelVM boardingCancel = new BoardingCancelVM();
+
+            boardingCancel.BoardingId = boarding.BoardingId;
+
+            boardingCancel.CustomerNameDisplay =
+                boarding.Customer.LastName + ", " +
+                boarding.Customer.FirstName;
+
+            boardingCancel.PetNameDisplay = boarding.Pet.PetName;
+
+            boardingCancel.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
+
+            boardingCancel.BoardingStatus = boarding.Status;
+
+            boardingCancel.StatusDisplay = boarding.Status.ToString();
+
+            boardingCancel.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingCancel.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            return View(boardingCancel);
+                
+        }
+
+
+        // POST: Boardings/Cancel
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Cancel(BoardingCancelVM boardingCancel)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingCancel.BoardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingCancel.BoardingId + " does not exist.");
+            }
+
+            if (boarding.Status == BoardingStatusEnum.Cancelled ||
+                boarding.Status == BoardingStatusEnum.CheckedOut ||
+                boarding.Status == BoardingStatusEnum.NoShow)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be cancelled.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                boardingCancel.CustomerNameDisplay =
+                    boarding.Customer.LastName + ", " +
+                    boarding.Customer.FirstName;
+
+                boardingCancel.PetNameDisplay = boarding.Pet.PetName;
+
+                boardingCancel.BoardingUnitDisplay =
+                    boarding.BoardingUnit.UnitName + " - " +
+                    boarding.BoardingUnit.UnitNumber + " - " +
+                    boarding.BoardingUnit.UnitType;
+
+                boardingCancel.BoardingStatus = boarding.Status;
+
+                boardingCancel.StatusDisplay = boarding.Status.ToString();
+
+                boardingCancel.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                boardingCancel.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                return View(boardingCancel);
+            }
+
+            string email = User.Identity.Name;
+
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
+
+            if (employee == null)
+            { 
+                return Content("Unable to determine the currently logged in employee."); 
+            }
+
+            boarding.Status = BoardingStatusEnum.Cancelled;
+            boarding.CancelledDateTime = DateTime.Now;
+            boarding.CancelledByEmployeeId = employee.EmployeeId;
+            boarding.CancelledReason = boardingCancel.CancelledReason;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+
+        }
+
+
+        // GET: Boardings/CheckIn
+        public ActionResult CheckIn(Guid boardingId) 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.Scheduled &&
+                boarding.Status != BoardingStatusEnum.Confirmed)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked in.");
+            }
+
+            BoardingCheckInVM boardingCheckIn = new BoardingCheckInVM();
+
+            boardingCheckIn.BoardingId = boarding.BoardingId;
+
+            boardingCheckIn.CustomerId = boarding.CustomerId;
+
+            boardingCheckIn.CustomerNameDisplay =
+                boarding.Customer.LastName + ", " +
+                boarding.Customer.FirstName;
+
+            boardingCheckIn.PetId = boarding.PetId;
+
+            boardingCheckIn.PetNameDisplay = boarding.Pet.PetName;
+
+            boardingCheckIn.BoardingUnitId = boarding.BoardingUnitId;
+
+            boardingCheckIn.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
+
+            boardingCheckIn.BoardingStatus = boarding.Status;
+
+            boardingCheckIn.StatusDisplay = boarding.Status.ToString();
+
+            boardingCheckIn.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingCheckIn.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingCheckIn.Notes = boarding.Notes;
+
+            return View(boardingCheckIn);
+        }
+
+
+        // POST: Boardings/CheckIn
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckIn(BoardingCheckInVM boardingCheckIn) 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingCheckIn.BoardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingCheckIn.BoardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.Scheduled &&
+                boarding.Status != BoardingStatusEnum.Confirmed)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked in.");
+            }
+ 
+            if (!ModelState.IsValid)
+            {
+                boardingCheckIn.BoardingId = boarding.BoardingId;
+
+                boardingCheckIn.CustomerId = boarding.CustomerId;
+                boardingCheckIn.CustomerNameDisplay =
+                    boarding.Customer.LastName + ", " +
+                    boarding.Customer.FirstName;
+
+                boardingCheckIn.PetId = boarding.PetId;
+                boardingCheckIn.PetNameDisplay = boarding.Pet.PetName;
+
+                boardingCheckIn.BoardingUnitId = boarding.BoardingUnitId;
+                boardingCheckIn.BoardingUnitDisplay =
+                    boarding.BoardingUnit.UnitName + " - " +
+                    boarding.BoardingUnit.UnitNumber + " - " +
+                    boarding.BoardingUnit.UnitType;
+
+                boardingCheckIn.BoardingStatus = boarding.Status;
+                boardingCheckIn.StatusDisplay = boarding.Status.ToString();
+
+                boardingCheckIn.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                boardingCheckIn.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                return View(boardingCheckIn);
+            }
+
+            string email = User.Identity.Name;
+
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
+
+            if (employee == null)
+            {
+                return Content("Unable to determine the currently logged in employee.");
+            }
+
+            boarding.ActualCheckInDateTime = DateTime.Now;
+
+            boarding.CheckedInByEmployeeId = employee.EmployeeId;
+
+            boarding.Status = BoardingStatusEnum.CheckedIn;
+
+            boarding.Notes = boardingCheckIn.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+
+        }
+
+
+        // GET: Boardings/CheckOut
+        public ActionResult CheckOut(Guid boardingId) 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.CheckedIn)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked out.");
+            }
+
+            BoardingCheckOutVM boardingCheckOut = new BoardingCheckOutVM();
+
+            boardingCheckOut.BoardingId = boarding.BoardingId;
+
+            boardingCheckOut.CustomerId = boarding.CustomerId;
+
+            boardingCheckOut.CustomerNameDisplay =
+                boarding.Customer.LastName + ", " +
+                boarding.Customer.FirstName;
+
+            boardingCheckOut.PetId = boarding.PetId;
+
+            boardingCheckOut.PetNameDisplay = boarding.Pet.PetName;
+
+            boardingCheckOut.BoardingUnitId = boarding.BoardingUnitId;
+
+            boardingCheckOut.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
+
+            boardingCheckOut.BoardingStatus = boarding.Status;
+
+            boardingCheckOut.StatusDisplay = boarding.Status.ToString();
+
+            boardingCheckOut.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingCheckOut.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingCheckOut.ActualCheckInDateTimeDisplay = boarding.ActualCheckInDateTime.HasValue
+                ? boarding.ActualCheckInDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                : "Not checked in";
+
+            boardingCheckOut.Notes = boarding.Notes;
+
+            return View(boardingCheckOut);
+
+        }
+
+
+        // POST: Boardings/CheckOut
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOut(BoardingCheckOutVM boardingCheckOut) 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingCheckOut.BoardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingCheckOut.BoardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.CheckedIn)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked out.");
+            }
+
+            DateTime actualCheckOutDateTime = DateTime.Now;
+
+            if (boarding.ActualCheckInDateTime.HasValue && 
+                actualCheckOutDateTime <= boarding.ActualCheckInDateTime.Value)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "The checkout date and time must be later than the checkin date and time.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                boardingCheckOut.BoardingId = boarding.BoardingId;
+
+                boardingCheckOut.CustomerId = boarding.CustomerId;
+                boardingCheckOut.CustomerNameDisplay =
+                    boarding.Customer.LastName + ", " +
+                    boarding.Customer.FirstName;
+
+                boardingCheckOut.PetId = boarding.PetId;
+                boardingCheckOut.PetNameDisplay = boarding.Pet.PetName;
+
+                boardingCheckOut.BoardingUnitId = boarding.BoardingUnitId;
+                boardingCheckOut.BoardingUnitDisplay =
+                    boarding.BoardingUnit.UnitName + " - " +
+                    boarding.BoardingUnit.UnitNumber + " - " +
+                    boarding.BoardingUnit.UnitType;
+
+                boardingCheckOut.BoardingStatus = boarding.Status;
+                boardingCheckOut.StatusDisplay = boarding.Status.ToString();
+
+                boardingCheckOut.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                boardingCheckOut.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                boardingCheckOut.ActualCheckInDateTimeDisplay = boarding.ActualCheckInDateTime.HasValue
+                    ? boarding.ActualCheckInDateTime.Value.ToString("MM/dd/yyyy hh:mm tt")
+                    : "Not checked in";
+
+                return View(boardingCheckOut);
+            }
+
+            string email = User.Identity.Name;
+
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
+
+            if (employee == null)
+            {
+                return Content("Unable to determine the currently logged in employee.");
+            }
+
+            boarding.ActualCheckOutDateTime = actualCheckOutDateTime;
+
+            boarding.CheckedOutByEmployeeId = employee.EmployeeId;
+
+            boarding.Status = BoardingStatusEnum.CheckedOut;
+
+            boarding.Notes = boardingCheckOut.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+
+        }
+
+
+        // GET: Boardings/NoShow
+        public ActionResult NoShow(Guid boardingId)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.Scheduled && 
+                boarding.Status != BoardingStatusEnum.Confirmed)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be marked as a no-show.");
+            }
+
+            BoardingNoShowVM boardingNoShow = new BoardingNoShowVM();
+
+            boardingNoShow.BoardingId = boarding.BoardingId;
+
+            boardingNoShow.CustomerNameDisplay =
+                boarding.Customer.LastName + ", " +
+                boarding.Customer.FirstName;
+
+            boardingNoShow.PetNameDisplay = boarding.Pet.PetName;
+
+            boardingNoShow.BoardingUnitDisplay =
+                boarding.BoardingUnit.UnitName + " - " +
+                boarding.BoardingUnit.UnitNumber + " - " +
+                boarding.BoardingUnit.UnitType;
+
+            boardingNoShow.BoardingStatus = boarding.Status;
+
+            boardingNoShow.StatusDisplay = boarding.Status.ToString();
+
+            boardingNoShow.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingNoShow.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+            boardingNoShow.Notes = boarding.Notes;
+
+            return View(boardingNoShow);
+
+        }
+
+
+        // POST: Boardings/NoShow
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NoShow(BoardingNoShowVM boardingNoShow)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            BoardingModel boarding = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .FirstOrDefault(x => x.BoardingId == boardingNoShow.BoardingId);
+
+            if (boarding == null)
+            {
+                return Content("Boarding ID #" + boardingNoShow.BoardingId + " does not exist.");
+            }
+
+            if (boarding.Status != BoardingStatusEnum.Scheduled &&
+                boarding.Status != BoardingStatusEnum.Confirmed)
+            {
+                return Content("Boarding ID #" + boarding.BoardingId + " cannot be marked as a no-show.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                boardingNoShow.BoardingId = boarding.BoardingId;
+
+                boardingNoShow.CustomerNameDisplay =
+                    boarding.Customer.LastName + ", " +
+                    boarding.Customer.FirstName;
+
+                boardingNoShow.PetNameDisplay = boarding.Pet.PetName;
+
+                boardingNoShow.BoardingUnitDisplay =
+                    boarding.BoardingUnit.UnitName + " - " +
+                    boarding.BoardingUnit.UnitNumber + " - " +
+                    boarding.BoardingUnit.UnitType;
+
+                boardingNoShow.BoardingStatus = boarding.Status;
+                boardingNoShow.StatusDisplay = boarding.Status.ToString();
+
+                boardingNoShow.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                boardingNoShow.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
+
+                return View(boardingNoShow);
+            }
+
+            string email = User.Identity.Name;
+
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
+
+            if (employee == null)
+            {
+                return Content("Unable to determine the currently logged in employee.");
+            }
+
+            boarding.Status = BoardingStatusEnum.NoShow;
+
+            boarding.NoShowDateTime = DateTime.Now;
+
+            boarding.NoShowByEmployeeId = employee.EmployeeId;
+
+            boarding.Notes = boardingNoShow.Notes;
+
+            dbContext.SaveChanges();
+
+            return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+        }
+
+
+        private List<SelectListItem> BuildCustomerSelectList(ApplicationDbContext dbContext)
+        {
+            return dbContext.Customers
+                .Where(x => x.IsActive)
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName)
+                .ToList()
+                .Select(x => new SelectListItem
+                {
+                    Value = x.CustomerId.ToString(),
+                    Text = $"{x.LastName}, {x.FirstName}",
+                })
+                .ToList();
+        }
+
+        private List<SelectListItem> BuildPetSelectList(ApplicationDbContext dbContext)
+        {
+            return dbContext.Pets
+                .Where(x => x.IsActive)
+                .OrderBy(x => x.PetName)
+                .ToList()
+                .Select(x => new SelectListItem
+                {
+                    Value = x.PetId.ToString(),
+                    Text = $"{x.PetName} - {x.Species} - {x.Breed}",
+                })
+                .ToList();
+        }
+
+        private List<SelectListItem> BuildBoardingUnitSelectList(ApplicationDbContext dbContext)
+        {
+            return dbContext.BoardingUnits
+                .Where(x => x.IsActive)
+                .OrderBy(x => x.UnitName)
+                .ThenBy(x => x.UnitNumber)
+                .ToList()
+                .Select(x => new SelectListItem
+                {
+                    Value = x.BoardingUnitId.ToString(),
+                    Text = $"{x.UnitName} - {x.UnitNumber} - {x.UnitType}",
+                })
+                .ToList();
         }
     }
 }

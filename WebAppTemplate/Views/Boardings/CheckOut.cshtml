@@ -1,0 +1,75 @@
+﻿@model JamesPetBoarding.ViewModels.BoardingCheckOutVM
+@{
+    ViewBag.Title = "CheckOut Boarding";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Check-Out Boarding</h2>
+    <p class="lead">
+        Check out an existing boarding.
+    </p>
+</div>
+
+@using (Html.BeginForm("CheckOut", "Boardings", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.BoardingId)
+
+
+    <div class="col-md-4">
+        <label class="form-label">Customer</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Boarding Unit</label>
+        @Html.TextBoxFor(x => x.BoardingUnitDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Start Date/Time</label>
+        @Html.TextBoxFor(x => x.StartDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">End Date/Time</label>
+        @Html.TextBoxFor(x => x.EndDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Check In Date/Time</label>
+        @Html.TextBoxFor(x => x.ActualCheckInDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Check-Out Boarding</button>
+
+        @Html.ActionLink(
+        "Back to Read",
+        "Read",
+        "Boardings",
+        new { boardingId = Model.BoardingId },
+        new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
