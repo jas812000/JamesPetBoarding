@@ -93,8 +93,8 @@
                                  new { boardingId = boarding.BoardingId },
                                  new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @if (boarding.Status == BoardingStatusEnum.Scheduled ||
-                                boarding.Status == BoardingStatusEnum.Confirmed)
+                            @if (boarding.BoardingStatus == BoardingStatusEnum.Scheduled ||
+                                boarding.BoardingStatus == BoardingStatusEnum.Confirmed)
                             {
 
                                 @Html.ActionLink(
@@ -126,7 +126,7 @@
                                     new { @class = "btn btn-success btn-sm" })
 
                             }
-                            else if (boarding.Status == BoardingStatusEnum.CheckedIn)
+                            else if (boarding.BoardingStatus == BoardingStatusEnum.CheckedIn)
                             {
 
                                 @Html.ActionLink(

@@ -1,0 +1,92 @@
+﻿@model JamesPetBoarding.ViewModels.InvoiceVoidVM
+@{
+    ViewBag.Title = "Void Invoice";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Void Invoice</h2>
+    <p class="lead">
+        Review the invoice information and provide a reason for voiding this invoice.
+    </p>
+</div>
+
+@using (Html.BeginForm("Void", "Invoices", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.InvoiceId)
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice ID</label>
+        <input type="text" class="form-control" value="@Model.InvoiceId" readonly = "readonly"/>
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Date/Time</label>
+        @Html.TextBoxFor(x => x.InvoiceDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Customer</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Pet</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Boarding</label>
+        @Html.TextBoxFor(x => x.BoardingDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Total</label>
+        @Html.TextBoxFor(x => x.TotalAmountDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Amount Paid</label>
+        @Html.TextBoxFor(x => x.AmountPaidDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Balance</label>
+        @Html.TextBoxFor(x => x.BalanceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Void Reason</label>
+        @Html.EnumDropDownListFor(x => x.VoidReason, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VoidReason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Void Notes</label>
+        @Html.TextAreaFor(x => x.VoidNotes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.VoidNotes, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Void Invoice</button>
+
+        @Html.ActionLink(
+            "Back to Invoice",
+            "Read",
+            "Invoices",
+            new { invoiceId = Model.InvoiceId },
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
+
+}

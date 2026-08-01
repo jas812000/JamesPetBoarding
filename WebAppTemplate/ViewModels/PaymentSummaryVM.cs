@@ -18,5 +18,9 @@ namespace JamesPetBoarding.ViewModels
         public string PaymentDateTimeDisplay { get; set; }
 
         public string StatusDisplay { get; set; }
+
+        public string ProcessedByEmployeeDisplay { get; set; }
+
+        public bool IsVoided { get; set; }
     }
 }

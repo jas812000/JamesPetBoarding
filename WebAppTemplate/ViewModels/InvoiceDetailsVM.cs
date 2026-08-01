@@ -10,6 +10,12 @@ namespace JamesPetBoarding.ViewModels
 {
     public class InvoiceDetailsVM
     {
+        public InvoiceDetailsVM() 
+        { 
+            InvoiceItems = new List<InvoiceItemSummaryVM>(); 
+            Payments = new List<PaymentSummaryVM>(); 
+        }
+
         public Guid InvoiceId { get; set; }
 
         public Guid CustomerId { get; set; }
@@ -26,6 +32,8 @@ namespace JamesPetBoarding.ViewModels
 
         public string InvoiceDateTimeDisplay { get; set; }
 
+        public InvoiceStatusEnum InvoiceStatus { get; set; }
+
         public string StatusDisplay { get; set; }
 
         public string SubtotalDisplay { get; set; }
@@ -40,7 +48,15 @@ namespace JamesPetBoarding.ViewModels
 
         public string BalanceDisplay { get; set; }
 
-        public string Notes { get; set; }
+        public string VoidReasonDisplay { get; set; }
+
+        public string VoidNotes { get; set; }
+
+        public string VoidDateTimeDisplay { get; set; }
+
+        public string VoidedByEmployeeDisplay { get; set; }
+
+        public string NotesDisplay { get; set; }
 
         public List<InvoiceItemSummaryVM> InvoiceItems { get; set; }
 

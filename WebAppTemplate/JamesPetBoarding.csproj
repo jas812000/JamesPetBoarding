@@ -193,6 +193,7 @@
     <Compile Include="Enums\ActiveStatusEnum.cs" />
     <Compile Include="Enums\BoardingStatusEnum.cs" />
     <Compile Include="Enums\InactivatedReasonEnum.cs" />
+    <Compile Include="Enums\InvoiceVoidReasonEnum.cs" />
     <Compile Include="Enums\VaccineComplianceStatusEnum.cs" />
     <Compile Include="Enums\EmergencyContactRelationshipEnum.cs" />
     <Compile Include="Enums\EmployeeRoleEnum.cs" />
@@ -370,7 +371,9 @@
     <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
     <Compile Include="ViewModels\InvoiceReportRowVM.cs" />
     <Compile Include="ViewModels\InvoiceReportVM.cs" />
+    <Compile Include="ViewModels\InvoiceSearchVM.cs" />
     <Compile Include="ViewModels\InvoiceSummaryVM.cs" />
+    <Compile Include="ViewModels\InvoiceVoidVM.cs" />
     <Compile Include="ViewModels\MedicationDeleteVM.cs" />
     <Compile Include="ViewModels\PaymentDetailsVM.cs" />
     <Compile Include="ViewModels\PaymentFormVM.cs" />
@@ -602,13 +605,18 @@
     <Content Include="Views\Boardings\Create.cshtml" />
     <Content Include="Views\Boardings\Read.cshtml" />
     <Content Include="Views\BoardingUnits\Update.cshtml" />
+    <Content Include="Views\Invoices\Search.cshtml" />
+    <Content Include="Views\Invoices\Create.cshtml" />
+    <Content Include="Views\Invoices\Read.cshtml" />
+    <Content Include="Views\Invoices\Update.cshtml" />
+    <Content Include="Views\Invoices\Void.cshtml" />
+    <Content Include="Views\Invoices\Receipt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\InvoiceItems\" />
-    <Folder Include="Views\Invoices\" />
     <Folder Include="Views\Payments\" />
     <Folder Include="Views\Veterinarians\" />
   </ItemGroup>

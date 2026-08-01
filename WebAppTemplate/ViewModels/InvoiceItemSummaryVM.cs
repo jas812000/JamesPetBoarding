@@ -15,6 +15,8 @@ namespace JamesPetBoarding.ViewModels
 
         public string QuantityDisplay { get; set; }
 
+        public string UnitPriceDisplay { get; set; }
+
         public string LineTotalDisplay { get; set; }
     }
 }

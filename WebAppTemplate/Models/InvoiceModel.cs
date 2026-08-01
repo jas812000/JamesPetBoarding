@@ -17,6 +17,9 @@ namespace JamesPetBoarding.Models
         public InvoiceModel()
         {
             InvoiceId = Guid.NewGuid();
+            InvoiceItems = new List<InvoiceItemModel>();
+            Payments = new List<PaymentModel>();
+
         }
 
         [Required]
@@ -40,7 +43,7 @@ namespace JamesPetBoarding.Models
         public DateTime InvoiceDateTime { get; set; }
 
         [Required]
-        public InvoiceStatusEnum Status { get; set; }
+        public InvoiceStatusEnum InvoiceStatus { get; set; }
 
         [Range(0, 999999999.99)]
         public decimal Subtotal { get; set; }
@@ -62,6 +65,18 @@ namespace JamesPetBoarding.Models
         
         [MaxLength(2000)]
         public string Notes { get; set; }
+
+        public InvoiceVoidReasonEnum? VoidReason { get; set; }
+
+        [MaxLength(1000)]
+        public string VoidNotes { get; set; }
+
+        public DateTime? VoidDateTime { get; set; }
+
+        public Guid? VoidedByEmployeeId { get; set; }
+
+        [ForeignKey("VoidedByEmployeeId")]
+        public EmployeeModel VoidedByEmployee { get; set; }
 
         public List<InvoiceItemModel> InvoiceItems { get; set; }
 
