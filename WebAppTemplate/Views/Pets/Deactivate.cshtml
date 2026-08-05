@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PetDeleteVM
+﻿@model JamesPetBoarding.ViewModels.PetDeactivateVM
 @{
     ViewBag.Title = "Deactivate Pet";
 }
@@ -11,7 +11,7 @@
     </p>
 </div>
 
-@using (Html.BeginForm("Delete", "Pets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm("Deactivate", "Pets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
 {
 
     @Html.AntiForgeryToken()

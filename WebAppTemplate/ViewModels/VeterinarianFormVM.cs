@@ -11,9 +11,6 @@ namespace JamesPetBoarding.ViewModels
     {
         public Guid VetId { get; set; }
 
-        [Required, MaxLength(100)]
-        public string ClinicName { get; set; }
-
         [Required, MaxLength(50)]
         public string LastName { get; set; }
 
@@ -23,6 +20,9 @@ namespace JamesPetBoarding.ViewModels
         [Required, MaxLength(50)]
         public string Credentials { get; set; }
 
+        [Required, MaxLength(100)]
+        public string ClinicName { get; set; }
+
         [Required, MaxLength(300)]
         public string Address { get; set; }
 
@@ -30,7 +30,7 @@ namespace JamesPetBoarding.ViewModels
         public string City { get; set; }
 
         [Required]
-        public StateEnum State { get; set; }
+        public StateEnum? State { get; set; }
 
         [Required, MaxLength(20)]
         public string ZipCode { get; set; }

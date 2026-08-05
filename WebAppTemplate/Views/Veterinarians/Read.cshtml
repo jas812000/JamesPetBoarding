@@ -1,0 +1,142 @@
+﻿@model JamesPetBoarding.ViewModels.VeterinarianDetailsVM
+@{
+    ViewBag.Title = "Read Veterinarian";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Veterinarian Profile</h2>
+    <p class="lead">
+        View Veterinarian profile information.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-6">
+        <label class="form-label">Veterinarian ID</label>
+        @Html.TextBoxFor(x => x.VetId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Veterinarian Name</label>
+        @Html.TextBoxFor(x => x.FullNameCredentialsDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Clinic Name</label>
+        @Html.TextBoxFor(x => x.ClinicNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Address</label>
+        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">City, State Zip Code</label>
+        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Phone Number</label>
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Email Address</label>
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-10 mt-4">
+        <h4>Pet Summaries</h4>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Pet Name</th>
+                    <th scope="col">Species</th>
+                    <th scope="col">Breed</th>
+                    <th scope="col">Sex</th>
+                    <th scope="col">Birth Date</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Weight</th>
+                    <th scope="col">Active Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.PetSummaries.Any())
+                {
+                    foreach (var pet in Model.PetSummaries)
+                    {
+                        <tr>
+                            <td>@pet.PetNameDisplay</td>
+                            <td>@pet.SpeciesDisplay</td>
+                            <td>@pet.BreedDisplay</td>
+                            <td>@pet.SexDisplay</td>
+                            <td>@pet.BirthDateDisplay</td>
+                            <td>@pet.AgeDisplay</td>
+                            <td>@pet.WeightDisplay</td>
+                            <td>@pet.ActiveStatusDisplay</td>
+                        </tr>
+                    }
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center">
+                            No pets are currently associated with this veterinarian.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-10 text-center mt-3">
+        @Html.ActionLink(
+            "Update Veterinarian",
+            "Update",
+            "Veterinarians",
+            new { vetId = Model.VetId },
+            new { @class = "btn btn-primary me-2" })
+
+        @if (Model.IsActive)
+        {
+
+            @Html.ActionLink(
+                "Deactivate Veterinarian",
+                "Deactivate",
+                "Veterinarians",
+                new { vetId = Model.VetId },
+                new { @class = "btn btn-danger me-2" })
+        }
+        else
+        {
+            @Html.ActionLink(
+                "Reactivate Veterinarian",
+                "Reactivate",
+                "Veterinarians",
+                new { vetId = Model.VetId },
+                new { @class = "btn btn-success me-2" })
+        }
+
+        @Html.ActionLink(
+            "Back to Search",
+            "Search",
+            "Veterinarians",
+            null,
+            new { @class = "btn btn-secondary" })
+    </div>
+</div>
+

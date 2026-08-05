@@ -1,0 +1,67 @@
+﻿@model JamesPetBoarding.ViewModels.VeterinarianStatusVM
+@{
+    ViewBag.Title = "Deactivate Veterinarian";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Deactivate Veterinarian Profile</h2>
+    <p class="lead">
+        Review veterinarian information before deactivation.
+    </p>
+</div>
+
+@using (Html.BeginForm("Deactivate", "Veterinarians", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(x => x.VetId)
+
+    <div class="col-md-4">
+        <label class="form-label">Veterinarian ID</label>
+        <input type="text" class="form-control" value="@Model.VetId" readonly="readonly" />
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Veterinarian Name</label>
+        @Html.TextBoxFor(x => x.FullNameCredentialsDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Clinic Name</label>
+        @Html.TextBoxFor(x => x.ClinicNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Active Status</label>
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+    </div>
+
+
+    <div class="col-md-8">
+        <div class="alert alert-warning">
+            This action will deactivate the veterinarian's profile. Historical records will remain available.
+        </div>
+    </div>
+
+    <div class="col-md-12 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Deactivate Veterinarian Profile</button>
+
+        @Html.ActionLink(
+            "Cancel",
+            "Read",
+            "Veterinarians",
+            new { vetId = Model.VetId },
+            new { @class = "btn btn-secondary ms-2" }
+        )
+    </div>
+}

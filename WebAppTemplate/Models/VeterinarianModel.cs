@@ -16,6 +16,7 @@ namespace JamesPetBoarding.Models
         public VeterinarianModel()
         {
             VetId = Guid.NewGuid();
+            Pets = new List<PetModel>();
         }
 
         [Required, MaxLength(100)]
@@ -50,6 +51,8 @@ namespace JamesPetBoarding.Models
 
         [MaxLength(2000)]
         public string Notes { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
         public List<PetModel> Pets { get; set; }
 
