@@ -1,14 +1,17 @@
 ﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class InvoiceItemDetailsVM
+    public class InvoiceItemDeleteVM
     {
+
         public Guid InvoiceItemId { get; set; }
 
         public Guid InvoiceId { get; set; }
@@ -22,8 +25,6 @@ namespace JamesPetBoarding.ViewModels
         public Guid? ServiceId { get; set; }
 
         public string ServiceNameDisplay { get; set; }
-
-        public InvoiceStatusEnum InvoiceStatus { get; set; }
 
         public string InvoiceStatusDisplay { get; set; }
 

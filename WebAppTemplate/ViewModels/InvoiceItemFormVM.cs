@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace JamesPetBoarding.ViewModels
 {
@@ -14,13 +15,13 @@ namespace JamesPetBoarding.ViewModels
         public Guid InvoiceItemId { get; set; }
 
         [Required]
-        public Guid BoardingId { get; set; }
-
-        [Required]
         public Guid InvoiceId { get; set; }
 
-        [Required] 
-        public Guid ServiceId { get; set; }
+        public string InvoiceDisplay { get; set; }
+
+        public Guid? BoardingId { get; set; }
+
+        public Guid? ServiceId { get; set; }
 
         [Required]
         public InvoiceItemTypeEnum ItemType { get; set; }
@@ -37,5 +38,9 @@ namespace JamesPetBoarding.ViewModels
 
         [MaxLength(2000)]
         public string Notes { get; set; }
+
+        public List<SelectListItem> BoardingSelectList { get; set; }
+
+        public List<SelectListItem> ServiceSelectList { get; set; }
     }
 }

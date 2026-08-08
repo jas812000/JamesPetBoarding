@@ -31,8 +31,7 @@ namespace JamesPetBoarding.Models
         [ForeignKey("InvoiceId")]
         public InvoiceModel Invoice { get; set; }
 
-        [Required]
-        public Guid ServiceId { get; set; }
+        public Guid? ServiceId { get; set; }
 
         [ForeignKey("ServiceId")]
         public ServiceModel Service { get; set; }

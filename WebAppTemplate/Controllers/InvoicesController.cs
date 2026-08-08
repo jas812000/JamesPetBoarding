@@ -98,11 +98,11 @@ namespace JamesPetBoarding.Controllers
                     BoardingId = x.BoardingId,
 
                     BoardingDisplay = x.Boarding == null
-                        ? "No Boarding"
-                        : x.Boarding.BoardingUnit.UnitName + " - " +
-                            x.Boarding.BoardingUnit.UnitNumber + " - " +
-                            x.Boarding.StartDateTime.ToString("MM/dd/yyyy") + " to " +
-                            x.Boarding.EndDateTime.ToString("MM/dd/yyyy"),
+                        ? "No Boarding(s)"
+                        : $"{x.Boarding.BoardingUnit.UnitName} - " +
+                            $"{x.Boarding.BoardingUnit.UnitNumber} - " +
+                            $"{x.Boarding.StartDateTime:MM/dd/yyyy} - " +
+                            $"{x.Boarding.EndDateTime:MM/dd/yyyy}",
 
                     TotalAmountDisplay = x.TotalAmount.ToString("C"),
 
@@ -609,7 +609,7 @@ namespace JamesPetBoarding.Controllers
 
             invoiceDetails.BoardingDisplay = invoice.Boarding == null
                 ? "No Boarding"
-                : $"{invoice.Boarding.BoardingUnit.UnitName} - " +
+                : $"{invoice.Boarding.BoardingUnit.UnitName} " +
                   $"{invoice.Boarding.BoardingUnit.UnitNumber} - " +
                   $"{invoice.Boarding.StartDateTime:MM/dd/yyyy} to " +
                   $"{invoice.Boarding.EndDateTime:MM/dd/yyyy}";
@@ -661,7 +661,7 @@ namespace JamesPetBoarding.Controllers
 
                 invoiceItemSummary.ItemTypeDisplay = invoiceItem.ItemType.ToString();
 
-                invoiceItemSummary.Description = invoiceItem.Description;
+                invoiceItemSummary.DescriptionDisplay = invoiceItem.Description;
 
                 invoiceItemSummary.UnitPriceDisplay = invoiceItem.UnitPrice.ToString("C");
 

@@ -332,6 +332,10 @@
     <Compile Include="Migrations\202607180628421_UpdateInvoiceAndVeterinarianActiveStatus.Designer.cs">
       <DependentUpon>202607180628421_UpdateInvoiceAndVeterinarianActiveStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202607260625228_MakeServiceOptionalOnInvoiceItems.cs" />
+    <Compile Include="Migrations\202607260625228_MakeServiceOptionalOnInvoiceItems.Designer.cs">
+      <DependentUpon>202607260625228_MakeServiceOptionalOnInvoiceItems.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -372,6 +376,8 @@
     <Compile Include="ViewModels\EmployeeSummaryVM.cs" />
     <Compile Include="ViewModels\InvoiceDetailsVM.cs" />
     <Compile Include="ViewModels\InvoiceFormVM.cs" />
+    <Compile Include="ViewModels\InvoiceItemDeleteVM.cs" />
+    <Compile Include="ViewModels\InvoiceItemSearchVM.cs" />
     <Compile Include="ViewModels\InvoiceReportFilterVM.cs" />
     <Compile Include="ViewModels\InvoiceReportRowVM.cs" />
     <Compile Include="ViewModels\InvoiceReportVM.cs" />
@@ -624,12 +630,16 @@
     <Content Include="Views\Veterinarians\Update.cshtml" />
     <Content Include="Views\Veterinarians\Deactivate.cshtml" />
     <Content Include="Views\Veterinarians\Reactivate.cshtml" />
+    <Content Include="Views\InvoiceItems\Search.cshtml" />
+    <Content Include="Views\InvoiceItems\Update.cshtml" />
+    <Content Include="Views\InvoiceItems\Delete.cshtml" />
+    <Content Include="Views\InvoiceItems\Read.cshtml" />
+    <Content Include="Views\InvoiceItems\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Dashboard\" />
-    <Folder Include="Views\InvoiceItems\" />
     <Folder Include="Views\Payments\" />
   </ItemGroup>
   <ItemGroup>
@@ -719,6 +729,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607180628421_UpdateInvoiceAndVeterinarianActiveStatus.resx">
       <DependentUpon>202607180628421_UpdateInvoiceAndVeterinarianActiveStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202607260625228_MakeServiceOptionalOnInvoiceItems.resx">
+      <DependentUpon>202607260625228_MakeServiceOptionalOnInvoiceItems.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

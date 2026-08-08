@@ -1,0 +1,106 @@
+﻿@model JamesPetBoarding.ViewModels.InvoiceItemDetailsVM
+@using JamesPetBoarding.Enums
+@{
+    ViewBag.Title = "Read Invoice Item";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Invoice Item</h2>
+    <p class="lead">
+        Review the selected invoice item and its related invoice information.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+    @Html.HiddenFor(x => x.InvoiceItemId)
+    <div class="col-md-12">
+        <label class="form-label">Invoice Item ID</label>
+        <input type="text"
+               class="form-control"
+               value="@Model.InvoiceItemId"
+               readonly="readonly" />
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Invoice</label>
+        @Html.TextBoxFor(x => x.InvoiceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Boarding</label>
+        @Html.TextBoxFor(x => x.BoardingDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Service</label>
+        @Html.TextBoxFor(x => x.ServiceNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Item Type</label>
+        @Html.TextBoxFor(x => x.ItemTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Description</label>
+        @Html.TextBoxFor(x => x.DescriptionDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Quantity</label>
+        @Html.TextBoxFor(x => x.QuantityDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Unit Price</label>
+        @Html.TextBoxFor(x => x.UnitPriceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Line Total</label>
+        @Html.TextBoxFor(x => x.LineTotalDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+
+        @Html.ActionLink(
+            "Back to Search",
+            "Search",
+            "InvoiceItems",
+            null,
+            new { @class = "btn btn-secondary me-2" })
+
+        @Html.ActionLink(
+            "Back to Invoice",
+            "Read",
+            "Invoices",
+            new { invoiceId = Model.InvoiceId },
+            new { @class = "btn btn-secondary me-2" })
+
+        @if (Model.InvoiceStatus != InvoiceStatusEnum.Void)
+        {
+            @Html.ActionLink(
+                "Update",
+                "Update",
+                "InvoiceItems",
+                new { invoiceItemId = Model.InvoiceItemId },
+                new { @class = "btn btn-warning me-2" })
+
+            @Html.ActionLink(
+                "Delete",
+                "Delete",
+                "InvoiceItems",
+                new { invoiceItemId = Model.InvoiceItemId },
+                new { @class = "btn btn-danger" })
+        }
+
+    </div>
+</div>
+

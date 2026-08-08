@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -9,9 +10,19 @@ namespace JamesPetBoarding.ViewModels
     {
         public Guid InvoiceItemId { get; set; }
 
+        public Guid InvoiceId { get; set; }
+
+        public string InvoiceDisplay { get; set; }
+
+        public InvoiceStatusEnum InvoiceStatus { get; set; }
+
+        public string BoardingDisplay { get; set; }
+
+        public string ServiceNameDisplay { get; set; }
+
         public string ItemTypeDisplay { get; set; }
 
-        public string Description { get; set; }
+        public string DescriptionDisplay { get; set; }
 
         public string QuantityDisplay { get; set; }
 
