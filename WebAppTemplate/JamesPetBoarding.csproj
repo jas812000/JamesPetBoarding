@@ -336,6 +336,10 @@
     <Compile Include="Migrations\202607260625228_MakeServiceOptionalOnInvoiceItems.Designer.cs">
       <DependentUpon>202607260625228_MakeServiceOptionalOnInvoiceItems.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202608011925218_RequirePaymentTransactionReference.cs" />
+    <Compile Include="Migrations\202608011925218_RequirePaymentTransactionReference.Designer.cs">
+      <DependentUpon>202608011925218_RequirePaymentTransactionReference.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -427,7 +431,10 @@
     <Compile Include="ViewModels\PaymentReportFilterVM.cs" />
     <Compile Include="ViewModels\PaymentReportRowVM.cs" />
     <Compile Include="ViewModels\PaymentReportVM.cs" />
+    <Compile Include="ViewModels\PaymentSearchVM.cs" />
     <Compile Include="ViewModels\PaymentSummaryVM.cs" />
+    <Compile Include="ViewModels\PaymentUpdateVM.cs" />
+    <Compile Include="ViewModels\PaymentVoidVM.cs" />
     <Compile Include="ViewModels\PetDeactivateVM.cs" />
     <Compile Include="ViewModels\PetDetailsVM.cs" />
     <Compile Include="ViewModels\PetFormVM.cs" />
@@ -630,17 +637,17 @@
     <Content Include="Views\Veterinarians\Update.cshtml" />
     <Content Include="Views\Veterinarians\Deactivate.cshtml" />
     <Content Include="Views\Veterinarians\Reactivate.cshtml" />
-    <Content Include="Views\InvoiceItems\Search.cshtml" />
-    <Content Include="Views\InvoiceItems\Update.cshtml" />
-    <Content Include="Views\InvoiceItems\Delete.cshtml" />
-    <Content Include="Views\InvoiceItems\Read.cshtml" />
-    <Content Include="Views\InvoiceItems\Create.cshtml" />
+    <Content Include="Views\Payments\Search.cshtml" />
+    <Content Include="Views\Payments\Create.cshtml" />
+    <Content Include="Views\Payments\Read.cshtml" />
+    <Content Include="Views\Payments\Update.cshtml" />
+    <Content Include="Views\Payments\Void.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
     <Folder Include="Views\Dashboard\" />
-    <Folder Include="Views\Payments\" />
+    <Folder Include="Views\InvoiceItems\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202605052221240_InitialCreate.resx">
@@ -732,6 +739,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202607260625228_MakeServiceOptionalOnInvoiceItems.resx">
       <DependentUpon>202607260625228_MakeServiceOptionalOnInvoiceItems.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202608011925218_RequirePaymentTransactionReference.resx">
+      <DependentUpon>202608011925218_RequirePaymentTransactionReference.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

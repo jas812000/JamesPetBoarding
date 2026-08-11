@@ -32,9 +32,10 @@ namespace JamesPetBoarding.Models
         public PaymentMethodEnum PaymentMethod { get; set; }
 
         [Required]
-        [Range(0, 999999999.99)]
+        [Range(typeof(decimal), "0.01", "999999999.99")]
         public decimal Amount { get; set; }
 
+        [Required]
         [MaxLength(200)]
         public string TransactionReference { get; set; }
 

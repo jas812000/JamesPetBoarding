@@ -9,7 +9,13 @@ namespace JamesPetBoarding.ViewModels
     {
         public Guid PaymentId { get; set; }
 
-        public string CustomerNameDisplay {  get; set; }
+        public Guid InvoiceId { get; set; }
+
+        public string InvoiceDisplay { get; set; }
+
+        public string CustomerNameDisplay { get; set; }
+
+        public string PetNameDisplay { get; set; }
 
         public string AmountDisplay { get; set; }
 
@@ -17,9 +23,11 @@ namespace JamesPetBoarding.ViewModels
 
         public string PaymentDateTimeDisplay { get; set; }
 
-        public string StatusDisplay { get; set; }
-
         public string ProcessedByEmployeeDisplay { get; set; }
+
+        public string TransactionReferenceDisplay { get; set; }
+
+        public string StatusDisplay { get; set; }
 
         public bool IsVoided { get; set; }
     }

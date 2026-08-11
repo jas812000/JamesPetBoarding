@@ -1,0 +1,114 @@
+﻿@model JamesPetBoarding.ViewModels.PaymentVoidVM
+@{
+    ViewBag.Title = "Void Payment";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Void Payment</h2>
+    <p class="lead">
+        Review the payment information and provide a reason for voiding this payment.
+    </p>
+</div>
+
+@using (Html.BeginForm("Void", "Payments", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.PaymentId)
+
+    @Html.HiddenFor(x => x.InvoiceId)
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+    <div class="col-md-6">
+        <label class="form-label">Payment ID</label>
+        <input type="text" class="form-control" value="@Model.PaymentId" readonly="readonly" />
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice ID</label>
+        <input type="text" class="form-control" value="@Model.InvoiceId" readonly="readonly" />
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Invoice</label>
+        @Html.TextBoxFor(x => x.InvoiceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Customer</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Pet</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Payment Date/Time</label>
+        @Html.TextBoxFor(x => x.PaymentDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Payment Method</label>
+        @Html.TextBoxFor(x => x.PaymentMethodDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Amount</label>
+        @Html.TextBoxFor(x => x.AmountDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Transaction Reference</label>
+        @Html.TextBoxFor(x => x.TransactionReferenceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Processed By</label>
+        @Html.TextBoxFor(x => x.ProcessedByEmployeeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-3">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Void Reason</label>
+        @Html.TextAreaFor(
+            x => x.VoidedReason, 
+            new { @class = "form-control", 
+                rows = "4", 
+                placeholder = "Enter the reason for voiding this payment" })
+        @Html.ValidationMessageFor(x => x.VoidedReason, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">Void Payment</button>
+
+        @Html.ActionLink(
+            "Back to Payment",
+            "Read",
+            "Payments",
+            new { paymentId = Model.PaymentId },
+            new { @class = "btn btn-secondary ms-2" })
+
+        @Html.ActionLink(
+            "Back to Invoice",
+            "Read",
+            "Invoices",
+            new { invoiceId = Model.InvoiceId },
+            new { @class = "btn btn-secondary ms-2" })
+
+    </div>
+
+}

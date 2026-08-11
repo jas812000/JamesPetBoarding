@@ -1,0 +1,127 @@
+﻿@model JamesPetBoarding.ViewModels.PaymentDetailsVM
+@{
+    ViewBag.Title = "Read Payment";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>View Payment</h2>
+    <p class="lead">
+        Review payment details and current status.
+    </p>
+</div>
+
+<div class="row g-3 justify-content-center">
+
+
+    <div class="col-md-12">
+        <label class="form-label">Payment ID</label>
+        @Html.TextBoxFor(x => x.PaymentId, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Invoice</label>
+        @Html.TextBoxFor(x => x.InvoiceDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Customer</label>
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Pet</label>
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Amount</label>
+        @Html.TextBoxFor(x => x.AmountDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Payment Method</label>
+        @Html.TextBoxFor(x => x.PaymentMethodDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Payment Date/Time</label>
+        @Html.TextBoxFor(x => x.PaymentDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Transaction Reference</label>
+        @Html.TextBoxFor(x => x.TransactionReference, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Processed By</label>
+        @Html.TextBoxFor(x => x.ProcessedByEmployeeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    <div class="col-md-12">
+        <label class="form-label">Status</label>
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+    </div>
+
+    @if (Model.IsVoided)
+    {
+
+        <div class="col-md-12">
+            <label class="form-label">Void Reason</label>
+            @Html.TextBoxFor(x => x.VoidedReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label">Voided Date/Time</label>
+            @Html.TextBoxFor(x => x.VoidedDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label">Voided By</label>
+            @Html.TextBoxFor(x => x.VoidedByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        </div>
+
+    }
+
+    <div class="col-12">
+        <label class="form-label">Notes</label>
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+
+        @if (!Model.IsVoided)
+        {
+            @Html.ActionLink(
+                "Update",
+                "Update",
+                "Payments",
+                new { paymentId = Model.PaymentId },
+                new { @class = "btn btn-warning me-2" })
+
+
+            @Html.ActionLink(
+                "Void",
+                "Void",
+                "Payments",
+                new { paymentId = Model.PaymentId },
+                new { @class = "btn btn-danger me-2" })
+        }
+        @Html.ActionLink(
+            "Back to Invoice",
+            "Read",
+            "Invoices",
+            new { invoiceId = Model.InvoiceId },
+            new { @class = "btn btn-secondary me-2" })
+
+        @Html.ActionLink(
+            "Back to Search",
+            "Search",
+            "Payments",
+            null,
+            new { @class = "btn btn-secondary" })
+
+    </div>
+</div>
+

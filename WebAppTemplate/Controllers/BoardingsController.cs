@@ -159,6 +159,7 @@ namespace JamesPetBoarding.Controllers
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == boardingForm.CustomerId);
+
             if (customer == null)
             {
                 return Content("Customer ID #" + boardingForm.CustomerId + " does not exist.");
@@ -170,6 +171,7 @@ namespace JamesPetBoarding.Controllers
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == boardingForm.PetId);
+
             if (pet == null)
             {
                 return Content("Pet ID #" + boardingForm.PetId + " does not exist.");
@@ -188,6 +190,7 @@ namespace JamesPetBoarding.Controllers
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingForm.BoardingUnitId);
+            
             if (boardingUnit == null)
             {
                 return Content("Boarding Unit ID #" + boardingForm.BoardingUnitId + " does not exist.");
