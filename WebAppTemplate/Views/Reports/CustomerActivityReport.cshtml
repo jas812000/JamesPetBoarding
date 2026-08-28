@@ -1,0 +1,207 @@
+﻿@model JamesPetBoarding.ViewModels.CustomerActivityReportVM
+@{
+    ViewBag.Title = "Customer Activity Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Customer Activity Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate a customer activity report.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("CustomerActivityReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Customer Name</label>
+        @Html.DropDownListFor(x => x.CustomerActivityReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.CustomerId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Active Status</label>
+        @Html.EnumDropDownListFor(x => x.CustomerActivityReportFilter.ActiveStatus, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.ActiveStatus, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">First Name</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.FirstName, new { @class = "form-control", placeholder = "John" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.FirstName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Last Name</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.LastName, new { @class = "form-control", placeholder = "Doe" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.LastName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">City</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.City, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.City, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">State</label>
+        @Html.EnumDropDownListFor(x => x.CustomerActivityReportFilter.State, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.State, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-2">
+        <label class="form-label">Zip Code</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.ZipCode, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.ZipCode, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Phone</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.Phone, new { @class = "form-control", placeholder = "202-555-1212" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Email</label>
+        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.Email, new { @class = "form-control", placeholder = "johndoe@anymail.com" })
+        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Cancel",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+@if (Request.HttpMethod == "POST" && ViewData.ModelState.IsValid)
+{
+    <hr class="my-5" />
+
+    <div class="text-center mb-4">
+        <h3>Report Summary</h3>
+    </div>
+
+    <div class="row g-3 justify-content-center mb-4">
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Total Customers</h5>
+                <p class="fs-4 mb-0">@Model.TotalCount</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Active Customers</h5>
+                <p class="fs-4 mb-0">@Model.ActiveCount</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Inactive Customers</h5>
+                <p class="fs-4 mb-0">@Model.InactiveCount</p>
+            </div>
+        </div>
+
+    </div>
+
+    if (Model.CustomerActivityReportRows != null && Model.CustomerActivityReportRows.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Status</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Emergency Contacts</th>
+                        <th>Pets</th>
+                        <th>Boardings</th>
+                        <th>Last Boarding</th>
+                        <th>Invoices</th>
+                        <th>Total Invoiced</th>
+                        <th>Total Payments</th>
+                        <th>Outstanding Balance</th>
+                        <th>Last Activity</th>
+                        <th>Frequent Customer</th>
+                        <th>Notes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (JamesPetBoarding.ViewModels.CustomerActivityReportRowVM customer in Model.CustomerActivityReportRows)
+                    {
+                        <tr>
+                            <td>@customer.CustomerNameDisplay</td>
+
+                            <td>@customer.ActiveStatusDisplay</td>
+
+                            <td>
+                                @customer.AddressDisplay<br />
+                                @customer.CityDisplay, @customer.StateDisplay @customer.ZipCodeDisplay
+                            </td>
+
+                            <td>@customer.PhoneDisplay</td>
+
+                            <td>@customer.EmailDisplay</td>
+
+                            <td>@customer.EmergencyContactCount</td>
+
+                            <td>@customer.PetCount</td>
+
+                            <td>@customer.BoardingCount</td>
+
+                            <td>@customer.LastBoardingDateDisplay</td>
+
+                            <td>@customer.InvoiceCount</td>
+
+                            <td>@customer.TotalInvoiceAmountDisplay</td>
+
+                            <td>@customer.TotalPaymentAmountDisplay</td>
+
+                            <td>@customer.OutstandingBalanceDisplay</td>
+
+                            <td>@customer.LastActivityDateDisplay</td>
+
+                            <td>@customer.IsFrequentCustomerDisplay</td>
+
+                            <td>@customer.NotesDisplay</td>
+
+                            <td>
+                                @Html.ActionLink(
+                                    "View Customer",
+                                    "Read",
+                                    "Customers",
+                                    new { customerId = customer.CustomerId },
+                                    new { @class = "btn btn-sm btn-primary" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            No customers matched the selected report filters.
+        </div>
+    }
+}

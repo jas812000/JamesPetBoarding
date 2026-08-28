@@ -84,12 +84,11 @@
 
     <div class="col-md-12">
         <label class="form-label">Void Reason</label>
-        @Html.TextAreaFor(
-            x => x.VoidedReason, 
-            new { @class = "form-control", 
-                rows = "4", 
-                placeholder = "Enter the reason for voiding this payment" })
-        @Html.ValidationMessageFor(x => x.VoidedReason, "", new { @class = "text-danger" })
+        @Html.EnumDropDownListFor(
+            x => x.VoidReason, 
+            "Select...",
+            new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VoidReason, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-12 text-center mt-4">

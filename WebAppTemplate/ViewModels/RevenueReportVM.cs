@@ -12,6 +12,8 @@ namespace JamesPetBoarding.ViewModels
 
         public List<RevenueReportRowVM> RevenueReportRows { get; set; }
 
+        public bool HasSearched { get; set; }
+
         public int TotalInvoiceCount { get; set; }
 
         public string TotalInvoicedDisplay { get; set; }
@@ -23,5 +25,10 @@ namespace JamesPetBoarding.ViewModels
         public string AverageInvoiceValueDisplay { get; set; }
 
         public string AverageAmountReceivedDisplay { get; set; }
+
+        public int TotalVoidedInvoiceCount { get; set; }
+
+        public string TotalVoidedAmountDisplay { get; set; }
+
     }
 }

@@ -1,15 +1,11 @@
-﻿using JamesPetBoarding.Enums;
-using JamesPetBoarding.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CustomerReportRowVM
+    public class CustomerActivityReportRowVM
     {
 
         public Guid? CustomerId { get; set; }
@@ -31,5 +27,26 @@ namespace JamesPetBoarding.ViewModels
         public string EmailDisplay { get; set; }
 
         public string NotesDisplay { get; set; }
+
+        public int EmergencyContactCount { get; set; }
+
+        public int PetCount { get; set; }
+
+        public int BoardingCount { get; set; }
+
+        public string LastBoardingDateDisplay { get; set; }
+
+        public int InvoiceCount { get; set; }
+
+        public string TotalInvoiceAmountDisplay { get; set; }
+
+        public string TotalPaymentAmountDisplay { get; set; }
+
+        public string OutstandingBalanceDisplay { get; set; }
+
+        public string LastActivityDateDisplay { get; set; }
+
+        public string IsFrequentCustomerDisplay { get; set; }
+
     }
 }

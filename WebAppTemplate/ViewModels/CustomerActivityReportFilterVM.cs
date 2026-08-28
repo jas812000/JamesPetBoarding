@@ -1,16 +1,15 @@
 ﻿using JamesPetBoarding.Enums;
-using JamesPetBoarding.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class CustomerReportFilterVM
+    public class CustomerActivityReportFilterVM
     {
+
         public Guid? CustomerId { get; set; }
 
         public ActiveStatusEnum? ActiveStatus { get; set; }
@@ -34,6 +33,5 @@ namespace JamesPetBoarding.ViewModels
 
         [EmailAddress, MaxLength(256)]
         public string Email { get; set; }
-
     }
 }

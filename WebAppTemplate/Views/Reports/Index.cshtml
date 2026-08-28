@@ -1,0 +1,148 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Reports</h2>
+    <p class="lead">
+        Select a report to generate.
+    </p>
+</div>
+
+<h3 class="text-center mt-4 mb-3">Customer &amp; Pet Reports</h3>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Customer Activity Report",
+            "CustomerActivityReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Pet Report",
+            "PetReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Pet Care Report",
+            "PetCareReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Species Report",
+            "SpeciesReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Vaccine Compliance Report",
+            "VaccineComplianceReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+</div>
+
+<h3 class="text-center mt-5 mb-3">Boarding Reports</h3>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Boarding Occupancy Report",
+            "BoardingOccupancyReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Daily Boarding Report",
+            "DailyBoardingReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+</div>
+
+<h3 class="text-center mt-5 mb-3">Financial Reports</h3>
+
+<div class="row g-3 justify-content-center">
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Invoice Report",
+            "InvoiceReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Outstanding Balance Report",
+            "OutstandingBalanceReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Payment Report",
+            "PaymentReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Revenue Report",
+            "RevenueReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Voided Transactions Report",
+            "VoidedTransactionsReport",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100" })
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+

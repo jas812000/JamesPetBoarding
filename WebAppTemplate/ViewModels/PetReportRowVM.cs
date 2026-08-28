@@ -12,12 +12,12 @@ namespace JamesPetBoarding.ViewModels
     public class PetReportRowVM
     {
         public Guid PetId { get; set; }
+
         public string PetNameDisplay { get; set; }
 
         public Guid? VetId { get; set; }
-        public string VeterinarianNameDisplay { get; set; }
 
-        public Guid? CustomerId { get; set; }
+        public string VeterinarianNameDisplay { get; set; }
 
         public string CustomerNameDisplay { get; set; }
 
@@ -30,6 +30,7 @@ namespace JamesPetBoarding.ViewModels
         public string BirthDateDisplay { get; set; }
 
         public string AgeDisplay { get; set; }
+
         public string WeightDisplay { get; set; }
 
         public string ActiveStatusDisplay { get; set; }

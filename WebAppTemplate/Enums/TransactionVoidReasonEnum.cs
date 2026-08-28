@@ -6,7 +6,7 @@ using System.Web;
 
 namespace JamesPetBoarding.Enums
 {
-    public enum InvoiceVoidReasonEnum
+    public enum TransactionVoidReasonEnum
     {
         [Display(Name = "Duplicate Invoice")]
         DuplicateInvoice = 1,
@@ -28,6 +28,19 @@ namespace JamesPetBoarding.Enums
 
         [Display(Name = "Administrative Adjustment")]
         AdministrativeAdjustment = 7,
+
+        [Display(Name = "Duplicate Payment")]
+        DuplicatePayment = 8,
+
+        [Display(Name = "Incorrect Payment Amount")]
+        IncorrectPaymentAmount = 9,
+
+
+        [Display(Name = "Incorrect Payment Method")]
+        IncorrectPaymentMethod = 10,
+
+        [Display(Name = "Payment Entered In Error")]
+        PaymentEnteredInError = 11,
 
         [Display(Name = "Other")]
         Other = 99

@@ -15,8 +15,7 @@ namespace JamesPetBoarding.ViewModels
         [Required]
         public DateTime InvoiceEndDate { get; set; }
 
-        [Required]
-        public InvoiceTypeEnum InvoiceType { get; set; }
+        public InvoiceTypeEnum? InvoiceType { get; set; }
 
         public InvoiceStatusEnum? InvoiceStatus { get; set; }
 

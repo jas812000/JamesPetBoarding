@@ -29,7 +29,7 @@ namespace JamesPetBoarding.ViewModels
         public string BalanceDisplay { get; set; }
 
         [Required]
-        public InvoiceVoidReasonEnum? VoidReason { get; set; }
+        public TransactionVoidReasonEnum? VoidReason { get; set; }
 
         [MaxLength(1000)]
         public string VoidNotes { get; set; }

@@ -1,0 +1,174 @@
+﻿@model JamesPetBoarding.ViewModels.InvoiceReportVM
+@{
+    ViewBag.Title = "Invoice Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Invoice Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate an invoice report.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("InvoiceReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Start Date</label>
+        @Html.TextBoxFor(x => x.InvoiceReportFilter.InvoiceStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceStartDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice End Date</label>
+        @Html.TextBoxFor(x => x.InvoiceReportFilter.InvoiceEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceEndDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Type</label>
+        @Html.EnumDropDownListFor(x => x.InvoiceReportFilter.InvoiceType, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Status</label>
+        @Html.EnumDropDownListFor(x => x.InvoiceReportFilter.InvoiceStatus, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceStatus, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Customer Name</label>
+        @Html.DropDownListFor(x => x.InvoiceReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.CustomerId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.DropDownListFor(x => x.InvoiceReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.PetId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Cancel",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+
+@if (Model.InvoiceReportRows != null && Model.InvoiceReportRows.Any())
+{
+    <div class="border rounded p-4 mt-5 mb-4">
+        <h3 class="text-center mb-4">Invoice Summary</h3>
+
+        <div class="row text-center justify-content-center">
+            <div class="col-md-3 mb-3">
+                <strong>Invoice Count</strong>
+                <div>@Model.InvoiceCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Total Subtotal</strong>
+                <div>@Model.TotalSubtotalDisplay</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Total Tax</strong>
+                <div>@Model.TotalTaxDisplay</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Total Discount</strong>
+                <div>@Model.TotalDiscountDisplay</div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Total Amount</strong>
+                <div>@Model.TotalAmountDisplay</div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Total Amount Paid</strong>
+                <div>@Model.TotalAmountPaidDisplay</div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Total Balance</strong>
+                <div>@Model.TotalBalanceDisplay</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Invoice Type</th>
+                    <th>Invoice Items</th>
+                    <th>Customer</th>
+                    <th>Pet</th>
+                    <th>Boarding</th>
+                    <th>Invoice Date/Time</th>
+                    <th>Status</th>
+                    <th>Subtotal</th>
+                    <th>Tax</th>
+                    <th>Discount</th>
+                    <th>Total Amount</th>
+                    <th>Amount Paid</th>
+                    <th>Balance</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var invoice in Model.InvoiceReportRows)
+                {
+                    <tr>
+                        <td>@invoice.InvoiceTypeDisplay</td>
+                        <td>@invoice.InvoiceItemCount</td>
+                        <td>@invoice.CustomerNameDisplay</td>
+                        <td>@invoice.PetNameDisplay</td>
+                        <td>@invoice.BoardingDisplay</td>
+                        <td>@invoice.InvoiceDateTimeDisplay</td>
+                        <td>@invoice.StatusDisplay</td>
+                        <td>@invoice.SubtotalDisplay</td>
+                        <td>@invoice.TaxAmountDisplay</td>
+                        <td>@invoice.DiscountAmountDisplay</td>
+                        <td>@invoice.TotalAmountDisplay</td>
+                        <td>@invoice.AmountPaidDisplay</td>
+                        <td>@invoice.BalanceDisplay</td>
+
+                        <td>
+                            @Html.ActionLink(
+                                "View",
+                                "Read",
+                                "Invoices",
+                                new { invoiceId = invoice.InvoiceId },
+                                new { @class = "btn btn-sm btn-outline-primary" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (Model.HasSearched)
+{
+    <div class="alert alert-info text-center mt-4">
+        No invoices matched the selected report filters.
+    </div>
+}
+

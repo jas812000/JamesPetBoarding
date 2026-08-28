@@ -186,6 +186,7 @@
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PetsController.cs" />
     <Compile Include="Controllers\PetVaccinesController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VaccinesController.cs" />
@@ -193,7 +194,7 @@
     <Compile Include="Enums\ActiveStatusEnum.cs" />
     <Compile Include="Enums\BoardingStatusEnum.cs" />
     <Compile Include="Enums\InactivatedReasonEnum.cs" />
-    <Compile Include="Enums\InvoiceVoidReasonEnum.cs" />
+    <Compile Include="Enums\TransactionVoidReasonEnum.cs" />
     <Compile Include="Enums\VaccineComplianceStatusEnum.cs" />
     <Compile Include="Enums\EmergencyContactRelationshipEnum.cs" />
     <Compile Include="Enums\EmployeeRoleEnum.cs" />
@@ -213,6 +214,7 @@
     <Compile Include="Enums\StateEnum.cs" />
     <Compile Include="Enums\UnitNameEnum.cs" />
     <Compile Include="Enums\UnitTypeEnum.cs" />
+    <Compile Include="Enums\WeightUnitEnum.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -340,6 +342,14 @@
     <Compile Include="Migrations\202608011925218_RequirePaymentTransactionReference.Designer.cs">
       <DependentUpon>202608011925218_RequirePaymentTransactionReference.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202608241725324_AddInvoiceTypeToInvoice.cs" />
+    <Compile Include="Migrations\202608241725324_AddInvoiceTypeToInvoice.Designer.cs">
+      <DependentUpon>202608241725324_AddInvoiceTypeToInvoice.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.cs" />
+    <Compile Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.Designer.cs">
+      <DependentUpon>202608242333342_UseTransactionVoidReasonEnum.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -355,20 +365,26 @@
     <Compile Include="Models\MedicationModel.cs" />
     <Compile Include="ViewModels\BoardingCancelVM.cs" />
     <Compile Include="ViewModels\BoardingNoShowVM.cs" />
+    <Compile Include="ViewModels\BoardingOccupancyReportFilterVM.cs" />
+    <Compile Include="ViewModels\BoardingOccupancyReportRowVM.cs" />
+    <Compile Include="ViewModels\BoardingOccupancyReportVM.cs" />
     <Compile Include="ViewModels\BoardingSearchVM.cs" />
     <Compile Include="ViewModels\BoardingUnitDeleteVM.cs" />
     <Compile Include="ViewModels\BoardingUnitSearchVM.cs" />
     <Compile Include="ViewModels\BoardingUnitSummaryVM.cs" />
-    <Compile Include="ViewModels\BoardingUtilizationReportFilterVM.cs" />
-    <Compile Include="ViewModels\BoardingUtilizationReportRowVM.cs" />
-    <Compile Include="ViewModels\BoardingUtilizationReportVM.cs" />
+    <Compile Include="ViewModels\CurrentBoardersReportFilterVM.cs" />
+    <Compile Include="ViewModels\CurrentBoardersReportRowVM.cs" />
+    <Compile Include="ViewModels\CurrentBoardersReportVM.cs" />
+    <Compile Include="ViewModels\CustomerActivityReportFilterVM.cs" />
+    <Compile Include="ViewModels\CustomerActivityReportRowVM.cs" />
+    <Compile Include="ViewModels\CustomerActivityReportVM.cs" />
     <Compile Include="ViewModels\CustomerDeactivateVM.cs" />
     <Compile Include="ViewModels\CustomerReactivateVM.cs" />
-    <Compile Include="ViewModels\CustomerReportFilterVM.cs" />
-    <Compile Include="ViewModels\CustomerReportRowVM.cs" />
-    <Compile Include="ViewModels\CustomerReportVM.cs" />
     <Compile Include="ViewModels\CustomerSearchResultVM.cs" />
     <Compile Include="ViewModels\CustomerSearchVM.cs" />
+    <Compile Include="ViewModels\DailyBoardingReportFilterVM.cs" />
+    <Compile Include="ViewModels\DailyBoardingReportRowVM.cs" />
+    <Compile Include="ViewModels\DailyBoardingReportVM.cs" />
     <Compile Include="ViewModels\DietDeleteVM.cs" />
     <Compile Include="ViewModels\EmergencyContactDeactivateVM.cs" />
     <Compile Include="ViewModels\EmergencyContactReactivateVM.cs" />
@@ -389,6 +405,9 @@
     <Compile Include="ViewModels\InvoiceSummaryVM.cs" />
     <Compile Include="ViewModels\InvoiceVoidVM.cs" />
     <Compile Include="ViewModels\MedicationDeleteVM.cs" />
+    <Compile Include="ViewModels\OutstandingBalanceReportFilterVM.cs" />
+    <Compile Include="ViewModels\OutstandingBalanceReportVM.cs" />
+    <Compile Include="ViewModels\OutstandingBalanceReportRowVM.cs" />
     <Compile Include="ViewModels\PaymentDetailsVM.cs" />
     <Compile Include="ViewModels\PaymentFormVM.cs" />
     <Compile Include="Models\PaymentModel.cs" />
@@ -428,6 +447,7 @@
     <Compile Include="ViewModels\MedicationDetailsVM.cs" />
     <Compile Include="ViewModels\MedicationFormVM.cs" />
     <Compile Include="ViewModels\MedicationSummaryVM.cs" />
+    <Compile Include="ViewModels\PaymentMethodSummaryRowVM.cs" />
     <Compile Include="ViewModels\PaymentReportFilterVM.cs" />
     <Compile Include="ViewModels\PaymentReportRowVM.cs" />
     <Compile Include="ViewModels\PaymentReportVM.cs" />
@@ -435,6 +455,9 @@
     <Compile Include="ViewModels\PaymentSummaryVM.cs" />
     <Compile Include="ViewModels\PaymentUpdateVM.cs" />
     <Compile Include="ViewModels\PaymentVoidVM.cs" />
+    <Compile Include="ViewModels\PetCareReportFilterVM.cs" />
+    <Compile Include="ViewModels\PetCareReportRowVM.cs" />
+    <Compile Include="ViewModels\PetCareReportVM.cs" />
     <Compile Include="ViewModels\PetDeactivateVM.cs" />
     <Compile Include="ViewModels\PetDetailsVM.cs" />
     <Compile Include="ViewModels\PetFormVM.cs" />
@@ -454,8 +477,14 @@
     <Compile Include="ViewModels\ServiceDeleteVM.cs" />
     <Compile Include="ViewModels\ServiceDetailsVM.cs" />
     <Compile Include="ViewModels\ServiceFormVM.cs" />
+    <Compile Include="ViewModels\ServiceReportFilterVM.cs" />
+    <Compile Include="ViewModels\ServiceReportRowVM.cs" />
+    <Compile Include="ViewModels\ServiceReportVM.cs" />
     <Compile Include="ViewModels\ServiceSearchVM.cs" />
     <Compile Include="ViewModels\ServiceSummaryVM.cs" />
+    <Compile Include="ViewModels\SpeciesReportFilterVM.cs" />
+    <Compile Include="ViewModels\SpeciesReportRowVM.cs" />
+    <Compile Include="ViewModels\SpeciesReportVM.cs" />
     <Compile Include="ViewModels\VaccineDeleteVM.cs" />
     <Compile Include="ViewModels\VaccineDetailsVM.cs" />
     <Compile Include="ViewModels\VaccineFormVM.cs" />
@@ -469,10 +498,9 @@
     <Compile Include="ViewModels\VeterinarianSearchVM.cs" />
     <Compile Include="ViewModels\VeterinarianStatusVM.cs" />
     <Compile Include="ViewModels\VeterinarianSummaryVM.cs" />
-    <Compile Include="ViewModels\VoidedPaymentReportFilterVM.cs" />
-    <Compile Include="ViewModels\VoidedPaymentReportRowVM.cs" />
-    <Compile Include="ViewModels\VoidedPaymentReportVM.cs" />
-    <Compile Include="ViewModels\VoidPaymentVM.cs" />
+    <Compile Include="ViewModels\VoidedTransactionsReportFilterVM.cs" />
+    <Compile Include="ViewModels\VoidedTransactionsReportRowVM.cs" />
+    <Compile Include="ViewModels\VoidedTransactionsReportVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-grid.css" />
@@ -642,6 +670,20 @@
     <Content Include="Views\Payments\Read.cshtml" />
     <Content Include="Views\Payments\Update.cshtml" />
     <Content Include="Views\Payments\Void.cshtml" />
+    <Content Include="Views\Reports\CustomerActivityReport.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Reports\PetReport.cshtml" />
+    <Content Include="Views\Reports\PetCareReport.cshtml" />
+    <Content Include="Views\Reports\SpeciesReport.cshtml" />
+    <Content Include="Views\Reports\PaymentReport.cshtml" />
+    <Content Include="Views\Reports\RevenueReport.cshtml" />
+    <Content Include="Views\Reports\VoidedTransactionsReport.cshtml" />
+    <Content Include="Views\Reports\CurrentBoardersReport.cshtml" />
+    <Content Include="Views\Reports\OutstandingBalanceReport.cshtml" />
+    <Content Include="Views\Reports\InvoiceReport.cshtml" />
+    <Content Include="Views\Reports\VaccineComplianceReport.cshtml" />
+    <Content Include="Views\Reports\BoardingOccupancyReport.cshtml" />
+    <Content Include="Views\Reports\DailyBoardingReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -742,6 +784,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202608011925218_RequirePaymentTransactionReference.resx">
       <DependentUpon>202608011925218_RequirePaymentTransactionReference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202608241725324_AddInvoiceTypeToInvoice.resx">
+      <DependentUpon>202608241725324_AddInvoiceTypeToInvoice.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.resx">
+      <DependentUpon>202608242333342_UseTransactionVoidReasonEnum.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

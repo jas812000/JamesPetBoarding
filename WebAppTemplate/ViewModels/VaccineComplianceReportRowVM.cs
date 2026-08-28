@@ -9,7 +9,7 @@ namespace JamesPetBoarding.ViewModels
 {
     public class VaccineComplianceReportRowVM
     {
-        public Guid PetVaccineId { get; set; }
+        public Guid? PetVaccineId { get; set; }
 
         public Guid VaccineId { get; set; }
 
@@ -19,21 +19,21 @@ namespace JamesPetBoarding.ViewModels
 
         public string PetNameDisplay { get; set; }
 
-        public Guid CustomerId { get; set; }
-
         public string CustomerNameDisplay { get; set; }
 
         public string SpeciesDisplay { get; set; }
 
-        public string RequiredFlagDisplay { get; set; }
-
         public string DateGivenDisplay { get; set; }
+
+        public DateTime? ExpirationDate { get; set; }
 
         public string ExpirationDateDisplay { get; set; }
 
+        public VaccineComplianceStatusEnum VaccineComplianceStatus { get; set; }
+
         public string VaccineComplianceStatusDisplay { get; set; }
 
-        public int DaysUntilExpiration { get; set; }
+        public int? DaysUntilExpiration { get; set; }
 
         public string DocumentFilePathDisplay { get; set; }
 

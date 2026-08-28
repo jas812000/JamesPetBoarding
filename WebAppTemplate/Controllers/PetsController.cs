@@ -3,9 +3,11 @@ using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Web.Mvc;
 using System.Web.UI;
 
@@ -80,9 +82,9 @@ namespace JamesPetBoarding.Controllers
                 {
                     PetId = pet.PetId,
                     PetNameDisplay = pet.PetName,
-                    SpeciesDisplay = pet.Species.ToString(),
+                    SpeciesDisplay = GetEnumDisplayName(pet.Species),
                     BreedDisplay = pet.Breed,
-                    SexDisplay = pet.Sex.ToString(),
+                    SexDisplay = GetEnumDisplayName(pet.Sex),
                     ActiveStatusDisplay = pet.IsActive ? "Active" : "Inactive",
                     IsActive = pet.IsActive
                 });
@@ -176,9 +178,9 @@ namespace JamesPetBoarding.Controllers
 
             petDetails.PetId = pet.PetId;
             petDetails.PetNameDisplay = pet.PetName;
-            petDetails.SpeciesDisplay = pet.Species.ToString();
+            petDetails.SpeciesDisplay = GetEnumDisplayName(pet.Species);
             petDetails.BreedDisplay = pet.Breed;
-            petDetails.SexDisplay = pet.Sex.ToString();
+            petDetails.SexDisplay = GetEnumDisplayName(pet.Sex);
             petDetails.BirthDateDisplay = pet.BirthDate.ToString("MM/dd/yyyy");
             petDetails.AgeDisplay = age.ToString();
             petDetails.WeightDisplay = pet.Weight.ToString();
@@ -191,7 +193,7 @@ namespace JamesPetBoarding.Controllers
                 : pet.Notes;
 
             petDetails.InactivationReasonDisplay = pet.InactivationReason.HasValue
-                ? pet.InactivationReason.ToString()
+                ? GetEnumDisplayName(pet.InactivationReason.Value)
                 : "Not Applicable";
 
             petDetails.InactivationDateDisplay = pet.InactivationDate.HasValue
@@ -393,11 +395,11 @@ namespace JamesPetBoarding.Controllers
 
             petDeactivate.PetNameDisplay = pet.PetName;
 
-            petDeactivate.SpeciesDisplay = pet.Species.ToString();
+            petDeactivate.SpeciesDisplay = GetEnumDisplayName(pet.Species);
 
             petDeactivate.BreedDisplay = pet.Breed;
 
-            petDeactivate.SexDisplay = pet.Sex.ToString();
+            petDeactivate.SexDisplay = GetEnumDisplayName(pet.Sex);
 
             petDeactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
 
@@ -442,11 +444,11 @@ namespace JamesPetBoarding.Controllers
 
                 petDeactivate.PetNameDisplay = pet.PetName;
 
-                petDeactivate.SpeciesDisplay = pet.Species.ToString();
+                petDeactivate.SpeciesDisplay = GetEnumDisplayName(pet.Species);
 
                 petDeactivate.BreedDisplay = pet.Breed;
 
-                petDeactivate.SexDisplay = pet.Sex.ToString();
+                petDeactivate.SexDisplay = GetEnumDisplayName(pet.Sex);
 
                 petDeactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
 
@@ -506,11 +508,11 @@ namespace JamesPetBoarding.Controllers
 
             petReactivate.PetNameDisplay = pet.PetName;
 
-            petReactivate.SpeciesDisplay = pet.Species.ToString();
+            petReactivate.SpeciesDisplay = GetEnumDisplayName(pet.Species);
 
             petReactivate.BreedDisplay = pet.Breed;
 
-            petReactivate.SexDisplay = pet.Sex.ToString();
+            petReactivate.SexDisplay = GetEnumDisplayName(pet.Sex);
 
             petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
 
@@ -523,7 +525,7 @@ namespace JamesPetBoarding.Controllers
                 : pet.Notes;
 
             petReactivate.InactivationReasonDisplay = pet.InactivationReason.HasValue
-                ? pet.InactivationReason.ToString()
+                ? GetEnumDisplayName(pet.InactivationReason.Value)
                 : "Not Applicable";
 
             petReactivate.InactivationDateDisplay = pet.InactivationDate.HasValue
@@ -567,11 +569,11 @@ namespace JamesPetBoarding.Controllers
 
                 petReactivate.PetNameDisplay = pet.PetName;
 
-                petReactivate.SpeciesDisplay = pet.Species.ToString();
+                petReactivate.SpeciesDisplay = GetEnumDisplayName(pet.Species);
 
                 petReactivate.BreedDisplay = pet.Breed;
 
-                petReactivate.SexDisplay = pet.Sex.ToString();
+                petReactivate.SexDisplay = GetEnumDisplayName(pet.Sex);
 
                 petReactivate.BirthDateDisplay = pet.BirthDate.ToShortDateString();
 
@@ -584,7 +586,7 @@ namespace JamesPetBoarding.Controllers
                     : pet.Notes;
 
                 petReactivate.InactivationReasonDisplay = pet.InactivationReason.HasValue
-                    ? pet.InactivationReason.ToString()
+                    ? GetEnumDisplayName(pet.InactivationReason.Value)
                     : "Not Applicable";
 
                 petReactivate.InactivationDateDisplay = pet.InactivationDate.HasValue
@@ -627,7 +629,20 @@ namespace JamesPetBoarding.Controllers
             SelectList vetSelectList = new SelectList(vetDropdownItems, "VetId", "VetDisplay");
 
             return vetSelectList;
+        }
 
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute = enumValue
+                .GetType()
+                .GetMember(enumValue.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.GetName()
+                : enumValue.ToString();
         }
     }
 }

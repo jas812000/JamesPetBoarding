@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JamesPetBoarding.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,8 +32,7 @@ namespace JamesPetBoarding.ViewModels
         public string StatusDisplay { get; set; }
 
         [Required]
-        [MaxLength(500)]
-        public string VoidedReason { get; set; }
+        public TransactionVoidReasonEnum? VoidReason { get; set; }
 
         public string Notes { get; set; }
     }

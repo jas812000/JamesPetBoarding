@@ -9,17 +9,19 @@ namespace JamesPetBoarding.ViewModels
 {
     public class PaymentReportFilterVM
     {
-        [Required]
-        public DateTime PaymentStartDate { get; set; }
+        public DateTime? PaymentStartDate { get; set; }
 
-        [Required]
-        public DateTime PaymentEndDate { get; set; }
+        public DateTime? PaymentEndDate { get; set; }
 
-        [Required]
-        public InvoiceTypeEnum InvoiceType { get; set; }
+        public Guid? CustomerId { get; set; }
+
+        public Guid? PetId { get; set; }
+
+        public InvoiceTypeEnum? InvoiceType { get; set; }
 
         public PaymentMethodEnum? PaymentMethod { get; set; }
 
         public Guid? ProcessedByEmployeeId {  get; set; }
+
     }
 }

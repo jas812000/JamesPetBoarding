@@ -3,8 +3,10 @@ using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Services.Description;
@@ -598,7 +600,7 @@ namespace JamesPetBoarding.Controllers
 
             payment.VoidedDateTime = DateTime.Now;
 
-            payment.VoidedReason = paymentVoid.VoidedReason;
+            payment.VoidReason = paymentVoid.VoidReason;
 
             payment.VoidedByEmployeeId = currentEmployee.EmployeeId;
 
@@ -670,8 +672,8 @@ namespace JamesPetBoarding.Controllers
                     ? "Voided"
                     : "Processed",
 
-                VoidedReasonDisplay = payment.IsVoided
-                    ? payment.VoidedReason
+                VoidedReasonDisplay = payment.IsVoided && payment.VoidReason.HasValue
+                    ? GetEnumDisplayName(payment.VoidReason)
                     : "Not Voided",
 
                 VoidedDateTimeDisplay = payment.VoidedDateTime.HasValue
@@ -767,5 +769,19 @@ namespace JamesPetBoarding.Controllers
             return currentEmployee;
 
         }
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute = enumValue
+                .GetType()
+                .GetMember(enumValue.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.GetName()
+                : enumValue.ToString();
+        }
+
     }
 }

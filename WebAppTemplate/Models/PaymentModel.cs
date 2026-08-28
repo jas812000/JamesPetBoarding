@@ -49,8 +49,7 @@ namespace JamesPetBoarding.Models
 
         public DateTime? VoidedDateTime { get; set; }
 
-        [MaxLength(500)]
-        public string VoidedReason { get; set; }
+        public TransactionVoidReasonEnum? VoidReason { get; set; }
 
         public Guid? VoidedByEmployeeId { get; set; }
 

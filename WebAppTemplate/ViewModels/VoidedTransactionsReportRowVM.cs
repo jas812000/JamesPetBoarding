@@ -5,9 +5,11 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class VoidedPaymentReportRowVM
+    public class VoidedTransactionsReportRowVM
     {
-        public Guid PaymentId { get; set; }
+        public string TransactionTypeDisplay { get; set; }
+
+        public Guid? PaymentId { get; set; }
 
         public Guid InvoiceId { get; set; }
 
@@ -21,7 +23,7 @@ namespace JamesPetBoarding.ViewModels
 
         public string PetNameDisplay { get; set; }
 
-        public string PaymentDateDisplay { get; set; }
+        public string OriginalTransactionDateDisplay { get; set; }
 
         public string AmountVoidedDisplay { get; set; }
 
@@ -29,15 +31,17 @@ namespace JamesPetBoarding.ViewModels
 
         public string TransactionReferenceDisplay { get; set; }
 
-        public Guid ProcessedByEmployeeId { get; set; }
+        public Guid? ProcessedByEmployeeId { get; set; }
 
         public string ProcessedByEmployeeNameDisplay { get; set; }
 
+        public DateTime? VoidedDate { get; set; }
+
         public string VoidedDateDisplay { get; set; }
 
-        public Guid VoidedByEmployeeId { get; set; }
+        public Guid? VoidedByEmployeeId { get; set; }
 
-        public string VoidedByEmployeNameDisplay { get; set; }
+        public string VoidedByEmployeeNameDisplay { get; set; }
 
         public string VoidedReasonDisplay { get; set; }
 

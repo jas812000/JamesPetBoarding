@@ -7,7 +7,7 @@ using System.Web;
 
 namespace JamesPetBoarding.ViewModels
 {
-    public class VoidedPaymentReportFilterVM
+    public class VoidedTransactionsReportFilterVM
     {
         [Required]
         public DateTime VoidedStartDate { get; set; }
@@ -15,8 +15,7 @@ namespace JamesPetBoarding.ViewModels
         [Required]
         public DateTime VoidedEndDate { get; set; }
 
-        [Required]
-        public InvoiceTypeEnum InvoiceType { get; set; }
+        public InvoiceTypeEnum? InvoiceType { get; set; }
 
         public PaymentMethodEnum? PaymentMethod { get; set; }
 

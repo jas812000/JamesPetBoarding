@@ -1,0 +1,189 @@
+﻿@model JamesPetBoarding.ViewModels.PaymentReportVM
+
+@{
+    ViewBag.Title = "Payment Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Payment Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate a payment report.
+    </p>
+</div>
+
+@using (Html.BeginForm("PaymentReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Payment Start Date</label>
+        @Html.TextBoxFor(x => x.PaymentReportFilter.PaymentStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentStartDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Payment End Date</label>
+        @Html.TextBoxFor(x => x.PaymentReportFilter.PaymentEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentEndDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Customer Name</label>
+        @Html.DropDownListFor(x => x.PaymentReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.CustomerId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.DropDownListFor(x => x.PaymentReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PetId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Type</label>
+        @Html.EnumDropDownListFor(x => x.PaymentReportFilter.InvoiceType, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.InvoiceType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Payment Method</label>
+        @Html.EnumDropDownListFor(x => x.PaymentReportFilter.PaymentMethod, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentMethod, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Processed By Employee</label>
+        @Html.DropDownListFor(x => x.PaymentReportFilter.ProcessedByEmployeeId, Model.EmployeeSelectList, "Select Employee...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PaymentReportFilter.ProcessedByEmployeeId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Cancel",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+
+@if ((Model.PaymentReportRows != null && Model.PaymentReportRows.Any()) ||
+     (Model.PaymentMethodSummaryRows != null && Model.PaymentMethodSummaryRows.Any()))
+{
+    <div class="border rounded p-4 mt-5 mb-4">
+        <h3 class="text-center mb-4">Payment Summary</h3>
+
+        <div class="row text-center justify-content-center">
+            <div class="col-md-4 mb-3">
+                <strong>Payment Count</strong>
+                <div>@Model.PaymentCount</div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Total Amount Paid</strong>
+                <div>@Model.TotalAmountPaidDisplay</div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <strong>Average Payment Amount</strong>
+                <div>@Model.AveragePaymentAmountDisplay</div>
+            </div>
+        </div>
+    </div>
+
+    if (Model.PaymentMethodSummaryRows != null && Model.PaymentMethodSummaryRows.Any())
+    {
+        <div class="table-responsive mt-4">
+            <h3 class="text-center mb-4">Payment Method Summary</h3>
+
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Payment Method</th>
+                        <th>Payment Count</th>
+                        <th>Total Payment Amount</th>
+                        <th>Voided Payment Count</th>
+                        <th>Voided Payment Amount</th>
+                        <th>Net Payment Amount</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var paymentMethod in Model.PaymentMethodSummaryRows)
+                    {
+                        <tr>
+                            <td>@paymentMethod.PaymentMethodDisplay</td>
+                            <td>@paymentMethod.PaymentCount</td>
+                            <td>@paymentMethod.TotalPaymentAmountDisplay</td>
+                            <td>@paymentMethod.VoidedPaymentCount</td>
+                            <td>@paymentMethod.VoidedPaymentAmountDisplay</td>
+                            <td>@paymentMethod.NetPaymentAmountDisplay</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    if (Model.PaymentReportRows != null && Model.PaymentReportRows.Any())
+    {
+        <div class="table-responsive mt-5">
+            <h3 class="text-center mb-4">Payment Details</h3>
+
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Payment Date</th>
+                        <th>Invoice Type</th>
+                        <th>Customer</th>
+                        <th>Pet</th>
+                        <th>Amount Paid</th>
+                        <th>Payment Method</th>
+                        <th>Transaction Reference</th>
+                        <th>Processed By</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var payment in Model.PaymentReportRows)
+                    {
+                        <tr>
+                            <td>@payment.PaymentDateDisplay</td>
+                            <td>@payment.InvoiceTypeDisplay</td>
+                            <td>@payment.CustomerNameDisplay</td>
+                            <td>@payment.PetNameDisplay</td>
+                            <td>@payment.AmountPaidDisplay</td>
+                            <td>@payment.PaymentMethodDisplay</td>
+                            <td>@payment.TransactionReferenceDisplay</td>
+                            <td>@payment.ProcessedByEmployeeNameDisplay</td>
+
+                            <td>
+                                @Html.ActionLink(
+                                    "View",
+                                    "Read",
+                                    "Payments",
+                                    new { paymentId = payment.PaymentId },
+                                    new { @class = "btn btn-sm btn-outline-primary" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+else if (Model.HasSearched)
+{
+    <div class="alert alert-info text-center mt-4">
+        No payments matched the selected payment report filters.
+    </div>
+}

@@ -8,9 +8,10 @@ namespace JamesPetBoarding.ViewModels
 {
     public class PetReportFilterVM
     {
-        public ActiveStatusEnum? ActiveStatus { get; set; }
-
+      
         public Guid? PetId { get; set; }
+
+        public ActiveStatusEnum? ActiveStatus { get; set; }
 
         public Guid? VetId { get; set; }
 
@@ -25,5 +26,8 @@ namespace JamesPetBoarding.ViewModels
         public SexEnum? Sex { get; set; }
 
         public DateTime? BirthDate { get; set; }
+
+        public WeightUnitEnum WeightUnit { get; set; }
+
     }
 }

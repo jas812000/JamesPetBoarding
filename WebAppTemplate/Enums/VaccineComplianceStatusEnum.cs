@@ -11,10 +11,23 @@ namespace JamesPetBoarding.Enums
         [Display(Name ="Expired")]
         Expired = 1,
 
-        [Display(Name = "Expiring Soon")]
-        ExpiringSoon = 2,
+        [Display(Name = "Expiring Today")]
+        ExpiringToday = 2,
+
+        [Display(Name = "Expiring Tomorrow")]
+        ExpiringTomorrow = 3,
+
+        [Display(Name = "Expiring Within 15 Days")]
+        ExpiringWithin15Days = 4,
+
+        [Display(Name = "Expiring Within 30 Days")]
+        ExpiringWithin30Days = 5,
 
         [Display(Name = "Current")]
-        Current = 3
+        Current = 6,
+
+        [Display(Name = "Missing")]
+        Missing = 7
+
     }
 }

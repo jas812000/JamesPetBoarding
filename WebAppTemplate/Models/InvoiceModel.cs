@@ -40,6 +40,9 @@ namespace JamesPetBoarding.Models
         public BoardingModel Boarding { get; set; }
 
         [Required]
+        public InvoiceTypeEnum InvoiceType { get; set; }
+
+        [Required]
         public DateTime InvoiceDateTime { get; set; }
 
         [Required]
@@ -66,7 +69,7 @@ namespace JamesPetBoarding.Models
         [MaxLength(2000)]
         public string Notes { get; set; }
 
-        public InvoiceVoidReasonEnum? VoidReason { get; set; }
+        public TransactionVoidReasonEnum? VoidReason { get; set; }
 
         [MaxLength(1000)]
         public string VoidNotes { get; set; }
