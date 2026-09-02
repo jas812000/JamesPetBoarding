@@ -11,19 +11,22 @@ using System.Web.Services.Description;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class PetVaccinesController : Controller
     {
-        // GET: PetVaccines
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: PetVaccines/Create
         public ActionResult Create(Guid petId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
             if (pet == null)
@@ -47,7 +50,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PetVaccineFormVM petVaccineForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petVaccineForm.PetId);
 
@@ -110,7 +121,15 @@ namespace JamesPetBoarding.Controllers
         // GET: PetVaccines/Read
         public ActionResult Read(Guid petVaccineId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetVaccineModel petVaccine = dbContext.PetVaccines
                 .Include(x => x.Pet)
@@ -142,7 +161,15 @@ namespace JamesPetBoarding.Controllers
         // GET: PetVaccines/Update
         public ActionResult Update(Guid petVaccineId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetVaccineModel petVaccine = dbContext.PetVaccines
                 .Include(x => x.Pet)
@@ -175,7 +202,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(PetVaccineFormVM petVaccineForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetVaccineModel petVaccine = dbContext.PetVaccines
                 .Include(x => x.Pet)
@@ -245,7 +280,15 @@ namespace JamesPetBoarding.Controllers
         // GET: PetVaccines/Delete
         public ActionResult Delete(Guid petVaccineId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetVaccineModel petVaccine = dbContext.PetVaccines
                 .Include(x => x.Pet)
@@ -280,7 +323,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(PetVaccineDeleteVM petVaccineDelete)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetVaccineModel petVaccine = dbContext.PetVaccines
                 .Include(x => x.Pet)
@@ -325,6 +376,18 @@ namespace JamesPetBoarding.Controllers
                 .ToList();
 
             return vaccineOptions;
+
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
 
         }
     }

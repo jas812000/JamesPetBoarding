@@ -12,17 +12,25 @@ using System.Web.Routing;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class VaccinesController : Controller
     {
-        // GET: Vaccines
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: Vaccines/Search
         public ActionResult Search()
-        { 
+        {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageVaccines = CanManageVaccines(currentEmployee);
+
             VaccineSearchVM vaccineSearch = new VaccineSearchVM();
 
             return View(vaccineSearch);    
@@ -35,6 +43,15 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Search (VaccineSearchVM vaccineSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageVaccines = CanManageVaccines(currentEmployee);
 
             List<VaccineModel> vaccines = dbContext.Vaccines.ToList();
 
@@ -83,6 +100,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Vaccines/Create
         public ActionResult Create()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VaccineFormVM vaccineForm = new VaccineFormVM();
 
             return View(vaccineForm);
@@ -95,13 +121,19 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(VaccineFormVM vaccineForm)
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
                 return View(vaccineForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VaccineModel existingVaccine = dbContext.Vaccines
                 .FirstOrDefault(x => 
@@ -135,6 +167,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
             if (vaccine == null) 
@@ -162,6 +201,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
             if (vaccine == null) 
@@ -188,6 +234,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Update(VaccineFormVM vaccineForm)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineForm.VaccineId);
 
@@ -231,6 +284,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
 
             if (vaccine == null) 
@@ -260,6 +320,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageVaccines(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineDelete.VaccineId);
 
             if (vaccine == null)
@@ -281,13 +348,48 @@ namespace JamesPetBoarding.Controllers
 
             if (petVaccines.Count > 0) 
             { 
-                return Content("This vaccine is assigned to pet vaccine records and cannot be deleted."); 
+                ModelState.AddModelError(
+                    "",
+                    "This vaccine is assigned to pet vaccine records and cannot be deleted."); 
+
+                return View(vaccineDelete);
             }
 
             dbContext.Vaccines.Remove(vaccine);
             dbContext.SaveChanges();
 
             return RedirectToAction("Search");
+
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
+
+        private bool CanViewVaccines(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageVaccines(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
 
         }
     }

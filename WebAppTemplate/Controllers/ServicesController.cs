@@ -12,18 +12,23 @@ using System.Web.Services.Description;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class ServicesController : Controller
     {
-        // GET: Services
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Services/Search
         public ActionResult Search() 
-        { 
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageServices = CanManageServices(currentEmployee);
 
             ServiceSearchVM serviceSearch = new ServiceSearchVM();
 
@@ -36,9 +41,18 @@ namespace JamesPetBoarding.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Search(ServiceSearchVM serviceSearch) 
-        { 
+        {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageServices = CanManageServices(currentEmployee);
 
             List<ServiceModel> services = dbContext.Services.ToList();
 
@@ -85,7 +99,16 @@ namespace JamesPetBoarding.Controllers
         // GET: Services/Create
         public ActionResult Create() 
         {
-            
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             ServiceFormVM serviceForm = new ServiceFormVM();
 
             return View(serviceForm);
@@ -98,8 +121,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ServiceFormVM serviceForm) 
         {
-            
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -122,17 +152,20 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-
-
-
-
-
         // GET: Services/Read
         public ActionResult Read(Guid serviceId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ServiceModel service = dbContext.Services
+                .FirstOrDefault(x => x.ServiceId == serviceId);
 
             if (service == null) 
             { 
@@ -160,7 +193,15 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ServiceModel service = dbContext.Services
+                .FirstOrDefault(x => x.ServiceId == serviceId);
 
             if (service == null)
             { 
@@ -188,7 +229,15 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceForm.ServiceId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ServiceModel service = dbContext.Services
+                .FirstOrDefault(x => x.ServiceId == serviceForm.ServiceId);
 
             if (service == null)
             {
@@ -215,11 +264,19 @@ namespace JamesPetBoarding.Controllers
 
         // GET: Service/Delete
         public ActionResult Delete(Guid serviceId) 
-        { 
-            
+        {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ServiceModel service = dbContext.Services
+                .FirstOrDefault(x => x.ServiceId == serviceId);
 
             if (service == null)
             {
@@ -249,7 +306,15 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            ServiceModel service = dbContext.Services.FirstOrDefault(x => x.ServiceId == serviceDelete.ServiceId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageServices(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ServiceModel service = dbContext.Services
+                .FirstOrDefault(x => x.ServiceId == serviceDelete.ServiceId);
 
             if (service == null)
             {
@@ -263,6 +328,37 @@ namespace JamesPetBoarding.Controllers
 
             return RedirectToAction("Search"); 
         
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
+
+        private bool CanViewServices(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageServices(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
+
         }
     }
 }

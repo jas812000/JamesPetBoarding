@@ -16,18 +16,22 @@ using System.Web.Services.Description;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class CustomersController : Controller
     {
-        // GET: Customers
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Customers/Search
         public ActionResult Search()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             CustomerSearchVM customerSearch = new CustomerSearchVM();
 
             return View(customerSearch);
@@ -40,6 +44,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Search(CustomerSearchVM customerSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             List<CustomerModel> customers = dbContext.Customers.ToList();
 
@@ -98,6 +109,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Customers/Create
         public ActionResult Create()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             CustomerFormVM customerForm = new CustomerFormVM();
 
             return View(customerForm);
@@ -109,12 +129,21 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CustomerFormVM customerForm)
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid) 
             { 
 
                 return View(customerForm); 
             }
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = new CustomerModel();
 
@@ -144,6 +173,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Read(Guid customerId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
@@ -242,6 +278,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (customer == null)
@@ -271,7 +314,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(CustomerFormVM customerForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerForm.CustomerId);
 
@@ -323,6 +374,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (customer == null)
@@ -354,6 +412,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerDelete.CustomerId);
 
@@ -398,6 +463,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (customer == null)
@@ -440,7 +512,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reactivate(CustomerReactivateVM customerReactivate)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageCustomers(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerReactivate.CustomerId);
 
@@ -486,6 +566,37 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { customerId = customer.CustomerId });
+
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
+
+        private bool CanViewCustomers(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageCustomers(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
 
         }
     }

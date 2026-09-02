@@ -32,23 +32,26 @@
 
     @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
 
-    <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search Boardings</button>
+<div class="col-12 text-center mt-4">
+    <button type="submit" class="btn btn-primary me-2">Search Boardings</button>
 
+    @if (ViewBag.CanManageBoardings)
+    {
         @Html.ActionLink(
             "Create Boarding",
             "Create",
             "Boardings",
             null,
             new { @class = "btn btn-success ms-2" })
+    }
 
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "Boardings",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-    </div>
+    @Html.ActionLink(
+        "Clear Search",
+        "Search",
+        "Boardings",
+        null,
+        new { @class = "btn btn-secondary ms-2" })
+</div>
 
 }
 
@@ -93,49 +96,52 @@
                                  new { boardingId = boarding.BoardingId },
                                  new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @if (boarding.BoardingStatus == BoardingStatusEnum.Scheduled ||
-                                boarding.BoardingStatus == BoardingStatusEnum.Confirmed)
+                            @if (ViewBag.CanManageBoardings)
                             {
+                                if (boarding.BoardingStatus == BoardingStatusEnum.Scheduled ||
+                                     boarding.BoardingStatus == BoardingStatusEnum.Confirmed)
+                                {
 
-                                @Html.ActionLink(
-                                    "Update",
-                                    "Update",
-                                    "Boardings",
-                                    new { boardingId = boarding.BoardingId },
-                                    new { @class = "btn btn-warning btn-sm me-1" })
+                                    @Html.ActionLink(
+                                        "Update",
+                                        "Update",
+                                        "Boardings",
+                                        new { boardingId = boarding.BoardingId },
+                                        new { @class = "btn btn-warning btn-sm me-1" })
 
-                                @Html.ActionLink(
-                                    "Cancel",
-                                    "Cancel",
-                                    "Boardings",
-                                    new { boardingId = boarding.BoardingId },
-                                    new { @class = "btn btn-danger btn-sm" })
+                                    @Html.ActionLink(
+                                        "Cancel",
+                                        "Cancel",
+                                        "Boardings",
+                                        new { boardingId = boarding.BoardingId },
+                                        new { @class = "btn btn-danger btn-sm" })
 
-                                @Html.ActionLink(
-                                    "Check In",
-                                    "CheckIn",
-                                    "Boardings",
-                                    new { boardingId = boarding.BoardingId },
-                                    new { @class = "btn btn-success btn-sm" })
+                                    @Html.ActionLink(
+                                        "Check In",
+                                        "CheckIn",
+                                        "Boardings",
+                                        new { boardingId = boarding.BoardingId },
+                                        new { @class = "btn btn-success btn-sm" })
 
-                                @Html.ActionLink(
-                                    "No Show",
-                                    "NoShow",
-                                    "Boardings",
-                                    new { boardingId = boarding.BoardingId },
-                                    new { @class = "btn btn-success btn-sm" })
+                                    @Html.ActionLink(
+                                        "No Show",
+                                        "NoShow",
+                                        "Boardings",
+                                        new { boardingId = boarding.BoardingId },
+                                        new { @class = "btn btn-success btn-sm" })
 
-                            }
-                            else if (boarding.BoardingStatus == BoardingStatusEnum.CheckedIn)
-                            {
+                                }
+                                else if (boarding.BoardingStatus == BoardingStatusEnum.CheckedIn)
+                                {
 
-                                @Html.ActionLink(
-                                    "Check Out",
-                                    "CheckOut",
-                                    "Boardings",
-                                    new { boardingId = boarding.BoardingId },
-                                    new { @class = "btn btn-success btn-sm" })
+                                    @Html.ActionLink(
+                                        "Check Out",
+                                        "CheckOut",
+                                        "Boardings",
+                                        new { boardingId = boarding.BoardingId },
+                                        new { @class = "btn btn-success btn-sm" })
 
+                                }
                             }
                         </td>
                     </tr>

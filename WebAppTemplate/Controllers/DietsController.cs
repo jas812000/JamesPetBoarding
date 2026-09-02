@@ -16,19 +16,22 @@ using System.Web.Mvc;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class DietsController : Controller
     {
-        // GET: Diets
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: Diets/Create
         public ActionResult Create(Guid petId)
         {
-            
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
@@ -54,6 +57,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == dietForm.PetId);
 
@@ -86,7 +96,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Diets/Read
         public ActionResult Read(Guid dietId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             DietModel diet = dbContext.Diets
                 .Include(x => x.Pet)
@@ -120,7 +138,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Diets/Update
         public ActionResult Update(Guid dietId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             DietModel diet = dbContext.Diets
                 .Include(x => x.Pet)
@@ -160,6 +186,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             DietModel diet = dbContext.Diets
                 .Include(x => x.Pet)
                 .FirstOrDefault(x => x.DietId == dietForm.DietId);
@@ -195,6 +228,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             DietModel diet = dbContext.Diets
                 .Include(x => x.Pet)
@@ -235,7 +275,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(DietDeleteVM dietDelete)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietDelete.DietId);
 
@@ -250,6 +298,18 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", "Pets", new { petId });
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
         }
 
     }

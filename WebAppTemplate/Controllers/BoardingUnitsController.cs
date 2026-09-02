@@ -1,8 +1,10 @@
 ﻿using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -11,17 +13,24 @@ using System.Web.UI.WebControls;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class BoardingUnitsController : Controller
     {
-        // GET: BoardingUnits
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: BoardingUnits/Search
         public ActionResult Search()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();    
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardingUnits(currentEmployee))
+            { 
+                return RedirectToAction("Index", "User"); 
+            }
+
+            ViewBag.CanManageBoardingUnits = CanManageBoardingUnits(currentEmployee);
+
             BoardingUnitSearchVM boardingUnitSearch = new BoardingUnitSearchVM();
 
             return View(boardingUnitSearch);
@@ -34,6 +43,15 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Search(BoardingUnitSearchVM boardingUnitSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageBoardingUnits = CanManageBoardingUnits(currentEmployee);
 
             if (!ModelState.IsValid)
             {
@@ -109,6 +127,15 @@ namespace JamesPetBoarding.Controllers
         // GET: BoardingUnits/Create
         public ActionResult Create()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingUnitFormVM boardingUnitForm = new BoardingUnitFormVM();
 
             return View(boardingUnitForm);
@@ -121,12 +148,20 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(BoardingUnitFormVM boardingUnitForm)
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(boardingUnitForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             BoardingUnitModel existingUnit = dbContext.BoardingUnits
                 .FirstOrDefault(x =>
@@ -166,7 +201,15 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits
+                .FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
             if (boardingUnit == null)
             {
@@ -197,7 +240,15 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits
+                .FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
             if (boardingUnit == null)
             {
@@ -227,7 +278,15 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitForm.BoardingUnitId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits
+                .FirstOrDefault(x => x.BoardingUnitId == boardingUnitForm.BoardingUnitId);
 
             if (boardingUnit == null)
             {
@@ -269,17 +328,20 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-
-
-
-
-
         // GET: BoardingUnits/Delete
         public ActionResult Delete(Guid boardingUnitId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits
+                .FirstOrDefault(x => x.BoardingUnitId == boardingUnitId);
 
             if (boardingUnit == null)
             {
@@ -312,7 +374,15 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
-            BoardingUnitModel boardingUnit = dbContext.BoardingUnits.FirstOrDefault(x => x.BoardingUnitId == boardingUnitDelete.BoardingUnitId);
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardingUnits(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            BoardingUnitModel boardingUnit = dbContext.BoardingUnits
+                .FirstOrDefault(x => x.BoardingUnitId == boardingUnitDelete.BoardingUnitId);
 
             if (boardingUnit == null) 
             { 
@@ -348,6 +418,37 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Search");
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x => 
+                    x.Email == loggedInEmail && 
+                    x.IsActive);
+
+        }
+
+
+        private bool CanViewBoardingUnits(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageBoardingUnits(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
+
         }
     }
 }

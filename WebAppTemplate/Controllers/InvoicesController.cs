@@ -11,19 +11,22 @@ using System.Web.Mvc;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class InvoicesController : Controller
     {
-        // GET: Invoices
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Invoices/Search
         public ActionResult Search()
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceSearchVM invoiceSearch = new InvoiceSearchVM();
 
@@ -41,6 +44,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Search(InvoiceSearchVM invoiceSearch)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             List<InvoiceModel> invoiceQuery = dbContext.Invoices
                .Include(x => x.Customer)
@@ -126,6 +136,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             InvoiceFormVM invoiceForm = new InvoiceFormVM();
 
             invoiceForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
@@ -144,6 +161,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -243,6 +267,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             InvoiceDetailsVM invoiceDetails = BuildInvoiceDetails(dbContext, invoiceId);
 
             if (invoiceDetails == null)
@@ -260,6 +291,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x => x.InvoiceId == invoiceId);
 
@@ -296,6 +334,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -394,6 +439,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
@@ -438,7 +490,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Void(InvoiceVoidVM invoiceVoid)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -485,23 +545,13 @@ namespace JamesPetBoarding.Controllers
                 return View(invoiceVoid);
             }
 
-            string email = User.Identity.Name;
-
-            EmployeeModel employee = dbContext.Employees
-                .FirstOrDefault(x => x.Email == email);
-
-            if (employee == null) 
-            { 
-                return Content("Unable to determine the current employee."); 
-            }
-
             invoice.InvoiceStatus = InvoiceStatusEnum.Void;
             invoice.VoidReason = invoiceVoid.VoidReason;
             invoice.VoidNotes = invoiceVoid.VoidNotes;
 
             invoice.VoidDateTime = DateTime.Now;
 
-            invoice.VoidedByEmployeeId = employee.EmployeeId;
+            invoice.VoidedByEmployeeId = currentEmployee.EmployeeId;
 
             dbContext.SaveChanges();
 
@@ -514,6 +564,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceDetailsVM invoiceDetails = BuildInvoiceDetails(dbContext, invoiceId);
 
@@ -704,6 +761,18 @@ namespace JamesPetBoarding.Controllers
             return invoiceDetails;
 
         }
-     
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
     }
 }

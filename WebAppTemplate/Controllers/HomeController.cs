@@ -27,14 +27,5 @@ namespace JamesPetBoarding.Controllers
             return View();
         }
 
-        public ActionResult GitBasics()
-        {
-            return Content("Git Basics");
-        }
-
-        public ActionResult EndpointA()
-        {
-            return Content("This is endpoint A");
-        }
     }
 }

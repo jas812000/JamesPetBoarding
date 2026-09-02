@@ -16,18 +16,19 @@ namespace JamesPetBoarding.Controllers
     [Authorize]
     public class PaymentsController : Controller
     {
-        // GET: Payments
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Payments/Search
         public ActionResult Search()
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PaymentSearchVM paymentSearch = new PaymentSearchVM();
 
@@ -52,6 +53,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             paymentSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
 
@@ -193,7 +201,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Payments/Create
         public ActionResult Create(Guid invoiceId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -238,6 +254,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -292,13 +315,6 @@ namespace JamesPetBoarding.Controllers
                 return View(paymentForm);
             }
 
-            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
-
-            if (currentEmployee == null)
-            {
-                return Content("The employee with the email address " + User.Identity.Name + " does not exist.");
-            }
-
             PaymentModel payment = new PaymentModel();
 
             payment.PaymentId = Guid.NewGuid();
@@ -345,7 +361,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Payments/Read
         public ActionResult Read(Guid paymentId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PaymentDetailsVM paymentDetails = BuildPaymentDetails(dbContext, paymentId);
 
@@ -364,6 +388,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PaymentModel payment = dbContext.Payments
                 .Include(x => x.Invoice)
@@ -417,6 +448,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             PaymentModel payment = dbContext.Payments
                 .Include(x => x.Invoice)
                 .Include(x => x.Invoice.Customer)
@@ -468,6 +506,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PaymentModel payment = dbContext.Payments
                 .Include(x => x.Invoice)
@@ -531,7 +576,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Void(PaymentVoidVM paymentVoid)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PaymentModel payment = dbContext.Payments
                 .Include(x => x.Invoice)
@@ -587,13 +640,6 @@ namespace JamesPetBoarding.Controllers
                 paymentVoid.Notes = payment.Notes;
 
                 return View(paymentVoid);
-            }
-
-            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
-
-            if (currentEmployee == null)
-            {
-                return Content("The employee with the email address " + User.Identity.Name + " does not exist.");
             }
 
             payment.IsVoided = true;
@@ -762,11 +808,12 @@ namespace JamesPetBoarding.Controllers
 
         private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
         {
-            string email = User.Identity.Name;
+            string loggedInEmail = User.Identity.Name;
 
-            EmployeeModel currentEmployee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
-
-            return currentEmployee;
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
 
         }
 

@@ -15,12 +15,28 @@ using System.Web.Mvc;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class ReportsController : Controller
     {
+
         // GET: Reports
         public ActionResult Index()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewReports(currentEmployee))
+            { 
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanViewFinancialReports = 
+                currentEmployee.Role == EmployeeRoleEnum.Admin || 
+                currentEmployee.Role == EmployeeRoleEnum.Manager;
+
             return View();
+
         }
 
         // GET: Reports/CustomerActivityReport
@@ -819,6 +835,13 @@ namespace JamesPetBoarding.Controllers
         { 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
+
             PaymentReportVM paymentReport = new PaymentReportVM();
 
             paymentReport.PaymentReportFilter = new PaymentReportFilterVM();
@@ -844,6 +867,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult PaymentReport(PaymentReportVM paymentReport) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
 
             paymentReport.CustomerSelectList = BuildCustomerSelectList(
                 dbContext,
@@ -1047,6 +1077,13 @@ namespace JamesPetBoarding.Controllers
         { 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            { 
+                return RedirectToAction("Index", "Reports"); 
+            }
+
             RevenueReportVM revenueReport = new RevenueReportVM();
 
             revenueReport.RevenueReportFilter = new RevenueReportFilterVM();
@@ -1067,6 +1104,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult RevenueReport(RevenueReportVM revenueReport) 
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
+
             if (revenueReport.RevenueReportFilter.InvoiceEndDate < revenueReport.RevenueReportFilter.InvoiceStartDate)
             {
                 ModelState.AddModelError(
@@ -1082,8 +1128,6 @@ namespace JamesPetBoarding.Controllers
             }
 
             revenueReport.HasSearched = true;
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             DateTime startDate = revenueReport.RevenueReportFilter.InvoiceStartDate.Date;
 
@@ -1242,6 +1286,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            { 
+                return RedirectToAction("Index", "Reports"); 
+            }
+
             VoidedTransactionsReportVM voidedTransactionsReport = new VoidedTransactionsReportVM();
 
             voidedTransactionsReport.VoidedTransactionsReportFilter = new VoidedTransactionsReportFilterVM();
@@ -1266,6 +1317,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult VoidedTransactionsReport(VoidedTransactionsReportVM voidedTransactionsReport) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
 
             voidedTransactionsReport.EmployeeSelectList = BuildEmployeeSelectList(dbContext);
 
@@ -1654,6 +1712,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            { 
+                return RedirectToAction("Index", "Reports"); 
+            }
+
             OutstandingBalanceReportVM outstandingBalanceReport = new OutstandingBalanceReportVM();
 
             outstandingBalanceReport.OutstandingBalanceReportFilter = new OutstandingBalanceReportFilterVM();
@@ -1676,6 +1741,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult OutstandingBalanceReport(OutstandingBalanceReportVM outstandingBalanceReport)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
 
             outstandingBalanceReport.CustomerSelectList = BuildCustomerSelectList(dbContext);
 
@@ -1798,6 +1870,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee)) 
+            { 
+                return RedirectToAction("Index", "Reports"); 
+            }
+
             InvoiceReportVM invoiceReport = new InvoiceReportVM();
 
             invoiceReport.InvoiceReportFilter = new InvoiceReportFilterVM();
@@ -1819,6 +1898,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult InvoiceReport(InvoiceReportVM invoiceReport) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewFinancialReports(currentEmployee))
+            {
+                return RedirectToAction("Index", "Reports");
+            }
 
             invoiceReport.CustomerSelectList = BuildCustomerSelectList(dbContext);
 
@@ -2884,6 +2970,35 @@ namespace JamesPetBoarding.Controllers
             return displayAttribute != null 
                 ? displayAttribute.GetName() 
                 : enumValue.ToString();
+        }
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
+        private bool CanViewReports(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanViewFinancialReports(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
+
         }
     }
 }

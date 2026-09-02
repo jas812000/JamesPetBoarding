@@ -61,14 +61,16 @@
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Employees</button>
 
-        @Html.ActionLink(
-            "Create Employee",
-            "Create",
-            "Employees",
-            null,
-            new { @class = "btn btn-success ms-2" })
+        @if (ViewBag.CanManageEmployees)
+        {
+            @Html.ActionLink(
+                "Create Employee",
+                "Create",
+                "Employees",
+                null,
+                new { @class = "btn btn-success ms-2" })
+        }
     </div>
-
 }
 
 @if (Model.EmployeeSearchResults != null && Model.EmployeeSearchResults.Any())
@@ -110,30 +112,33 @@
                                  new { employeeId = employee.EmployeeId },
                                  new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @Html.ActionLink(
-                                 "Update",
-                                 "Update",
-                                 "Employees",
-                                 new { employeeId = employee.EmployeeId },
-                                 new { @class = "btn btn-warning btn-sm me-1" })
+                            @if (ViewBag.CanManageEmployees)
+                            {
+                                @Html.ActionLink(
+                                     "Update",
+                                     "Update",
+                                     "Employees",
+                                     new { employeeId = employee.EmployeeId },
+                                     new { @class = "btn btn-warning btn-sm me-1" })
 
-                            @if (employee.IsActive)
-                            {
-                                @Html.ActionLink(
-                                     "Deactivate",
-                                     "Delete",
-                                     "Employees",
-                                     new { employeeId = employee.EmployeeId },
-                                     new { @class = "btn btn-danger btn-sm" })
-                            }
-                            else
-                            {
-                                @Html.ActionLink(
-                                     "Reactivate",
-                                     "Reactivate",
-                                     "Employees",
-                                     new { employeeId = employee.EmployeeId },
-                                     new { @class = "btn btn-success btn-sm" })
+                                @if (employee.IsActive)
+                                {
+                                    @Html.ActionLink(
+                                         "Deactivate",
+                                         "Delete",
+                                         "Employees",
+                                         new { employeeId = employee.EmployeeId },
+                                         new { @class = "btn btn-danger btn-sm" })
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(
+                                         "Reactivate",
+                                         "Reactivate",
+                                         "Employees",
+                                         new { employeeId = employee.EmployeeId },
+                                         new { @class = "btn btn-success btn-sm" })
+                                }
                             }
                         </td>
                     </tr>

@@ -1,10 +1,69 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Staff Dashboard";
     Layout = "~/Views/Shared/_UserLayout.cshtml";
 }
 
-<h1>User Page</h1>
+<div class="text-center border-bottom pb-4 mb-5">
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Staff Dashboard</h2>
+</div>
 
-<h2>This is the User page routed from the User Layout</h2>
+<div class="row g-4 justify-content-center">
 
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Boarding Management",
+            "BoardingManagement",
+            "User",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Pet Search",
+            "Search",
+            "Pets",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Customer Search",
+            "Search",
+            "Customers",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Billing",
+            "Billing",
+            "User",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "My Profile",
+            "MyProfile",
+            "Employees",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <button type="submit" class="btn btn-secondary w-100 py-4">
+                Logout
+            </button>
+        }
+    </div>
+
+</div>

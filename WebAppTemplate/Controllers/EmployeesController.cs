@@ -16,18 +16,24 @@ using System.Web.UI.WebControls;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class EmployeesController : Controller
     {
-        // GET: Employees
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Employees/Search
         public ActionResult Search()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageEmployees = CanManageEmployees(currentEmployee);
+
             EmployeeSearchVM employeeSearch = new EmployeeSearchVM();
 
             return View(employeeSearch);
@@ -39,12 +45,22 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Search(EmployeeSearchVM employeeSearch)
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageEmployees = CanManageEmployees(currentEmployee);
+
             if (!ModelState.IsValid)
             {
                 return View(employeeSearch);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             List<EmployeeModel> employees = dbContext.Employees.ToList();
 
@@ -116,7 +132,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Employees/Create
         public ActionResult Create()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+    
             EmployeeFormVM employeeForm = new EmployeeFormVM();
 
             return View(employeeForm);
@@ -128,7 +152,14 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(EmployeeFormVM employeeForm)
         {
-            ApplicationDbContext dbContext = ApplicationDbContext.Create();
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -175,6 +206,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Read(Guid employeeId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
 
@@ -229,6 +267,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
 
             if (employee == null)
@@ -256,6 +301,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Update(EmployeeFormVM employeeForm)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeForm.EmployeeId);
 
@@ -300,6 +352,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
 
             if (employee == null)
@@ -329,6 +388,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeDeactivate.EmployeeId);
 
             if (employee == null)
@@ -338,7 +404,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!ModelState.IsValid)
             {
-                employeeDeactivate.EmployeeId = employeeDeactivate.EmployeeId;
+                employeeDeactivate.EmployeeId = employee.EmployeeId;
                 employeeDeactivate.EmployeeNameDisplay = employee.FirstName + " " + employee.LastName;
                 employeeDeactivate.RoleDisplay = employee.Role.ToString();
                 employeeDeactivate.PhoneDisplay = employee.Phone;
@@ -369,6 +435,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Reactivate(Guid employeeId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
 
@@ -417,6 +490,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Reactivate(EmployeeReactivateVM employeeReactivate)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeReactivate.EmployeeId);
 
@@ -486,6 +566,11 @@ namespace JamesPetBoarding.Controllers
                     " does not exist.");
             }
 
+            if (!employee.IsActive)
+            {
+                return Content("This employee account is inactive.");
+            }
+
             EmployeeProfileVM employeeProfile = new EmployeeProfileVM();
 
             employeeProfile.EmployeeId = employee.EmployeeId;
@@ -524,6 +609,11 @@ namespace JamesPetBoarding.Controllers
                     " does not exist.");
             }
 
+            if (!employee.IsActive)
+            {
+                return Content("This employee account is inactive.");
+            }
+
             EmployeeProfileUpdateVM employeeProfileUpdate = new EmployeeProfileUpdateVM();
 
             employeeProfileUpdate.EmployeeId = employee.EmployeeId;
@@ -553,6 +643,11 @@ namespace JamesPetBoarding.Controllers
                     "The employee with the email address " +
                     email +
                     " does not exist.");
+            }
+
+            if (!employee.IsActive) 
+            {
+                return Content("This employee account is inactive.");
             }
 
             if (!ModelState.IsValid)
@@ -620,6 +715,36 @@ namespace JamesPetBoarding.Controllers
 
             return RedirectToAction("MyProfile");
         
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext) 
+        { 
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x => 
+                    x.Email == loggedInEmail && 
+                    x.IsActive);
+
+        }
+
+        private bool CanViewEmployees(EmployeeModel employee) 
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageEmployees(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager);
+
         }
 
 

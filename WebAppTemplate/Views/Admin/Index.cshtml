@@ -1,10 +1,142 @@
-﻿
-@{
-    ViewBag.Title = "Index";
+﻿@{
+    ViewBag.Title = "Admin Dashboard";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Admin Page</h1>
+<div class="text-center border-bottom pb-4 mb-5">
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Admin Dashboard</h2>
+</div>
 
-<h2>This is the Admin page routed from the Admin Layout</h2>
+<div class="border-bottom mb-4">
+    <h3>Staff Operations</h3>
+</div>
 
+<div class="row g-4 justify-content-center">
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Boarding Management",
+            "BoardingManagement",
+            "User",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Pet Search",
+            "Search",
+            "Pets",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Customer Search",
+            "Search",
+            "Customers",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Billing",
+            "Billing",
+            "User",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "My Profile",
+            "MyProfile",
+            "Employees",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+</div>
+
+<div class="border-bottom mt-5 mb-4">
+    <h3>Administration</h3>
+</div>
+
+<div class="row g-4 justify-content-center">
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Boarding Units",
+            "Search",
+            "BoardingUnits",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Services",
+            "Search",
+            "Services",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Vaccines",
+            "Search",
+            "Vaccines",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    @if (ViewBag.CanManageEmployees)
+    {
+        <div class="col-md-4">
+            @Html.ActionLink(
+                "Employee Management",
+                "Search",
+                "Employees",
+                null,
+                new { @class = "btn btn-primary w-100 py-4" })
+        </div>
+    }
+    else if (ViewBag.IsSupervisor)
+    {
+        <div class="col-md-4">
+            @Html.ActionLink(
+                "Employee Directory",
+                "Search",
+                "Employees",
+                null,
+                new { @class = "btn btn-primary w-100 py-4" })
+        </div>
+    }
+
+    <div class="col-md-4">
+        @Html.ActionLink(
+            "Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+</div>
+
+<div class="text-center border-top mt-5 pt-4">
+
+    @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <button type="submit" class="btn btn-secondary px-5 py-3">
+            Logout
+        </button>
+    }
+
+</div>

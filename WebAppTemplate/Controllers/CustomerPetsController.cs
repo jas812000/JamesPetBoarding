@@ -13,19 +13,22 @@ using System.Web.UI;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class CustomerPetsController : Controller
     {
-        // GET: CustomerPets
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: CustomerPets/Create
         public ActionResult Create(Guid customerId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
@@ -53,7 +56,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(CustomerPetFormVM customerPetForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerPetForm.CustomerId);
 
@@ -109,7 +120,15 @@ namespace JamesPetBoarding.Controllers
         // GET: CustomerPets/Read
         public ActionResult Read(Guid customerPetId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
                 .Include(x => x.Customer)
@@ -139,7 +158,15 @@ namespace JamesPetBoarding.Controllers
         // GET: CustomerPets/Update
         public ActionResult Update(Guid customerPetId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
                 .Include(x => x.Customer)
@@ -174,7 +201,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(CustomerPetFormVM customerPetForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerPetForm.CustomerId);
 
@@ -231,7 +266,15 @@ namespace JamesPetBoarding.Controllers
         // GET: CustomerPets/Delete
         public ActionResult Delete(Guid customerPetId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
                 .Include(x => x.Customer)
@@ -263,6 +306,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
                 .Include(x => x.Customer)
@@ -310,6 +360,18 @@ namespace JamesPetBoarding.Controllers
             SelectList petSelectList = new SelectList(petDropdownItems, "PetId", "PetDisplay");
 
             return petSelectList;
+
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
 
         }
 

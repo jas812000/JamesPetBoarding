@@ -12,19 +12,23 @@ using JamesPetBoarding.Migrations;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class BoardingsController : Controller
     {
-        // GET: Boardings
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Boardings/Search
         public ActionResult Search() 
-        { 
+        {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageBoardings = CanManageBoardings(currentEmployee);
 
             BoardingSearchVM boardingSearch = new BoardingSearchVM();
 
@@ -43,6 +47,15 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Search(BoardingSearchVM boardingSearch) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
+            ViewBag.CanManageBoardings = CanManageBoardings(currentEmployee);
 
             List<BoardingModel> boardingQuery = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -136,6 +149,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingFormVM boardingForm = new BoardingFormVM();
             boardingForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
             boardingForm.PetSelectList = BuildPetSelectList(dbContext);
@@ -152,6 +172,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Create(BoardingFormVM boardingForm)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (boardingForm.EndDateTime <= boardingForm.StartDateTime)
             {
@@ -245,8 +272,15 @@ namespace JamesPetBoarding.Controllers
 
         // GET: Boardings/Read
         public ActionResult Read(Guid boardingId) 
-        { 
+        {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanViewBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -345,8 +379,15 @@ namespace JamesPetBoarding.Controllers
 
         // GET: Boardings/Update
         public ActionResult Update(Guid boardingId) 
-        { 
+        {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                .Include(x => x.Customer)
@@ -403,6 +444,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Update(BoardingFormVM boardingForm) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                .FirstOrDefault(x => x.BoardingId == boardingForm.BoardingId);
@@ -461,7 +509,7 @@ namespace JamesPetBoarding.Controllers
 
             BoardingModel conflictingBoarding = dbContext.Boardings
                 .FirstOrDefault(x =>
-                    x.BoardingId == boardingForm.BoardingId &&
+                    x.BoardingId != boardingForm.BoardingId &&
                     x.BoardingUnitId == boardingForm.BoardingUnitId &&
                     x.Status != BoardingStatusEnum.Cancelled &&
                     x.Status != BoardingStatusEnum.NoShow &&
@@ -502,6 +550,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Cancel(Guid boardingId) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -556,6 +611,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
@@ -598,18 +660,9 @@ namespace JamesPetBoarding.Controllers
                 return View(boardingCancel);
             }
 
-            string email = User.Identity.Name;
-
-            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
-
-            if (employee == null)
-            { 
-                return Content("Unable to determine the currently logged in employee."); 
-            }
-
             boarding.Status = BoardingStatusEnum.Cancelled;
             boarding.CancelledDateTime = DateTime.Now;
-            boarding.CancelledByEmployeeId = employee.EmployeeId;
+            boarding.CancelledByEmployeeId = currentEmployee.EmployeeId;
             boarding.CancelledReason = boardingCancel.CancelledReason;
 
             dbContext.SaveChanges();
@@ -623,6 +676,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult CheckIn(Guid boardingId) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -683,6 +743,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
@@ -728,18 +795,10 @@ namespace JamesPetBoarding.Controllers
                 return View(boardingCheckIn);
             }
 
-            string email = User.Identity.Name;
-
-            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
-
-            if (employee == null)
-            {
-                return Content("Unable to determine the currently logged in employee.");
-            }
 
             boarding.ActualCheckInDateTime = DateTime.Now;
 
-            boarding.CheckedInByEmployeeId = employee.EmployeeId;
+            boarding.CheckedInByEmployeeId = currentEmployee.EmployeeId;
 
             boarding.Status = BoardingStatusEnum.CheckedIn;
 
@@ -756,6 +815,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult CheckOut(Guid boardingId) 
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -820,6 +886,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
@@ -878,18 +951,10 @@ namespace JamesPetBoarding.Controllers
                 return View(boardingCheckOut);
             }
 
-            string email = User.Identity.Name;
-
-            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
-
-            if (employee == null)
-            {
-                return Content("Unable to determine the currently logged in employee.");
-            }
 
             boarding.ActualCheckOutDateTime = actualCheckOutDateTime;
 
-            boarding.CheckedOutByEmployeeId = employee.EmployeeId;
+            boarding.CheckedOutByEmployeeId = currentEmployee.EmployeeId;
 
             boarding.Status = BoardingStatusEnum.CheckedOut;
 
@@ -906,6 +971,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult NoShow(Guid boardingId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
@@ -961,6 +1033,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             BoardingModel boarding = dbContext.Boardings
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
@@ -1003,20 +1082,11 @@ namespace JamesPetBoarding.Controllers
                 return View(boardingNoShow);
             }
 
-            string email = User.Identity.Name;
-
-            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.Email == email);
-
-            if (employee == null)
-            {
-                return Content("Unable to determine the currently logged in employee.");
-            }
-
             boarding.Status = BoardingStatusEnum.NoShow;
 
             boarding.NoShowDateTime = DateTime.Now;
 
-            boarding.NoShowByEmployeeId = employee.EmployeeId;
+            boarding.NoShowByEmployeeId = currentEmployee.EmployeeId;
 
             boarding.Notes = boardingNoShow.Notes;
 
@@ -1068,6 +1138,38 @@ namespace JamesPetBoarding.Controllers
                     Text = $"{x.UnitName} - {x.UnitNumber} - {x.UnitType}",
                 })
                 .ToList();
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
+
+        private bool CanViewBoardings(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
+        }
+
+
+        private bool CanManageBoardings(EmployeeModel employee)
+        {
+            return employee != null &&
+                (employee.Role == EmployeeRoleEnum.Admin ||
+                 employee.Role == EmployeeRoleEnum.Manager ||
+                 employee.Role == EmployeeRoleEnum.Supervisor);
+
         }
     }
 }

@@ -15,18 +15,23 @@ using System.Xml.Linq;
 
 namespace WebAppTemplate.Controllers
 {
+    [Authorize]
     public class VeterinariansController : Controller
     {
-        // GET: Veterinarians
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: Veterinarians/Search
         public ActionResult Search()
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VeterinarianSearchVM veterinarianSearch = new VeterinarianSearchVM();
 
             return View(veterinarianSearch);
@@ -39,7 +44,15 @@ namespace WebAppTemplate.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Search(VeterinarianSearchVM veterinarianSearch)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             List<VeterinarianModel> veterinarians = dbContext.Veterinarians
                 .OrderBy(x => x.LastName)
@@ -145,6 +158,14 @@ namespace WebAppTemplate.Controllers
         // GET: Veterinarians/Create
         public ActionResult Create()
         {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianFormVM veterinarianForm = new VeterinarianFormVM();
 
@@ -160,6 +181,13 @@ namespace WebAppTemplate.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -215,6 +243,13 @@ namespace WebAppTemplate.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
 
@@ -307,6 +342,13 @@ namespace WebAppTemplate.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
 
             if (veterinarian == null)
@@ -351,12 +393,19 @@ namespace WebAppTemplate.Controllers
         public ActionResult Update(VeterinarianFormVM veterinarianForm)
         {
 
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(veterinarianForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == veterinarianForm.VetId);
 
@@ -406,16 +455,18 @@ namespace WebAppTemplate.Controllers
         }
 
 
-
-
-
-
-
         // GET: Veterinarians/Deactivate
         public ActionResult Deactivate(Guid vetId)
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
 
@@ -456,7 +507,15 @@ namespace WebAppTemplate.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Deactivate(VeterinarianStatusVM veterinarianStatus)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == veterinarianStatus.VetId);
 
@@ -486,6 +545,13 @@ namespace WebAppTemplate.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
 
@@ -526,7 +592,15 @@ namespace WebAppTemplate.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reactivate(VeterinarianStatusVM veterinarianStatus)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == veterinarianStatus.VetId);
 
@@ -549,5 +623,18 @@ namespace WebAppTemplate.Controllers
             return RedirectToAction("Read", new { vetId = veterinarian.VetId });
 
         }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
     }
 }

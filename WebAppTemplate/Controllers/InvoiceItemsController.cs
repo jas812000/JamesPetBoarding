@@ -11,19 +11,22 @@ using System.Web.Mvc;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class InvoiceItemsController : Controller
     {
-        // GET: InvoiceItems
-        public ActionResult Index()
-        {
-            return View();
-        }
-
 
         // GET: InvoiceItems/Search
         public ActionResult Search()
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceItemSearchVM invoiceItemSearch = new InvoiceItemSearchVM();
 
@@ -43,7 +46,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Search(InvoiceItemSearchVM invoiceItemSearch)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             invoiceItemSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
 
@@ -146,7 +157,15 @@ namespace JamesPetBoarding.Controllers
         // GET: InvoiceItems/Create
         public ActionResult Create(Guid invoiceId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -191,7 +210,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(InvoiceItemFormVM invoiceItemForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceModel invoice = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -307,7 +334,15 @@ namespace JamesPetBoarding.Controllers
         // GET: InvoiceItems/Read
         public ActionResult Read(Guid invoiceItemId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
                 .Include(x => x.Invoice)
@@ -373,7 +408,15 @@ namespace JamesPetBoarding.Controllers
         // GET: InvoiceItems/Update
         public ActionResult Update(Guid invoiceItemId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
                 .Include(x => x.Invoice)
@@ -424,7 +467,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(InvoiceItemFormVM invoiceItemForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -542,6 +593,13 @@ namespace JamesPetBoarding.Controllers
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
                 .Include(x => x.Invoice)
                 .Include(x => x.Invoice.Customer)
@@ -616,7 +674,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(InvoiceItemDeleteVM invoiceItemDelete)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
                 .Include(x => x.Invoice)
@@ -721,6 +787,19 @@ namespace JamesPetBoarding.Controllers
                 })
                 .ToList();
         }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
+        }
+
     }
 }
 

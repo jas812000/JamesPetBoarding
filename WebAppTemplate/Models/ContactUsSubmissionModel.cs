@@ -33,5 +33,7 @@ namespace JamesPetBoarding.Models
         [Required, MaxLength(2000)]
         public string Message { get; set; }
 
+        public DateTime SubmissionDateTime { get; set; }
+
     }
 }

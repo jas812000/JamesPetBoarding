@@ -46,12 +46,15 @@
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Vaccines</button>
 
-        @Html.ActionLink(
-            "Create Vaccine", 
-            "Create", 
-            "Vaccines", 
-            null, 
-            new { @class = "btn btn-success ms-2" })
+        @if (ViewBag.CanManageVaccines)
+        {
+            @Html.ActionLink(
+                "Create Vaccine",
+                "Create",
+                "Vaccines",
+                null,
+                new { @class = "btn btn-success ms-2" })
+        }
     </div>
 
 }
@@ -91,20 +94,22 @@
                                  new { vaccineId = vaccine.VaccineId },
                                  new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @Html.ActionLink(
-                                 "Update",
-                                 "Update",
-                                 "Vaccines",
-                                 new { vaccineId = vaccine.VaccineId },
-                                 new { @class = "btn btn-warning btn-sm me-1" })
+                            @if (ViewBag.CanManageVaccines)
+                            {
+                                @Html.ActionLink(
+                                    "Update",
+                                    "Update",
+                                    "Vaccines",
+                                    new { vaccineId = vaccine.VaccineId },
+                                    new { @class = "btn btn-warning btn-sm me-1" })
 
-                            @Html.ActionLink(
-                                 "Delete",
-                                 "Delete",
-                                 "Vaccines",
-                                 new { vaccineId = vaccine.VaccineId },
-                                 new { @class = "btn btn-danger btn-sm" })
-
+                                @Html.ActionLink(
+                                     "Delete",
+                                     "Delete",
+                                     "Vaccines",
+                                     new { vaccineId = vaccine.VaccineId },
+                                     new { @class = "btn btn-danger btn-sm" })
+                            }
                         </td>
                     </tr>
                 }

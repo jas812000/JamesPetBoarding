@@ -36,12 +36,15 @@
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Services</button>
 
-        @Html.ActionLink(
-            "Create Service",
-            "Create",
-            "Services",
-            null,
-            new { @class = "btn btn-success ms-2" })
+        @if (ViewBag.CanManageServices)
+        {
+            @Html.ActionLink(
+                "Create Service",
+                "Create",
+                "Services",
+                null,
+                new { @class = "btn btn-success ms-2" })
+        }
     </div>
 
 }
@@ -83,20 +86,22 @@
                                  new { serviceId = service.ServiceId },
                                  new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @Html.ActionLink(
-                                 "Update",
-                                 "Update",
-                                 "Services",
-                                 new { serviceId = service.ServiceId },
-                                 new { @class = "btn btn-warning btn-sm me-1" })
+                            @if (ViewBag.CanManageServices)
+                            {
+                                @Html.ActionLink(
+                                    "Update",
+                                    "Update",
+                                    "Services",
+                                    new { serviceId = service.ServiceId },
+                                    new { @class = "btn btn-warning btn-sm me-1" })
 
-                            @Html.ActionLink(
+                                @Html.ActionLink(
                                     "Delete",
                                     "Delete",
                                     "Services",
                                     new { serviceId = service.ServiceId },
                                     new { @class = "btn btn-danger btn-sm" })
-                        
+                            }
                         </td>
                     </tr>
                 }

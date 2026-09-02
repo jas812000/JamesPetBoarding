@@ -12,18 +12,21 @@ using System.Web.Routing;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class MedicationsController : Controller
     {
-        // GET: Medications
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: Medications/Create
         public ActionResult Create(Guid petId)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
@@ -46,7 +49,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(MedicationFormVM medicationForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == medicationForm.PetId);
 
@@ -89,6 +100,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             MedicationModel medication = dbContext.Medications
                 .Include(x => x.Pet)
                 .FirstOrDefault(x => x.MedicationId == medicationId);
@@ -126,7 +144,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Medications/Update
         public ActionResult Update(Guid medicationId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             MedicationModel medication = dbContext.Medications
                 .Include(x => x.Pet)
@@ -160,6 +186,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult Update(MedicationFormVM medicationForm)
         {
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             MedicationModel medication = dbContext.Medications
                 .Include(x => x.Pet)
@@ -200,6 +233,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             MedicationModel medication = dbContext.Medications
                 .Include(x => x.Pet)
@@ -243,6 +283,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             MedicationModel medication = dbContext.Medications
                 .FirstOrDefault(x => x.MedicationId == medicationDelete.MedicationId);
 
@@ -256,6 +303,18 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", "Pets", new { petId });
+
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
 
         }
     }

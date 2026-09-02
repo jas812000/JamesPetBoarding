@@ -1,13 +1,11 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Thank You";
 }
 
-<h2>Thank you for contacting Paws & Reservations.</h2>
-
-<p>
-    We have received your message and a member of our team will reach out to you in 1-2 business days.
-</p>
+@if (TempData["SuccessMessage"] != null)
+{ 
+    <h2>@TempData["SuccessMessage"]</h2>
+}
 
 <p>
     If your matter is urgent, please call us directly at (214) 555-0192.

@@ -17,7 +17,9 @@ namespace JamesPetBoarding.Controllers
             return View(new ContactUsSubmissionVM());
         }
 
+        // POST: ContactUs
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(ContactUsSubmissionVM contactUsSubmissionVM)
         {
             if (!ModelState.IsValid) 
@@ -34,6 +36,7 @@ namespace JamesPetBoarding.Controllers
             submission.Phone = contactUsSubmissionVM.Phone;
             submission.Email = contactUsSubmissionVM.Email;
             submission.Message = contactUsSubmissionVM.Message;
+            submission.SubmissionDateTime = DateTime.Now;
 
             dbContext.ContactUsSubmissions.Add(submission);
             dbContext.SaveChanges();

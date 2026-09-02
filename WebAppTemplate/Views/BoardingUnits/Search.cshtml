@@ -61,12 +61,15 @@
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Boarding Units</button>
 
-        @Html.ActionLink(
-            "Create Boarding Unit",
-            "Create",
-            "BoardingUnits",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+        @if (ViewBag.CanManageBoardingUnits)
+        {
+            @Html.ActionLink(
+                "Create Boarding Unit",
+                "Create",
+                "BoardingUnits",
+                null,
+                new { @class = "btn btn-secondary ms-2" })
+        }
     </div>
 
 }
@@ -120,20 +123,22 @@
                                new { boardingUnitId = boardingUnit.BoardingUnitId },
                                new { @class = "btn btn-primary btn-sm me-1" })
 
-                            @Html.ActionLink(
-                               "Update",
-                               "Update",
-                               "BoardingUnits",
-                               new { boardingUnitId = boardingUnit.BoardingUnitId },
-                               new { @class = "btn btn-warning btn-sm me-1" })
+                            @if (ViewBag.CanManageBoardingUnits)
+                            {
+                                @Html.ActionLink(
+                                    "Update",
+                                    "Update",
+                                    "BoardingUnits",
+                                    new { boardingUnitId = boardingUnit.BoardingUnitId },
+                                    new { @class = "btn btn-warning btn-sm me-1" })
 
-                            @Html.ActionLink(
-                                "Delete",
-                                "Delete",
-                                "BoardingUnits",
-                                new { boardingUnitId = boardingUnit.BoardingUnitId },
-                                new { @class = "btn btn-danger btn-sm" })
-
+                                @Html.ActionLink(
+                                    "Delete",
+                                    "Delete",
+                                    "BoardingUnits",
+                                    new { boardingUnitId = boardingUnit.BoardingUnitId },
+                                    new { @class = "btn btn-danger btn-sm" })
+                            }
                         </td>
                     </tr>
                 }

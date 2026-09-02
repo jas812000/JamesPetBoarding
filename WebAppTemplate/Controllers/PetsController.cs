@@ -13,17 +13,23 @@ using System.Web.UI;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class PetsController : Controller
     {
-        // GET: Pets
-        public ActionResult Index()
-        {
-            return View();
-        }
 
         // GET: Pets/Search
         public ActionResult Search()
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             PetSearchVM petSearch = new PetSearchVM();
 
             return View(petSearch);
@@ -35,7 +41,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Search(PetSearchVM petSearch)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             List<PetModel> pets = dbContext.Pets.ToList();
 
@@ -97,6 +111,16 @@ namespace JamesPetBoarding.Controllers
         // GET: Pets/Create
         public ActionResult Create()
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             PetFormVM petForm = new PetFormVM();
 
             petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
@@ -110,7 +134,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(PetFormVM petForm)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -159,7 +191,15 @@ namespace JamesPetBoarding.Controllers
         // GET: Pets/Read
         public ActionResult Read(Guid petId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
@@ -285,6 +325,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
             if (pet == null)
@@ -316,14 +363,21 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(PetFormVM petForm)
         {
-            
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid)
             {
                 petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
                 return View(petForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             if (petForm.BirthDate > DateTime.Today)
             {
@@ -372,9 +426,17 @@ namespace JamesPetBoarding.Controllers
 
 
         // GET: Pets/Delete
-        public ActionResult Delete(Guid petId) { 
+        public ActionResult Delete(Guid petId) 
+        {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
@@ -421,7 +483,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Deactivate(PetDeactivateVM petDeactivate)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petDeactivate.PetId);
 
@@ -489,6 +559,13 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
             if (pet == null)
@@ -548,6 +625,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petReactivate.PetId);
 
@@ -619,12 +703,12 @@ namespace JamesPetBoarding.Controllers
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             var vetDropdownItems = dbContext.Veterinarians
-                        .Select(x => new
-                        {
-                            VetId = x.VetId,
-                            VetDisplay = x.FirstName + " " + x.LastName + ", " + x.Credentials
-                        })
-                        .ToList();
+                .Select(x => new
+                {
+                    VetId = x.VetId,
+                    VetDisplay = x.FirstName + " " + x.LastName + ", " + x.Credentials
+                })
+                .ToList();
 
             SelectList vetSelectList = new SelectList(vetDropdownItems, "VetId", "VetDisplay");
 
@@ -643,6 +727,18 @@ namespace JamesPetBoarding.Controllers
             return displayAttribute != null
                 ? displayAttribute.GetName()
                 : enumValue.ToString();
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
         }
     }
 }

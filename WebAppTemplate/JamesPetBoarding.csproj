@@ -168,7 +168,6 @@
     <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BoardingsController.cs" />
     <Compile Include="Controllers\BoardingUnitsController.cs" />
-    <Compile Include="Controllers\BookingsController.cs" />
     <Compile Include="Controllers\ContactUsSubmissionController.cs" />
     <Compile Include="Controllers\CustomerPetsController.cs" />
     <Compile Include="Controllers\CustomersController.cs" />
@@ -182,7 +181,6 @@
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MedicationsController.cs" />
-    <Compile Include="Controllers\MyAccountController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PetsController.cs" />
     <Compile Include="Controllers\PetVaccinesController.cs" />
@@ -349,6 +347,10 @@
     <Compile Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.cs" />
     <Compile Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.Designer.cs">
       <DependentUpon>202608242333342_UseTransactionVoidReasonEnum.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202608270630366_AddedSubmissionDateTimeToContactUsSubmission.cs" />
+    <Compile Include="Migrations\202608270630366_AddedSubmissionDateTimeToContactUsSubmission.Designer.cs">
+      <DependentUpon>202608270630366_AddedSubmissionDateTimeToContactUsSubmission.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
@@ -584,11 +586,8 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\Hours\Index.cshtml" />
     <Content Include="Views\ContactUsSubmission\Index.cshtml" />
-    <Content Include="Views\MyAccount\Index.cshtml" />
     <Content Include="Views\Bookings\Index.cshtml" />
     <Content Include="Views\Pets\Index.cshtml" />
-    <Content Include="Views\Admin\Pets.cshtml" />
-    <Content Include="Views\Admin\Bookings.cshtml" />
     <Content Include="Views\ContactUsSubmission\ContactUsSuccessful.cshtml" />
     <Content Include="Views\Home\OurTeam.cshtml" />
     <Content Include="Views\Home\OurServices.cshtml" />
@@ -684,6 +683,8 @@
     <Content Include="Views\Reports\VaccineComplianceReport.cshtml" />
     <Content Include="Views\Reports\BoardingOccupancyReport.cshtml" />
     <Content Include="Views\Reports\DailyBoardingReport.cshtml" />
+    <Content Include="Views\User\BoardingManagement.cshtml" />
+    <Content Include="Views\User\Billing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -790,6 +791,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202608242333342_UseTransactionVoidReasonEnum.resx">
       <DependentUpon>202608242333342_UseTransactionVoidReasonEnum.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202608270630366_AddedSubmissionDateTimeToContactUsSubmission.resx">
+      <DependentUpon>202608270630366_AddedSubmissionDateTimeToContactUsSubmission.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

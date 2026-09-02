@@ -13,13 +13,22 @@ using System.Web.Services.Description;
 
 namespace JamesPetBoarding.Controllers
 {
+    [Authorize]
     public class EmergencyContactsController : Controller
     {
 
         // GET: EmergencyContacts/Create
         public ActionResult Create(Guid customerId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactFormVM emergencyContactForm = new EmergencyContactFormVM();
 
@@ -39,12 +48,20 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(EmergencyContactFormVM emergencyContactForm)
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(emergencyContactForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == emergencyContactForm.CustomerId);
 
@@ -79,7 +96,15 @@ namespace JamesPetBoarding.Controllers
         // GET: EmergencyContacts/Read
         public ActionResult Read(Guid emergencyContactId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
@@ -119,6 +144,13 @@ namespace JamesPetBoarding.Controllers
         {
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
@@ -161,12 +193,20 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Update(EmergencyContactFormVM emergencyContactForm)
         {
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(emergencyContactForm);
             }
-
-            ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactForm.EmergencyContactId);
 
@@ -204,7 +244,15 @@ namespace JamesPetBoarding.Controllers
         // GET: EmergencyContacts/Delete
         public ActionResult Delete(Guid emergencyContactId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
@@ -250,7 +298,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Delete(EmergencyContactDeactivateVM emergencyContactDelete)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactDelete.EmergencyContactId);
 
@@ -300,7 +356,15 @@ namespace JamesPetBoarding.Controllers
         // GET: EmergencyContacts/Reactivate
         public ActionResult Reactivate(Guid emergencyContactId)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
 
@@ -354,7 +418,15 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Reactivate(EmergencyContactReactivateVM emergencyContactReactivate)
         {
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactReactivate.EmergencyContactId);
 
@@ -411,6 +483,18 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", "Customers", new { customerId = emergencyContact.CustomerId });
+        }
+
+
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
+            string loggedInEmail = User.Identity.Name;
+
+            return dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email == loggedInEmail &&
+                    x.IsActive);
+
         }
 
     }
