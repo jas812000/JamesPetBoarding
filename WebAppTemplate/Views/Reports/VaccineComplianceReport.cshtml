@@ -117,6 +117,24 @@
         </div>
     </div>
 
+    using (Html.BeginForm("ExportVaccineComplianceReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ExpirationStartDate)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ExpirationEndDate)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.CustomerId)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.PetId)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.Species)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ComplianceStatus)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
     <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered align-middle">
             <thead>

@@ -127,6 +127,29 @@
 
     if (Model.PetReportRows != null && Model.PetReportRows.Count > 0)
     {
+
+        using (Html.BeginForm("ExportPetReportPdf", "Reports", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.PetReportFilter.CustomerId)
+            @Html.HiddenFor(x => x.PetReportFilter.PetId)
+            @Html.HiddenFor(x => x.PetReportFilter.VetId)
+            @Html.HiddenFor(x => x.PetReportFilter.ActiveStatus)
+            @Html.HiddenFor(x => x.PetReportFilter.PetName)
+            @Html.HiddenFor(x => x.PetReportFilter.Species)
+            @Html.HiddenFor(x => x.PetReportFilter.Breed)
+            @Html.HiddenFor(x => x.PetReportFilter.Sex)
+            @Html.HiddenFor(x => x.PetReportFilter.BirthDate)
+            @Html.HiddenFor(x => x.PetReportFilter.WeightUnit)
+
+            <div class="text-center mb-4">
+                <button type="submit" class="btn btn-success">
+                    Export PDF
+                </button>
+            </div> 
+        }
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
                 <thead>
@@ -189,7 +212,7 @@
     else
     {
         <div class="alert alert-info text-center">
-            No pets matched the selected report filters.
+        No pets matched the selected report filters.
         </div>
     }
 }

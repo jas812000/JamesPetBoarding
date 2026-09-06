@@ -119,8 +119,31 @@
 
     </div>
 
+
     if (Model.CustomerActivityReportRows != null && Model.CustomerActivityReportRows.Count > 0)
     {
+
+        using (Html.BeginForm("ExportCustomerActivityReportPdf", "Reports", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.CustomerId)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.ActiveStatus)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.FirstName)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.LastName)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.City)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.State)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.ZipCode)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.Phone)
+            @Html.HiddenFor(x => x.CustomerActivityReportFilter.Email)
+
+            <div class="text-center mb-4">
+                <button type="submit" class="btn btn-success">
+                    Export PDF
+                </button>
+            </div>
+        }
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
                 <thead>

@@ -87,6 +87,22 @@
         </div>
     </div>
 
+    using (Html.BeginForm("ExportBoardingOccupancyReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.ReportDate)
+        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.UnitType)
+        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.SpeciesAllowed)
+        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.SizeCategory)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
     <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered align-middle">
             <thead>

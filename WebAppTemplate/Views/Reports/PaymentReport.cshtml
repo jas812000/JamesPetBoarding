@@ -99,6 +99,25 @@
         </div>
     </div>
 
+    using (Html.BeginForm("ExportPaymentReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.PaymentReportFilter.PaymentStartDate)
+        @Html.HiddenFor(x => x.PaymentReportFilter.PaymentEndDate)
+        @Html.HiddenFor(x => x.PaymentReportFilter.CustomerId)
+        @Html.HiddenFor(x => x.PaymentReportFilter.PetId)
+        @Html.HiddenFor(x => x.PaymentReportFilter.InvoiceType)
+        @Html.HiddenFor(x => x.PaymentReportFilter.PaymentMethod)
+        @Html.HiddenFor(x => x.PaymentReportFilter.ProcessedByEmployeeId)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
     if (Model.PaymentMethodSummaryRows != null && Model.PaymentMethodSummaryRows.Any())
     {
         <div class="table-responsive mt-4">

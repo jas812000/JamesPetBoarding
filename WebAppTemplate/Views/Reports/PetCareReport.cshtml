@@ -121,6 +121,25 @@
 
     if (Model.PetCareReportRows != null && Model.PetCareReportRows.Count > 0)
     {
+
+        using (Html.BeginForm("ExportPetCareReportPdf", "Reports", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.PetCareReportFilter.CustomerId)
+            @Html.HiddenFor(x => x.PetCareReportFilter.PetId)
+            @Html.HiddenFor(x => x.PetCareReportFilter.PetName)
+            @Html.HiddenFor(x => x.PetCareReportFilter.Species)
+            @Html.HiddenFor(x => x.PetCareReportFilter.HasDiet)
+            @Html.HiddenFor(x => x.PetCareReportFilter.HasMedication)
+
+            <div class="text-center mb-4">
+                <button type="submit" class="btn btn-success">
+                    Export PDF
+                </button>
+            </div>
+        }
+
         <div class="table-responsive">
             <table class="table table-striped table-bordered align-middle">
                 <thead>

@@ -58,6 +58,7 @@
 
 @if (Model.RevenueReportRows != null && Model.RevenueReportRows.Any())
 {
+
     <div class="border rounded p-4 mt-5 mb-4">
         <h3 class="text-center mb-4">Revenue Summary</h3>
 
@@ -103,6 +104,22 @@
             </div>
         </div>
     </div>
+
+    using (Html.BeginForm("ExportRevenueReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.RevenueReportFilter.InvoiceStartDate)
+        @Html.HiddenFor(x => x.RevenueReportFilter.InvoiceEndDate)
+        @Html.HiddenFor(x => x.RevenueReportFilter.InvoiceType)
+        @Html.HiddenFor(x => x.RevenueReportFilter.InvoiceStatus)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
 
     <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered align-middle">

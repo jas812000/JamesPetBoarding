@@ -112,6 +112,24 @@
         </div>
     </div>
 
+    using (Html.BeginForm("ExportInvoiceReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.InvoiceReportFilter.InvoiceStartDate)
+        @Html.HiddenFor(x => x.InvoiceReportFilter.InvoiceEndDate)
+        @Html.HiddenFor(x => x.InvoiceReportFilter.CustomerId)
+        @Html.HiddenFor(x => x.InvoiceReportFilter.PetId)
+        @Html.HiddenFor(x => x.InvoiceReportFilter.InvoiceType)
+        @Html.HiddenFor(x => x.InvoiceReportFilter.InvoiceStatus)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
     <div class="table-responsive mt-4">
         <table class="table table-striped table-bordered align-middle">
             <thead>
