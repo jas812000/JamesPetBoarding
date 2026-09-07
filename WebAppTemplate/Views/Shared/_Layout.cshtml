@@ -19,10 +19,13 @@
             <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                 <ul class="navbar-nav flex-grow-1">
                     <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Hours", "Index", "Hours", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact Us", "Index", "ContactUsSubmission", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Our Services", "OurServices", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Our Team", "OurTeam", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Hours", "Hours", "Home", new { area = "" }, new { @class = "nav-link" })</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
                 </ul>
-                 @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
@@ -31,7 +34,7 @@
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Paws & Reservations, LLC. All rights reserved.</p>
-            <p> Developed by James Stevens.</p>
+            <p>Developed by James Stevens.</p>
         </footer>
     </div>
 

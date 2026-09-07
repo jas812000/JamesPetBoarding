@@ -1,12 +1,117 @@
-﻿
-@{
-    ViewBag.Title = "OurServices";
+﻿@{
+    ViewBag.Title = "Our Services";
 }
 
-<h2>OurServices</h2>
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
+<main>
+    <section class="py-5" aria-labelledby="servicesTitle">
+        <h1 id="servicesTitle">Our Services</h1>
 
-    <p>Use this area to provide additional information.</p>
+        <p class="lead">
+            Thoughtful pet-care services designed around comfort, routine,
+            and individual needs.
+        </p>
+
+        <p>
+            Service availability may depend on scheduling, staffing, and your
+            pet’s specific care requirements. Contact us before your appointment
+            if you have questions or special instructions.
+        </p>
+    </section>
+
+    <section class="row g-4" aria-label="Available pet-care services">
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Overnight Pet Boarding</h2>
+
+                    <p class="card-text">
+                        Comfortable accommodations and attentive daily care while
+                        you are away. We follow the feeding, medication, and routine
+                        information provided for each pet.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Doggy Daycare</h2>
+
+                    <p class="card-text">
+                        Scheduled daytime care that gives dogs a safe place to stay,
+                        receive attention, and enjoy appropriate activity while their
+                        owners are unavailable.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Professional Grooming</h2>
+
+                    <p class="card-text">
+                        Grooming services are available by appointment to help pets
+                        remain clean, comfortable, and well cared for.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Medication Assistance</h2>
+
+                    <p class="card-text">
+                        Our team can follow documented medication instructions during
+                        an eligible pet’s scheduled stay. Medication details must be
+                        provided and reviewed in advance.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Daily Exercise and Enrichment</h2>
+
+                    <p class="card-text">
+                        Age-appropriate activity, play, and interaction help support
+                        each pet’s comfort and well-being during their time with us.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="mt-5" aria-labelledby="planningTitle">
+        <h2 id="planningTitle">Planning Your Pet’s Visit</h2>
+
+        <p>
+            Appointments are required. Review our hours or contact us to discuss
+            availability and your pet’s care needs.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary"
+               href="@Url.Action("Contact", "Home")">
+                Contact Us
+            </a>
+
+            <a class="btn btn-outline-dark"
+               href="@Url.Action("Hours", "Home")">
+                View Hours
+            </a>
+        </div>
+    </section>
+    <section class="mt-5 pt-4 border-top" aria-label="Page navigation">
+        <a class="btn btn-outline-secondary"
+           href="@Url.Action("Index", "Home")">
+            &larr; Return to Home
+        </a>
+    </section>
 </main>

@@ -2,25 +2,32 @@
     ViewBag.Title = "Thank You";
 }
 
-@if (TempData["SuccessMessage"] != null)
-{ 
-    <h2>@TempData["SuccessMessage"]</h2>
-}
+<main>
+    <section class="py-5 text-center" aria-labelledby="confirmationTitle">
+        <h1 id="confirmationTitle">Message Sent Successfully</h1>
 
-<p>
-    If your matter is urgent, please call us directly at (214) 555-0192.
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <p class="lead" role="status">
+                @TempData["SuccessMessage"]
+            </p>
+        }
 
-    You will be redirected to the Home Page in 5 seconds...
-</p>
+        <p>
+            If your matter is urgent, please call us directly at
+            <a href="tel:+12145550192">(214) 555-0192</a>.
+        </p>
 
-<p>
-    @Html.ActionLink(
-        "Return to Home", 
-        "Index", 
-        "Home", 
-        null, 
-        new { @class = "btn btn-primary" })
-</p>
+        <p>
+            You will be redirected to the Home page in five seconds.
+        </p>
+
+        <a class="btn btn-primary"
+           href="@Url.Action("Index", "Home")">
+            Continue to Home
+        </a>
+    </section>
+</main>
 
 <script>
     setTimeout(function () {

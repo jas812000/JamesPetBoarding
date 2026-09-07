@@ -20,6 +20,21 @@ namespace JamesPetBoarding.Controllers
             return View();
         }
 
+        public ActionResult OurServices()
+        {
+            return View();
+        }
+
+        public ActionResult OurTeam()
+        {
+            return View();
+        }
+
+        public ActionResult Hours()
+        {
+            return View();
+        }
+
         public ActionResult Contact()
         {
             ViewBag.Message = "My contact page.";

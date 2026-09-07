@@ -18,7 +18,7 @@
 
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-        <div class="row">
+        <div class="row mb-3">
             @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
 
             <div class="col-md-10">
@@ -27,7 +27,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-3">
             @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
 
             <div class="col-md-10">
@@ -36,7 +36,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row mb-3">
             @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 col-form-label" })
 
             <div class="col-md-10">
@@ -47,10 +47,16 @@
 
         <div class="row">
             <div class="offset-md-2 col-md-10">
-                <input type="submit" value="Register" class="btn btn-outline-dark" />
+                <input type="submit" value="Register" class="btn btn-primary" />
             </div>
         </div>
     }
+    <section class="mt-5 pt-4 border-top" aria-label="Page navigation">
+        <a class="btn btn-outline-secondary"
+           href="@Url.Action("Index", "Home")">
+            &larr; Return to Home
+        </a>
+    </section>
 </main>
 
 @section Scripts {

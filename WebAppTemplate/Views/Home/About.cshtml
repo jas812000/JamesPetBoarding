@@ -1,9 +1,84 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<main aria-labelledby="title">
-    <h2 id="title">@ViewBag.Title.</h2>
-    <h3>@ViewBag.Message</h3>
 
-    <p>Use this area to provide additional information.</p>
+<main>
+    <section class="py-5" aria-labelledby="aboutTitle">
+        <h1 id="aboutTitle">About Paws &amp; Reservations</h1>
+
+        <p class="lead">
+            We provide dependable boarding and pet-care services in a safe,
+            comfortable, and welcoming environment.
+        </p>
+
+        <p>
+            We understand that leaving a pet in someone else’s care is an important
+            decision. Our goal is to give pet owners confidence that their pets will
+            receive attentive care that respects their established routines and
+            individual needs.
+        </p>
+    </section>
+
+    <section class="row g-4" aria-label="Our approach to pet care">
+        <div class="col-md-6">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Our Approach</h2>
+
+                    <p class="card-text">
+                        Every pet has a different personality, routine, and level of
+                        comfort. Our team uses the information provided by each pet
+                        owner to support consistent feeding, medication, activity,
+                        and general care while the pet is with us.
+                    </p>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Our Commitment</h2>
+
+                    <p class="card-text">
+                        We are committed to clear communication, responsible care,
+                        clean and comfortable accommodations, and respectful service
+                        for every pet and pet owner.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="mt-5" aria-labelledby="learnMoreTitle">
+        <h2 id="learnMoreTitle">Learn More</h2>
+
+        <p>
+            Explore our services, meet our team, or contact us with questions about
+            caring for your pet.
+        </p>
+
+        <div class="d-flex flex-wrap gap-2">
+            <a class="btn btn-primary"
+               href="@Url.Action("OurServices", "Home")">
+                View Our Services
+            </a>
+
+            <a class="btn btn-outline-dark"
+               href="@Url.Action("OurTeam", "Home")">
+                Meet Our Team
+            </a>
+
+            <a class="btn btn-outline-dark"
+               href="@Url.Action("Contact", "Home")">
+                Contact Us
+            </a>
+        </div>
+    </section>
+    <section class="mt-5 pt-4 border-top" aria-label="Page navigation">
+        <a class="btn btn-outline-secondary"
+           href="@Url.Action("Index", "Home")">
+            &larr; Return to Home
+        </a>
+    </section>
 </main>

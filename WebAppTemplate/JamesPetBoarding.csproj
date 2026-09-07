@@ -192,7 +192,6 @@
     <Compile Include="Controllers\EmergencyContactsController.cs" />
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\HoursController.cs" />
     <Compile Include="Controllers\InvoiceItemsController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -594,7 +593,7 @@
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
-    <Content Include="Views\Hours\Index.cshtml" />
+    <Content Include="Views\Home\Hours.cshtml" />
     <Content Include="Views\ContactUsSubmission\Index.cshtml" />
     <Content Include="Views\Bookings\Index.cshtml" />
     <Content Include="Views\Pets\Index.cshtml" />
