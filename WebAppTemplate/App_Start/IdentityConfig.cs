@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Configuration;
+using System.Net;
+using System.Net.Mail;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -16,10 +19,38 @@ namespace JamesPetBoarding
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+            string smtpHost = ConfigurationManager.AppSettings["SmtpHost"];
+            int smtpPort = int.Parse(ConfigurationManager.AppSettings["SmtpPort"]);
+            bool smtpEnableSsl = bool.Parse(ConfigurationManager.AppSettings["SmtpEnableSsl"]);
+            string smtpUsername = ConfigurationManager.AppSettings["SmtpUsername"];
+            string smtpFromAddress = ConfigurationManager.AppSettings["SmtpFromAddress"];
+
+            string smtpPassword = Environment.GetEnvironmentVariable("JamesPetBoarding_SMTP_Password");
+
+            if (string.IsNullOrWhiteSpace(smtpPassword)) 
+            {
+                throw new InvalidOperationException("SMTP password environment variable is not configured.");
+            }
+
+            using (var mailMessage = new MailMessage()) 
+            {
+                mailMessage.From = new MailAddress(smtpFromAddress);
+                mailMessage.To.Add(message.Destination);
+                mailMessage.Subject = message.Subject;
+                mailMessage.Body = message.Body;
+                mailMessage.IsBodyHtml = true;
+
+                using (var smtpClient = new SmtpClient(smtpHost, smtpPort)) 
+                {
+                    smtpClient.EnableSsl = smtpEnableSsl;
+                    smtpClient.UseDefaultCredentials = false;
+                    smtpClient.Credentials = new NetworkCredential(smtpUsername, smtpPassword);
+
+                    await smtpClient.SendMailAsync(mailMessage);
+                }
+            }
         }
     }
 
