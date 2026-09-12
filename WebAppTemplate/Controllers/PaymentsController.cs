@@ -27,7 +27,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentSearchVM paymentSearch = new PaymentSearchVM();
@@ -58,7 +58,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             paymentSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
@@ -208,7 +208,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceModel invoice = dbContext.Invoices
@@ -259,7 +259,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceModel invoice = dbContext.Invoices
@@ -368,7 +368,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentDetailsVM paymentDetails = BuildPaymentDetails(dbContext, paymentId);
@@ -393,7 +393,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentModel payment = dbContext.Payments
@@ -452,7 +452,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentModel payment = dbContext.Payments
@@ -511,7 +511,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentModel payment = dbContext.Payments
@@ -583,7 +583,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PaymentModel payment = dbContext.Payments

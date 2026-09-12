@@ -70,6 +70,20 @@
                 null,
                 new { @class = "btn btn-success ms-2" })
         }
+
+        @Html.ActionLink(
+            "Clear Search",
+            "Search",
+            "Employees",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+
+        @Html.ActionLink(
+            "Back to Dashboard",
+            "Index",
+            "Dashboard",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
@@ -121,7 +135,7 @@
                                      new { employeeId = employee.EmployeeId },
                                      new { @class = "btn btn-warning btn-sm me-1" })
 
-                                @if (employee.IsActive)
+                                if (employee.IsActive)
                                 {
                                     @Html.ActionLink(
                                          "Deactivate",

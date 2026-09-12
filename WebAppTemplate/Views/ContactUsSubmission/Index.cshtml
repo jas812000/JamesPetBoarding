@@ -29,111 +29,80 @@
             )
         }
 
-        <div class="mb-3">
-            @Html.LabelFor(
-                x => x.LastName,
-                "Last Name",
-                new { @class = "form-label" }
-            )
+        <div class="row g-3">
 
-            @Html.TextBoxFor(
-                x => x.LastName,
-                new { @class = "form-control", placeholder = "Doe" }
-            )
+            <div class="col-md-5">
+                <label class="form-label">Last Name</label>
+                @Html.TextBoxFor(
+                    x => x.LastName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Doe"
+                    })
+                @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+            </div>
 
-            @Html.ValidationMessageFor(
-                x => x.LastName,
-                "",
-                new { @class = "text-danger" }
-            )
+            <div class="col-md-5">
+                <label class="form-label">First Name</label>
+                @Html.TextBoxFor(
+                    x => x.FirstName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "John"
+                    })
+                @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label">Phone Number</label>
+                @Html.TextBoxFor(
+                    x => x.Phone,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "214-555-1212"
+                    })
+                @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label">Email Address</label>
+                @Html.TextBoxFor(
+                    x => x.Email,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "jdoe@example.com"
+                    })
+                @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-10">
+                <label class="form-label">Message</label>
+                @Html.TextAreaFor(
+                    x => x.Message,
+                    new
+                    {
+                        @class = "form-control",
+                        rows = "5",
+                        style = "max-width: 88%;"
+                    })
+                @Html.ValidationMessageFor(x => x.Message, "", new { @class = "text-danger" })
+            </div>
+
         </div>
 
-        <div class="mb-3">
-            @Html.LabelFor(
-                x => x.FirstName,
-                "First Name",
-                new { @class = "form-label" }
-            )
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary me-2">
+                Submit
+            </button>
 
-            @Html.TextBoxFor(
-                x => x.FirstName,
-                new { @class = "form-control", placeholder = "John" }
-            )
-
-            @Html.ValidationMessageFor(
-                x => x.FirstName,
-                "",
-                new { @class = "text-danger" }
-            )
+            <button type="reset" class="btn btn-secondary">
+                Clear Form
+            </button>
         </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(
-                x => x.Phone,
-                "Phone Number",
-                new { @class = "form-label" }
-            )
-
-            @Html.TextBoxFor(
-                x => x.Phone,
-                new { @class = "form-control", placeholder = "214-555-1212" }
-            )
-
-            @Html.ValidationMessageFor(
-                x => x.Phone,
-                "",
-                new { @class = "text-danger" }
-            )
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(
-                x => x.Email,
-                "Email Address",
-                new { @class = "form-label" }
-            )
-
-            @Html.TextBoxFor(
-                x => x.Email,
-                new
-                {
-                    @class = "form-control",
-                    placeholder = "jdoe@example.com",
-                    type = "email"
-                }
-            )
-
-            @Html.ValidationMessageFor(
-                x => x.Email,
-                "",
-                new { @class = "text-danger" }
-            )
-        </div>
-
-        <div class="mb-3">
-            @Html.LabelFor(
-                x => x.Message,
-                "Message",
-                new { @class = "form-label" }
-            )
-
-            @Html.TextAreaFor(
-                x => x.Message,
-                5,
-                50,
-                new { @class = "form-control" }
-            )
-
-            @Html.ValidationMessageFor(
-                x => x.Message,
-                "",
-                new { @class = "text-danger" }
-            )
-        </div>
-
-        <button type="submit" class="btn btn-primary">
-            Submit
-        </button>
     }
 
     <section class="mt-5 pt-4 border-top" aria-label="Page navigation">

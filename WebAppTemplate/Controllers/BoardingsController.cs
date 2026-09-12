@@ -25,7 +25,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageBoardings = CanManageBoardings(currentEmployee);
@@ -52,7 +52,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageBoardings = CanManageBoardings(currentEmployee);
@@ -153,7 +153,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingFormVM boardingForm = new BoardingFormVM();
@@ -177,7 +177,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (boardingForm.EndDateTime <= boardingForm.StartDateTime)
@@ -279,7 +279,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -386,7 +386,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -449,7 +449,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -555,7 +555,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -615,7 +615,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -681,7 +681,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -747,7 +747,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -820,7 +820,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -890,7 +890,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -976,7 +976,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -1037,7 +1037,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardings(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingModel boarding = dbContext.Boardings
@@ -1158,8 +1158,14 @@ namespace JamesPetBoarding.Controllers
             return employee != null &&
                 (employee.Role == EmployeeRoleEnum.Admin ||
                  employee.Role == EmployeeRoleEnum.Manager ||
-                 employee.Role == EmployeeRoleEnum.Supervisor);
-
+                 employee.Role == EmployeeRoleEnum.Supervisor ||
+                 employee.Role == EmployeeRoleEnum.FrontDesk ||
+                 employee.Role == EmployeeRoleEnum.KennelStaff ||
+                 employee.Role == EmployeeRoleEnum.Caretaker ||
+                 employee.Role == EmployeeRoleEnum.Groomer ||
+                 employee.Role == EmployeeRoleEnum.VeterinaryTechnician ||
+                 employee.Role == EmployeeRoleEnum.Veterinarian ||
+                 employee.Role == EmployeeRoleEnum.Trainer);
         }
 
 
@@ -1168,8 +1174,14 @@ namespace JamesPetBoarding.Controllers
             return employee != null &&
                 (employee.Role == EmployeeRoleEnum.Admin ||
                  employee.Role == EmployeeRoleEnum.Manager ||
-                 employee.Role == EmployeeRoleEnum.Supervisor);
-
+                 employee.Role == EmployeeRoleEnum.Supervisor ||
+                 employee.Role == EmployeeRoleEnum.FrontDesk ||
+                 employee.Role == EmployeeRoleEnum.KennelStaff ||
+                 employee.Role == EmployeeRoleEnum.Caretaker ||
+                 employee.Role == EmployeeRoleEnum.Groomer ||
+                 employee.Role == EmployeeRoleEnum.VeterinaryTechnician ||
+                 employee.Role == EmployeeRoleEnum.Veterinarian ||
+                 employee.Role == EmployeeRoleEnum.Trainer);
         }
     }
 }

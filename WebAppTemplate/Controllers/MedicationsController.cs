@@ -25,7 +25,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -56,7 +56,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == medicationForm.PetId);
@@ -104,7 +104,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             MedicationModel medication = dbContext.Medications
@@ -151,7 +151,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             MedicationModel medication = dbContext.Medications
@@ -191,7 +191,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             MedicationModel medication = dbContext.Medications
@@ -238,7 +238,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             MedicationModel medication = dbContext.Medications
@@ -287,7 +287,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             MedicationModel medication = dbContext.Medications

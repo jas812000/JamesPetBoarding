@@ -71,7 +71,16 @@
 
     <div class="col-md-6">
         <label class="form-label">Phone Number</label>
-        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+        @Html.TextBoxFor(
+            x => x.Phone,
+            new
+            {
+                @class = "form-control",
+                placeholder = "972-555-1212",
+                maxlength = "12",
+                inputmode = "numeric",
+                id = "Phone"
+            })
         @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
     </div>
 
@@ -98,4 +107,33 @@
             new { @class = "btn btn-secondary ms-2" })
     </div>
 
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const phoneInput = document.getElementById("Phone");
+
+            if (phoneInput) {
+                phoneInput.addEventListener("input", function () {
+                    let digits = this.value.replace(/\D/g, "").substring(0, 10);
+
+                    if (digits.length > 6) {
+                        this.value =
+                            digits.substring(0, 3) + "-" +
+                            digits.substring(3, 6) + "-" +
+                            digits.substring(6);
+                    }
+                    else if (digits.length > 3) {
+                        this.value =
+                            digits.substring(0, 3) + "-" +
+                            digits.substring(3);
+                    }
+                    else {
+                        this.value = digits;
+                    }
+                });
+            }
+        });
+    </script>
 }

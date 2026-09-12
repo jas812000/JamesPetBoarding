@@ -37,7 +37,7 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Admin");
             }
     
-            return RedirectToAction("Index", "User");
+            return RedirectToAction("Index", "Staff");
 
         }
     }

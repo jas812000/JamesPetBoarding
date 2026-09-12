@@ -30,7 +30,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -62,7 +62,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == dietForm.PetId);
@@ -103,7 +103,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             DietModel diet = dbContext.Diets
@@ -145,7 +145,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             DietModel diet = dbContext.Diets
@@ -190,7 +190,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             DietModel diet = dbContext.Diets
@@ -233,7 +233,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             DietModel diet = dbContext.Diets
@@ -282,7 +282,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             DietModel diet = dbContext.Diets.FirstOrDefault(x => x.DietId == dietDelete.DietId);

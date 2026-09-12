@@ -25,7 +25,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceItemSearchVM invoiceItemSearch = new InvoiceItemSearchVM();
@@ -53,7 +53,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             invoiceItemSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
@@ -164,7 +164,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceModel invoice = dbContext.Invoices
@@ -217,7 +217,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceModel invoice = dbContext.Invoices
@@ -341,7 +341,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
@@ -415,7 +415,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
@@ -474,7 +474,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -597,7 +597,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems
@@ -681,7 +681,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             InvoiceItemModel invoiceItem = dbContext.InvoiceItems

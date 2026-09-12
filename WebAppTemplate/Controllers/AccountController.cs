@@ -109,12 +109,12 @@ namespace JamesPetBoarding.Controllers
             var result = await SignInManager.PasswordSignInAsync(
                 model.Email, 
                 model.Password, 
-                model.RememberMe, 
+               isPersistent: false,
                 shouldLockout: true);
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Dashboard");
 
                 case SignInStatus.LockedOut:
                     return View("Lockout");

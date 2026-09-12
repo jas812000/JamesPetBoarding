@@ -30,7 +30,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanViewFinancialReports =
@@ -279,7 +279,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -688,7 +688,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -1125,7 +1125,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -2969,7 +2969,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -4013,7 +4013,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -4410,7 +4410,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -4828,7 +4828,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewReports(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (dailyBoardingReport.DailyBoardingReportFilter.StartDate.HasValue &&

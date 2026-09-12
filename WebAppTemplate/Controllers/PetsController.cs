@@ -27,7 +27,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetSearchVM petSearch = new PetSearchVM();
@@ -48,7 +48,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             List<PetModel> pets = dbContext.Pets.ToList();
@@ -118,7 +118,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetFormVM petForm = new PetFormVM();
@@ -141,7 +141,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -198,7 +198,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -329,7 +329,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -370,7 +370,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -435,7 +435,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -490,7 +490,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petDeactivate.PetId);
@@ -563,7 +563,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
@@ -630,7 +630,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petReactivate.PetId);

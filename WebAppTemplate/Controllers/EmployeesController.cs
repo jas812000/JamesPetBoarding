@@ -29,7 +29,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageEmployees = CanManageEmployees(currentEmployee);
@@ -51,7 +51,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageEmployees = CanManageEmployees(currentEmployee);
@@ -136,7 +136,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeFormVM employeeForm = new EmployeeFormVM();
@@ -155,7 +155,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -232,8 +232,8 @@ namespace JamesPetBoarding.Controllers
 
             EmployeeModel employee = new EmployeeModel();
 
-            employee.LastName = employeeForm.LastName.Trim();
-            employee.FirstName = employeeForm.FirstName.Trim();
+            employee.LastName = FormatName(employeeForm.LastName.Trim());
+            employee.FirstName = FormatName(employeeForm.FirstName.Trim());
             employee.Role = employeeForm.Role;
             employee.Phone = employeeForm.Phone.Trim();
             employee.Email = employeeForm.Email.Trim();
@@ -244,6 +244,8 @@ namespace JamesPetBoarding.Controllers
 
             dbContext.Employees.Add(employee);
             dbContext.SaveChanges();
+
+            TempData["SuccessMessage"] = "Employee profile created successfully.";
 
             return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
 
@@ -258,7 +260,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
@@ -317,7 +319,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
@@ -357,7 +359,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeForm.EmployeeId);
@@ -484,9 +486,9 @@ namespace JamesPetBoarding.Controllers
                 employeeIdentityUser != null &&
                 currentEmployee.EmployeeId == employee.EmployeeId;
 
-            employee.LastName = employeeForm.LastName.Trim();
+            employee.LastName = FormatName(employeeForm.LastName.Trim());
 
-            employee.FirstName = employeeForm.FirstName.Trim();
+            employee.FirstName = FormatName(employeeForm.FirstName.Trim());
 
             employee.Role = employeeForm.Role;
 
@@ -520,7 +522,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
@@ -555,7 +557,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeDeactivate.EmployeeId);
@@ -602,7 +604,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeId);
@@ -656,7 +658,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageEmployees(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeReactivate.EmployeeId);
@@ -922,6 +924,36 @@ namespace JamesPetBoarding.Controllers
             }
 
             return new string(phone.Where(char.IsDigit).ToArray());
+        }
+
+        private string FormatName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+
+            string[] words = name.Trim().ToLower()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                string[] hyphenatedParts = words[i].Split('-');
+
+                for (int j = 0; j < hyphenatedParts.Length; j++)
+                {
+                    if (!string.IsNullOrWhiteSpace(hyphenatedParts[j]))
+                    {
+                        hyphenatedParts[j] =
+                            char.ToUpper(hyphenatedParts[j][0]) +
+                            hyphenatedParts[j].Substring(1);
+                    }
+                }
+
+                words[i] = string.Join("-", hyphenatedParts);
+            }
+
+            return string.Join(" ", words);
         }
 
         private ApplicationUserManager _userManager;

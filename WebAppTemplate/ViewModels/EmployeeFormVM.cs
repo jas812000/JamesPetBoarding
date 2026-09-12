@@ -23,7 +23,11 @@ namespace JamesPetBoarding.ViewModels
         [Required, EmailAddress, MaxLength(256)]
         public string Email { get; set; }
 
-        [Required, MaxLength(20)]
+        [Required]
+        [RegularExpression(
+            @"^\d{3}-\d{3}-\d{4}$",
+            ErrorMessage = "Phone number must be in the format 972-555-1212.")]
+        [MaxLength(12)]
         public string Phone { get; set; }
 
         [MaxLength(500)]

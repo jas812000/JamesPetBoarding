@@ -27,7 +27,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactFormVM emergencyContactForm = new EmergencyContactFormVM();
@@ -55,7 +55,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -73,8 +73,8 @@ namespace JamesPetBoarding.Controllers
             EmergencyContactModel emergencyContact = new EmergencyContactModel();
 
             emergencyContact.CustomerId = emergencyContactForm.CustomerId;
-            emergencyContact.LastName = emergencyContactForm.LastName;
-            emergencyContact.FirstName = emergencyContactForm.FirstName;
+            emergencyContact.LastName = FormatName(emergencyContactForm.LastName);
+            emergencyContact.FirstName = FormatName(emergencyContactForm.FirstName);
             emergencyContact.Address = emergencyContactForm.Address;
             emergencyContact.City = emergencyContactForm.City;
             emergencyContact.State = emergencyContactForm.State;
@@ -103,7 +103,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
@@ -149,7 +149,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
@@ -200,7 +200,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -224,8 +224,8 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + emergencyContact.CustomerId + " does not exist.");
             }
 
-            emergencyContact.LastName = emergencyContactForm.LastName;
-            emergencyContact.FirstName = emergencyContactForm.FirstName;
+            emergencyContact.LastName = FormatName(emergencyContactForm.LastName);
+            emergencyContact.FirstName = FormatName(emergencyContactForm.FirstName);
             emergencyContact.Address = emergencyContactForm.Address;
             emergencyContact.City = emergencyContactForm.City;
             emergencyContact.State = emergencyContactForm.State;
@@ -251,7 +251,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
@@ -305,7 +305,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactDelete.EmergencyContactId);
@@ -363,7 +363,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactId);
@@ -425,7 +425,7 @@ namespace JamesPetBoarding.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             EmergencyContactModel emergencyContact = dbContext.EmergencyContacts.FirstOrDefault(x => x.EmergencyContactId == emergencyContactReactivate.EmergencyContactId);
@@ -495,6 +495,36 @@ namespace JamesPetBoarding.Controllers
                     x.Email == loggedInEmail &&
                     x.IsActive);
 
+        }
+
+        private string FormatName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+
+            string[] words = name.Trim().ToLower()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                string[] hyphenatedParts = words[i].Split('-');
+
+                for (int j = 0; j < hyphenatedParts.Length; j++)
+                {
+                    if (!string.IsNullOrWhiteSpace(hyphenatedParts[j]))
+                    {
+                        hyphenatedParts[j] =
+                            char.ToUpper(hyphenatedParts[j][0]) +
+                            hyphenatedParts[j].Substring(1);
+                    }
+                }
+
+                words[i] = string.Join("-", hyphenatedParts);
+            }
+
+            return string.Join(" ", words);
         }
 
     }

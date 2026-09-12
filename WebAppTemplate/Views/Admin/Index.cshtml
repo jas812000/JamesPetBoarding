@@ -1,6 +1,5 @@
 ﻿@{
     ViewBag.Title = "Admin Dashboard";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
 <div class="text-center border-bottom pb-4 mb-5">
@@ -14,49 +13,40 @@
 
 <div class="row g-4 justify-content-center">
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Boarding Management",
             "BoardingManagement",
-            "User",
+            "Staff",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Pet Search",
             "Search",
             "Pets",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Customer Search",
             "Search",
             "Customers",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Billing",
             "Billing",
-            "User",
+            "Staff",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
-    </div>
-
-    <div class="col-md-4">
-        @Html.ActionLink(
-            "My Profile",
-            "MyProfile",
-            "Employees",
-            null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
 </div>
@@ -67,64 +57,64 @@
 
 <div class="row g-4 justify-content-center">
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Boarding Units",
             "Search",
             "BoardingUnits",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Services",
             "Search",
             "Services",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Vaccines",
             "Search",
             "Vaccines",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
 
-    @if (ViewBag.CanManageEmployees)
-    {
-        <div class="col-md-4">
-            @Html.ActionLink(
-                "Employee Management",
-                "Search",
-                "Employees",
-                null,
-                new { @class = "btn btn-primary w-100 py-4" })
-        </div>
-    }
-    else if (ViewBag.IsSupervisor)
-    {
-        <div class="col-md-4">
-            @Html.ActionLink(
-                "Employee Directory",
-                "Search",
-                "Employees",
-                null,
-                new { @class = "btn btn-primary w-100 py-4" })
-        </div>
-    }
-
-    <div class="col-md-4">
+    <div class="col-md-5">
         @Html.ActionLink(
             "Reports",
             "Index",
             "Reports",
             null,
-            new { @class = "btn btn-primary w-100 py-4" })
+            new { @class = "btn btn-primary w-100 py-5" })
     </div>
+
+    @if (ViewBag.CanManageEmployees)
+    {
+        <div class="col-md-5">
+            @Html.ActionLink(
+                "Employee Management",
+                "Search",
+                "Employees",
+                null,
+                new { @class = "btn btn-primary w-100 py-5" })
+        </div>
+    }
+    else if (ViewBag.IsSupervisor)
+    {
+        <div class="col-md-5">
+            @Html.ActionLink(
+                "Employee Directory",
+                "Search",
+                "Employees",
+                null,
+                new { @class = "btn btn-primary w-100 py-5" })
+        </div>
+    }
 
 </div>
 

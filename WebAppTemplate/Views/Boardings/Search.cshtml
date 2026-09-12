@@ -20,38 +20,57 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+    <div class="col-md-5">
+        @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+    </div>
 
-    @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+    <div class="col-md-5">
+        @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+    </div>
 
-    @Html.DropDownListFor(x => x.BoardingUnitId, Model.BoardingUnitSelectList, "Select Boarding Unit...", new { @class = "form-select" })
+    <div class="col-md-5">
+        @Html.DropDownListFor(x => x.BoardingUnitId, Model.BoardingUnitSelectList, "Select Boarding Unit...", new { @class = "form-select" })
+    </div>
 
-    @Html.EnumDropDownListFor(x => x.BoardingStatus, "Select Status...", new { @class = "form-select" })
+    <div class="col-md-5">
+        @Html.EnumDropDownListFor(x => x.BoardingStatus, "Select Status...", new { @class = "form-select" })
+    </div>
 
-    @Html.TextBoxFor(x => x.StartDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    <div class="col-md-5">
+        @Html.TextBoxFor(x => x.StartDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    </div>
 
-    @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    <div class="col-md-5">
+        @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    </div>
 
-<div class="col-12 text-center mt-4">
-    <button type="submit" class="btn btn-primary me-2">Search Boardings</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Search Boardings</button>
 
-    @if (ViewBag.CanManageBoardings)
-    {
+        @if (ViewBag.CanManageBoardings)
+        {
+            @Html.ActionLink(
+                "Create Boarding",
+                "Create",
+                "Boardings",
+                null,
+                new { @class = "btn btn-success ms-2" })
+        }
+
         @Html.ActionLink(
-            "Create Boarding",
-            "Create",
+            "Clear Search",
+            "Search",
             "Boardings",
             null,
-            new { @class = "btn btn-success ms-2" })
-    }
+            new { @class = "btn btn-secondary ms-2" })
 
-    @Html.ActionLink(
-        "Clear Search",
-        "Search",
-        "Boardings",
-        null,
-        new { @class = "btn btn-secondary ms-2" })
-</div>
+        @Html.ActionLink(
+            "Back to Boarding Management",
+            "BoardingManagement",
+            "Staff",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
 
 }
 

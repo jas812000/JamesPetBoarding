@@ -68,10 +68,22 @@
                 "Create",
                 "BoardingUnits",
                 null,
-                new { @class = "btn btn-secondary ms-2" })
+                new { @class = "btn btn-success ms-2" })
         }
-    </div>
+        @Html.ActionLink(
+            "Clear Search",
+            "Search",
+            "BoardingUnits",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
 
+        @Html.ActionLink(
+            "Back to Dashboard",
+            "Index",
+            "Dashboard",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
 }
 
 @if (Model.BoardingUnitResults != null && Model.BoardingUnitResults.Any())
@@ -149,7 +161,7 @@
 else if (Request.HttpMethod == "POST")
 {
     <div class="alert alert-info mt-4">
-        No boarding units found
+        No boarding units found.
     </div>
 
 }

@@ -29,7 +29,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianSearchVM veterinarianSearch = new VeterinarianSearchVM();
@@ -51,7 +51,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             List<VeterinarianModel> veterinarians = dbContext.Veterinarians
@@ -164,7 +164,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianFormVM veterinarianForm = new VeterinarianFormVM();
@@ -186,7 +186,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -217,8 +217,8 @@ namespace WebAppTemplate.Controllers
 
             VeterinarianModel veterinarian = new VeterinarianModel();
 
-            veterinarian.LastName = veterinarianForm.LastName;
-            veterinarian.FirstName = veterinarianForm.FirstName;
+            veterinarian.LastName = FormatName(veterinarianForm.LastName);
+            veterinarian.FirstName = FormatName(veterinarianForm.FirstName);
             veterinarian.Credentials = veterinarianForm.Credentials;
             veterinarian.ClinicName = veterinarianForm.ClinicName;
             veterinarian.Address = veterinarianForm.Address;
@@ -248,7 +248,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
@@ -346,7 +346,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
@@ -399,7 +399,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -436,8 +436,8 @@ namespace WebAppTemplate.Controllers
                 return View(veterinarianForm);
             }
 
-            veterinarian.LastName = veterinarianForm.LastName;
-            veterinarian.FirstName = veterinarianForm.FirstName;
+            veterinarian.LastName = FormatName(veterinarianForm.LastName);
+            veterinarian.FirstName = FormatName(veterinarianForm.FirstName);
             veterinarian.Credentials = veterinarianForm.Credentials;
             veterinarian.ClinicName = veterinarianForm.ClinicName;
             veterinarian.Address = veterinarianForm.Address;
@@ -465,7 +465,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
@@ -514,7 +514,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == veterinarianStatus.VetId);
@@ -550,7 +550,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == vetId);
@@ -599,7 +599,7 @@ namespace WebAppTemplate.Controllers
 
             if (currentEmployee == null)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VeterinarianModel veterinarian = dbContext.Veterinarians.FirstOrDefault(x => x.VetId == veterinarianStatus.VetId);
@@ -634,6 +634,36 @@ namespace WebAppTemplate.Controllers
                     x.Email == loggedInEmail &&
                     x.IsActive);
 
+        }
+
+        private string FormatName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+
+            string[] words = name.Trim().ToLower()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                string[] hyphenatedParts = words[i].Split('-');
+
+                for (int j = 0; j < hyphenatedParts.Length; j++)
+                {
+                    if (!string.IsNullOrWhiteSpace(hyphenatedParts[j]))
+                    {
+                        hyphenatedParts[j] =
+                            char.ToUpper(hyphenatedParts[j][0]) +
+                            hyphenatedParts[j].Substring(1);
+                    }
+                }
+
+                words[i] = string.Join("-", hyphenatedParts);
+            }
+
+            return string.Join(" ", words);
         }
 
     }

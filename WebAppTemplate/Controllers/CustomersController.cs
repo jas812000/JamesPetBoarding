@@ -29,10 +29,12 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerSearchVM customerSearch = new CustomerSearchVM();
+
+            ViewBag.SearchPerformed = false;
 
             return View(customerSearch);
         }
@@ -49,7 +51,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             List<CustomerModel> customers = dbContext.Customers.ToList();
@@ -102,6 +104,8 @@ namespace JamesPetBoarding.Controllers
                 }); 
             }
 
+            ViewBag.SearchPerformed = true;
+
             return View(customerSearch);
         }
 
@@ -115,7 +119,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerFormVM customerForm = new CustomerFormVM();
@@ -136,7 +140,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid) 
@@ -147,8 +151,8 @@ namespace JamesPetBoarding.Controllers
 
             CustomerModel customer = new CustomerModel();
 
-            customer.LastName = customerForm.LastName;
-            customer.FirstName = customerForm.FirstName;
+            customer.LastName = FormatName(customerForm.LastName);
+            customer.FirstName = FormatName(customerForm.FirstName);
             customer.Address = customerForm.Address;
             customer.City = customerForm.City;
             customer.State = customerForm.State;
@@ -178,7 +182,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
@@ -282,7 +286,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
@@ -321,7 +325,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerForm.CustomerId);
@@ -346,9 +350,9 @@ namespace JamesPetBoarding.Controllers
                 customerForm.Notes = customer.Notes;
                 return View(customerForm);
             }
-            
-            customer.LastName = customerForm.LastName;
-            customer.FirstName = customerForm.FirstName;
+
+            customer.LastName = FormatName(customerForm.LastName);
+            customer.FirstName = FormatName(customerForm.FirstName);
             customer.Address = customerForm.Address;
             customer.City = customerForm.City;
             customer.State = customerForm.State;
@@ -378,7 +382,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
@@ -417,7 +421,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerDelete.CustomerId);
@@ -467,7 +471,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
@@ -519,7 +523,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageCustomers(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             CustomerModel customer = dbContext.Customers.FirstOrDefault(x => x.CustomerId == customerReactivate.CustomerId);
@@ -581,16 +585,20 @@ namespace JamesPetBoarding.Controllers
 
         }
 
-
         private bool CanViewCustomers(EmployeeModel employee)
         {
             return employee != null &&
                 (employee.Role == EmployeeRoleEnum.Admin ||
                  employee.Role == EmployeeRoleEnum.Manager ||
-                 employee.Role == EmployeeRoleEnum.Supervisor);
-
+                 employee.Role == EmployeeRoleEnum.Supervisor ||
+                 employee.Role == EmployeeRoleEnum.FrontDesk ||
+                 employee.Role == EmployeeRoleEnum.KennelStaff ||
+                 employee.Role == EmployeeRoleEnum.Caretaker ||
+                 employee.Role == EmployeeRoleEnum.Groomer ||
+                 employee.Role == EmployeeRoleEnum.VeterinaryTechnician ||
+                 employee.Role == EmployeeRoleEnum.Veterinarian ||
+                 employee.Role == EmployeeRoleEnum.Trainer);
         }
-
 
         private bool CanManageCustomers(EmployeeModel employee)
         {
@@ -598,6 +606,36 @@ namespace JamesPetBoarding.Controllers
                 (employee.Role == EmployeeRoleEnum.Admin ||
                  employee.Role == EmployeeRoleEnum.Manager);
 
+        }
+
+        private string FormatName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return name;
+            }
+
+            string[] words = name.Trim().ToLower()
+                .Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < words.Length; i++)
+            {
+                string[] hyphenatedParts = words[i].Split('-');
+
+                for (int j = 0; j < hyphenatedParts.Length; j++)
+                {
+                    if (!string.IsNullOrWhiteSpace(hyphenatedParts[j]))
+                    {
+                        hyphenatedParts[j] =
+                            char.ToUpper(hyphenatedParts[j][0]) +
+                            hyphenatedParts[j].Substring(1);
+                    }
+                }
+
+                words[i] = string.Join("-", hyphenatedParts);
+            }
+
+            return string.Join(" ", words);
         }
     }
 }

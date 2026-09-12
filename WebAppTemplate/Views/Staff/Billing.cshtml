@@ -1,47 +1,37 @@
 ﻿@{
-    ViewBag.Title = "Boarding Management";
-    Layout = "~/Views/Shared/_UserLayout.cshtml";
+    ViewBag.Title = "Billing";
 }
 
 <div class="text-center border-bottom pb-4 mb-5">
     <h1>Paws &amp; Reservations, LLC</h1>
-    <h2>Boarding Management</h2>
+    <h2>Billing</h2>
 </div>
 
 <div class="row g-4 justify-content-center">
 
     <div class="col-md-5">
         @Html.ActionLink(
-            "Create Boarding",
+            "Create Invoice",
             "Create",
-            "Boardings",
+            "Invoices",
             null,
             new { @class = "btn btn-primary w-100 py-4" })
     </div>
 
     <div class="col-md-5">
         @Html.ActionLink(
-            "Search Boardings",
+            "Search Invoices",
             "Search",
-            "Boardings",
+            "Invoices",
             null,
             new { @class = "btn btn-primary w-100 py-4" })
     </div>
 
     <div class="col-md-5">
         @Html.ActionLink(
-            "Check In / Check Out",
+            "Search Payments",
             "Search",
-            "Boardings",
-            null,
-            new { @class = "btn btn-primary w-100 py-4" })
-    </div>
-
-    <div class="col-md-5">
-        @Html.ActionLink(
-            "Cancel / No Show",
-            "Search",
-            "Boardings",
+            "Payments",
             null,
             new { @class = "btn btn-primary w-100 py-4" })
     </div>
@@ -52,7 +42,7 @@
     @Html.ActionLink(
         "Back to Dashboard",
         "Index",
-        "User",
+        "Dashboard",
         null,
         new { @class = "btn btn-secondary" })
 </div>

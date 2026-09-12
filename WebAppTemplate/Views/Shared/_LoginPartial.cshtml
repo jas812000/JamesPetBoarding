@@ -1,13 +1,35 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using JamesPetBoarding.Models
+@using Microsoft.AspNet.Identity
 @if (Request.IsAuthenticated)
 {
+
+    ApplicationDbContext dbContext = new ApplicationDbContext();
+
+    string currentEmail = User.Identity.Name;
+
+    EmployeeModel employee = dbContext.Employees
+        .FirstOrDefault(x => x.Email.ToLower() == currentEmail.ToLower());
+
+    string displayName = employee != null
+        ? employee.FirstName
+        : User.Identity.GetUserName();
+
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="navbar-nav navbar-right">
+        <ul class="navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @class="nav-link" })
+            @Html.ActionLink(
+                "Hello " + displayName + "!",
+                "Index",
+                "Manage",
+                routeValues: null,
+                htmlAttributes: new
+                {
+                    title = "Manage",
+                    @class="nav-link"
+                })
         </li>
         <li><a class="nav-link" href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
     </ul>
@@ -16,7 +38,28 @@
 else
 {
     <ul class="navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @class="nav-link" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class="nav-link" })</li>
+        <li>@Html.ActionLink(
+                "Register",
+                "Register",
+                "Account",
+                routeValues: null,
+                htmlAttributes: new
+                {
+                    id = "registerLi" + "nk",
+                    @class="nav-link"
+                })
+        </li>
+
+        <li>@Html.ActionLink(
+                "Log in",
+                "Login",
+                "Account",
+                routeValues: null,
+                htmlAttributes: new
+                {
+                    id = "loginLink",
+                    @class="nav-link"
+                })
+        </li>
     </ul>
 }

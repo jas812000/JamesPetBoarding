@@ -26,7 +26,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardingUnits(currentEmployee))
             { 
-                return RedirectToAction("Index", "User"); 
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageBoardingUnits = CanManageBoardingUnits(currentEmployee);
@@ -48,7 +48,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageBoardingUnits = CanManageBoardingUnits(currentEmployee);
@@ -133,7 +133,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitFormVM boardingUnitForm = new BoardingUnitFormVM();
@@ -155,7 +155,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -205,7 +205,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits
@@ -244,7 +244,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits
@@ -282,7 +282,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits
@@ -337,7 +337,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits
@@ -378,7 +378,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageBoardingUnits(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             BoardingUnitModel boardingUnit = dbContext.BoardingUnits
@@ -452,4 +452,3 @@ namespace JamesPetBoarding.Controllers
         }
     }
 }
-

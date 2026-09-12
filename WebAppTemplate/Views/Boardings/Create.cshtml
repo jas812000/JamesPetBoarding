@@ -18,51 +18,51 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-12">
+    <div class="col-md-5">
         <label class="form-label">Customer</label>
         @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
         @Html.ValidationMessageFor(x => x.CustomerId, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-5">
         <label class="form-label">Pet</label>
         @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
         @Html.ValidationMessageFor(x => x.PetId, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-10">
         <label class="form-label">Boarding Unit</label>
         @Html.DropDownListFor(x => x.BoardingUnitId, Model.BoardingUnitSelectList, "Select Boarding Unit...", new { @class = "form-select" })
         @Html.ValidationMessageFor(x => x.BoardingUnitId, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-5">
         <label class="form-label">Start Date/Time</label>
         @Html.TextBoxFor(x => x.StartDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
         @Html.ValidationMessageFor(x => x.StartDateTime, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-5">
         <label class="form-label">End Date/Time</label>
         @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
         @Html.ValidationMessageFor(x => x.EndDateTime, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-md-10">
         <label class="form-label">Notes</label>
         @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
-        <div class="col-12 text-center mt-4">
-            <button type="submit" class="btn btn-primary me-2">Create Boarding</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Create Boarding</button>
 
-            @Html.ActionLink(
-                "Back to Search",
-                "Search",
-                "Boardings",
-                null,
-                new { @class = "btn btn-secondary ms-2" })
-        </div>
+        @Html.ActionLink(
+            "Back to Boarding Management",
+            "BoardingManagement",
+            "Staff",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
 
 }

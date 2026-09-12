@@ -45,6 +45,19 @@
                 null,
                 new { @class = "btn btn-success ms-2" })
         }
+        @Html.ActionLink(
+            "Clear Search",
+            "Search",
+            "Services",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+
+        @Html.ActionLink(
+            "Back to Dashboard",
+            "Index",
+            "Dashboard",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 
 }

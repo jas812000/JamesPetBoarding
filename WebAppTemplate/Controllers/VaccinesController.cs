@@ -26,7 +26,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageVaccines = CanManageVaccines(currentEmployee);
@@ -48,7 +48,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageVaccines = CanManageVaccines(currentEmployee);
@@ -106,7 +106,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineFormVM vaccineForm = new VaccineFormVM();
@@ -127,7 +127,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -171,7 +171,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
@@ -205,7 +205,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
@@ -239,7 +239,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineForm.VaccineId);
@@ -288,7 +288,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineId);
@@ -324,7 +324,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             VaccineModel vaccine = dbContext.Vaccines.FirstOrDefault(x => x.VaccineId == vaccineDelete.VaccineId);

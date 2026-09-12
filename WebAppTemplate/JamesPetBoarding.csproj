@@ -201,7 +201,7 @@
     <Compile Include="Controllers\PetVaccinesController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
-    <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\StaffController.cs" />
     <Compile Include="Controllers\VaccinesController.cs" />
     <Compile Include="Controllers\VeterinariansController.cs" />
     <Compile Include="Enums\ActiveStatusEnum.cs" />
@@ -589,14 +589,12 @@
     <Content Include="Views\Manage\SetPassword.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_UserLayout.cshtml" />
+    <Content Include="Views\Shared\_StaffLayout.cshtml" />
     <Content Include="Views\Shared\_AdminLayout.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
-    <Content Include="Views\User\Index.cshtml" />
+    <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\Home\Hours.cshtml" />
     <Content Include="Views\ContactUsSubmission\Index.cshtml" />
-    <Content Include="Views\Bookings\Index.cshtml" />
-    <Content Include="Views\Pets\Index.cshtml" />
     <Content Include="Views\ContactUsSubmission\ContactUsSuccessful.cshtml" />
     <Content Include="Views\Home\OurTeam.cshtml" />
     <Content Include="Views\Home\OurServices.cshtml" />
@@ -607,7 +605,6 @@
     <Content Include="Views\Customers\Reactivate.cshtml" />
     <Content Include="Views\Customers\Index.cshtml" />
     <Content Include="Views\Customers\Search.cshtml" />
-    <Content Include="Views\Staff\Index.cshtml" />
     <Content Include="Views\EmergencyContacts\Create.cshtml" />
     <Content Include="Views\EmergencyContacts\Delete.cshtml" />
     <Content Include="Views\EmergencyContacts\Update.cshtml" />
@@ -692,13 +689,12 @@
     <Content Include="Views\Reports\VaccineComplianceReport.cshtml" />
     <Content Include="Views\Reports\BoardingOccupancyReport.cshtml" />
     <Content Include="Views\Reports\DailyBoardingReport.cshtml" />
-    <Content Include="Views\User\BoardingManagement.cshtml" />
-    <Content Include="Views\User\Billing.cshtml" />
+    <Content Include="Views\Staff\BoardingManagement.cshtml" />
+    <Content Include="Views\Staff\Billing.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
-    <Folder Include="Views\Dashboard\" />
     <Folder Include="Views\InvoiceItems\" />
   </ItemGroup>
   <ItemGroup>

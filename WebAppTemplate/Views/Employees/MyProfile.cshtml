@@ -44,35 +44,17 @@
     </div>
 
     <div class="col-md-10 text-center mt-3">
-        @Html.ActionLink(
-            "Update My Profile",
-            "UpdateMyProfile",
-            "Employees",
-            null,
-            new { @class = "btn btn-primary me-2" })
 
-        @if (Model.IsAdmin)
-        {
+        <div class="col-md-10 text-center mt-3">
 
             @Html.ActionLink(
-                "Back to Dashboard",
+                "Back to Account Settings",
                 "Index",
-                "Admin",
+                "Manage",
                 null,
                 new { @class = "btn btn-secondary" })
 
-        }
-        else
-        {
-
-            @Html.ActionLink(
-                "Back to Dashboard",
-                "Index",
-                "Staff",
-                null,
-                new { @class = "btn btn-secondary" })
-
-        }
+        </div>
 
     </div>
 </div>

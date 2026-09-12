@@ -12,10 +12,10 @@
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
         <div class="container">
             @Html.ActionLink(
-                "Paws & Reservations, LLC", 
-                "Index", 
-                "Home", 
-                new { area = "" }, 
+                "Paws & Reservations, LLC",
+                "Index",
+                "Dashboard",
+                new { area = "" },
                 new { @class = "navbar-brand" })
             <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,7 @@
                         @Html.ActionLink(
                             "Staff Dashboard",
                             "Index",
-                            "User",
+                            "Staff",
                             new { area = "" },
                             new { @class = "nav-link" })
                     </li>
@@ -36,7 +36,7 @@
                         @Html.ActionLink(
                             "Boardings",
                             "BoardingManagement",
-                            "User",
+                            "Staff",
                             new { area = "" },
                             new { @class = "nav-link" })
                     </li>
@@ -63,16 +63,7 @@
                         @Html.ActionLink(
                             "Billing",
                             "Billing",
-                            "User",
-                            new { area = "" },
-                            new { @class = "nav-link" })
-                    </li>
-
-                    <li>
-                        @Html.ActionLink(
-                            "My Profile",
-                            "MyProfile",
-                            "Employees",
+                            "Staff",
                             new { area = "" },
                             new { @class = "nav-link" })
                     </li>

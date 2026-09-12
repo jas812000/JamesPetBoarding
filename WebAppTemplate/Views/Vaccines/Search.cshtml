@@ -55,6 +55,20 @@
                 null,
                 new { @class = "btn btn-success ms-2" })
         }
+
+        @Html.ActionLink(
+            "Clear Search",
+            "Search",
+            "Vaccines",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+
+        @Html.ActionLink(
+            "Back to Dashboard",
+            "Index",
+            "Dashboard",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 
 }
@@ -118,7 +132,9 @@
     </div>
 }
 
-@if (Model.VaccineSummaryResults != null && !Model.VaccineSummaryResults.Any())
+@if (Request.HttpMethod == "POST" &&
+     Model.VaccineSummaryResults != null &&
+     !Model.VaccineSummaryResults.Any())
 {
     <div class="alert alert-info mt-4">
         No vaccines matched the search criteria.

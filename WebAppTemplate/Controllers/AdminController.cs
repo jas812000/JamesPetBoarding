@@ -35,7 +35,7 @@ namespace JamesPetBoarding.Controllers
                 employee.Role != EmployeeRoleEnum.Manager &&
                 employee.Role != EmployeeRoleEnum.Supervisor)
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageEmployees =

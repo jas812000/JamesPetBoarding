@@ -5,7 +5,7 @@ using System.Web.Mvc;
 namespace JamesPetBoarding.Controllers
 {
     [Authorize]
-    public class UserController : Controller
+    public class StaffController : Controller
     {
         // GET: User
         public ActionResult Index()

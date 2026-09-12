@@ -25,7 +25,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageServices = CanManageServices(currentEmployee);
@@ -49,7 +49,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ViewBag.CanManageServices = CanManageServices(currentEmployee);
@@ -106,7 +106,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceFormVM serviceForm = new ServiceFormVM();
@@ -128,7 +128,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             if (!ModelState.IsValid)
@@ -161,7 +161,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanViewServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceModel service = dbContext.Services
@@ -197,7 +197,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceModel service = dbContext.Services
@@ -233,7 +233,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceModel service = dbContext.Services
@@ -272,7 +272,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceModel service = dbContext.Services
@@ -310,7 +310,7 @@ namespace JamesPetBoarding.Controllers
 
             if (!CanManageServices(currentEmployee))
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Staff");
             }
 
             ServiceModel service = dbContext.Services
