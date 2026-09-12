@@ -1,0 +1,68 @@
+﻿@model JamesPetBoarding.ViewModels.EmployeeProfileUpdateVM
+@{
+    ViewBag.Title = "Update My Profile";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Update My Profile</h2>
+    <p class="lead">
+        Update My profile information.
+    </p>
+</div>
+
+@using (Html.BeginForm("UpdateMyProfile", "Employees", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Email Address</label>
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Phone Number</label>
+        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", maxLength = "12", inputmode = "numeric", id = "Phone" })
+        @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-success me-2">Update My Profile</button>
+
+        @Html.ActionLink(
+             "Back to Account Settings",
+             "Index",
+             "Manage",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+@section Scripts
+{
+    <script>
+        document.getElementById("Phone").addEventListener("input", function () {
+
+            var phone = this.value.replace(/\D/g, "").substring(0, 10);
+
+            if (phone.length > 6) {
+                phone =
+                    phone.substring(0, 3) + "-" +
+                    phone.substring(3, 6) + "-" +
+                    phone.substring(6);
+            }
+            else if (phone.length > 3) {
+                phone =
+                    phone.substring(0, 3) + "-" +
+                    phone.substring(3);
+            }
+
+            this.value = phone;
+        });
+    </script>
+}

@@ -1,0 +1,121 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+
+<main>
+    <section class="py-5 text-center" aria-labelledby="welcomeTitle">
+        <h1 id="welcomeTitle">Paws &amp; Reservations</h1>
+
+        <p class="lead">
+            Comfortable, dependable care for the pets you love.
+        </p>
+
+        <p>
+            Whether your pet is staying with us or receiving one of our available
+            care services, our team is committed to providing a safe, welcoming,
+            and comfortable experience.
+        </p>
+
+        <div class="d-flex flex-wrap justify-content-center">
+            <a class="btn btn-primary"
+               href="@Url.Action("Contact", "Home")">
+                Contact Us
+            </a>
+        </div>
+    </section>
+
+    <section class="row g-4" aria-label="Learn more about Paws and Reservations">
+        <div class="col-md-4">
+            <article class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="card-title h4">Our Services</h2>
+
+                    <p class="card-text">
+                        Explore our boarding and pet-care services designed to support
+                        your pet’s comfort, routine, and individual needs.
+                    </p>
+
+                    <a class="btn btn-outline-dark mt-auto"
+                       href="@Url.Action("OurServices", "Home")">
+                        View Our Services
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <article class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="card-title h4">Our Team</h2>
+
+                    <p class="card-text">
+                        Meet the dedicated professionals who work together to provide
+                        attentive and dependable care for every pet.
+                    </p>
+
+                    <a class="btn btn-outline-dark mt-auto"
+                       href="@Url.Action("OurTeam", "Home")">
+                        Meet Our Team
+                    </a>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-4">
+            <article class="card h-100">
+                <div class="card-body d-flex flex-column">
+                    <h2 class="card-title h4">About Us</h2>
+
+                    <p class="card-text">
+                        Learn more about Paws &amp; Reservations, our approach to pet
+                        care, and the values behind our business.
+                    </p>
+
+                    <a class="btn btn-outline-dark mt-auto"
+                       href="@Url.Action("About", "Home")">
+                        About Paws &amp; Reservations
+                    </a>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="row mt-5" aria-labelledby="visitTitle">
+        <div class="col-12">
+            <h2 id="visitTitle">Visit Paws &amp; Reservations</h2>
+        </div>
+
+        <div class="col-md-6">
+            <h3 class="h5">Contact Information</h3>
+
+            <address>
+                <strong>Paws &amp; Reservations, LLC</strong><br />
+                4821 Shady Creek Lane<br />
+                Dallas, Texas 75201<br />
+                <a href="tel:+12145550192">(214) 555-0192</a><br />
+                <a href="mailto:info@pawsandreservations.com">
+                    info@pawsandreservations.com
+                </a>
+            </address>
+        </div>
+
+        <div class="col-md-6">
+            <h3 class="h5">Office Hours</h3>
+
+            <p>
+                Monday–Friday: 7:00 AM–7:00 PM<br />
+                Saturday–Sunday: 8:00 AM–5:00 PM
+            </p>
+
+            <p>
+                Drop-off and pick-up are available during designated appointment
+                windows.
+            </p>
+
+            <a class="btn btn-outline-dark"
+               href="@Url.Action("Hours", "Home")">
+                View Complete Hours
+            </a>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,33 @@
+﻿@using JamesPetBoarding.Enums
+@using JamesPetBoarding.Models
+@using System.Linq
+
+@{
+    if (!Request.IsAuthenticated)
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        ApplicationDbContext dbContext = new ApplicationDbContext();
+
+        string email = User.Identity.Name;
+
+        EmployeeModel employee = dbContext.Employees
+            .FirstOrDefault(x =>
+                x.Email.ToLower() == email.ToLower() &&
+                x.IsActive);
+
+        if (employee != null &&
+            (employee.Role == EmployeeRoleEnum.Admin ||
+             employee.Role == EmployeeRoleEnum.Manager ||
+             employee.Role == EmployeeRoleEnum.Supervisor))
+        {
+            Layout = "~/Views/Shared/_AdminLayout.cshtml";
+        }
+        else
+        {
+            Layout = "~/Views/Shared/_StaffLayout.cshtml";
+        }
+    }
+}

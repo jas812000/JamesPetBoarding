@@ -1,0 +1,212 @@
+﻿@model JamesPetBoarding.ViewModels.VaccineComplianceReportVM
+@{
+    ViewBag.Title = "Vaccine Compliance Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Vaccine Compliance Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate a vaccine compliance report.
+    </p>
+</div>
+
+
+@using (Html.BeginForm("VaccineComplianceReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Vaccine Expiration Start Date</label>
+        @Html.TextBoxFor(x => x.VaccineComplianceReportFilter.ExpirationStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.ExpirationStartDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Vaccine Expiration End Date</label>
+        @Html.TextBoxFor(x => x.VaccineComplianceReportFilter.ExpirationEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.ExpirationEndDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Customer Name</label>
+        @Html.DropDownListFor(x => x.VaccineComplianceReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.CustomerId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pet Name</label>
+        @Html.DropDownListFor(x => x.VaccineComplianceReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.PetId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Species</label>
+        @Html.EnumDropDownListFor(x => x.VaccineComplianceReportFilter.Species, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.Species, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Compliance Status</label>
+        @Html.EnumDropDownListFor(x => x.VaccineComplianceReportFilter.ComplianceStatus, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VaccineComplianceReportFilter.ComplianceStatus, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Back to Reports",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+
+@if (Model.VaccineComplianceReportRows != null && Model.VaccineComplianceReportRows.Any())
+{
+    <div class="border rounded p-4 mt-5 mb-4">
+        <h3 class="text-center mb-4">Vaccine Compliance Summary</h3>
+
+        <div class="row text-center justify-content-center">
+            <div class="col-md-3 mb-3">
+                <strong>Total Vaccine Requirements</strong>
+                <div>@Model.TotalCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Expired</strong>
+                <div>@Model.ExpiredCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Expiring Today</strong>
+                <div>@Model.ExpiringTodayCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Expiring Tomorrow</strong>
+                <div>@Model.ExpiringTomorrowCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Expiring Within 15 Days</strong>
+                <div>@Model.ExpiringWithin15DaysCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Expiring Within 30 Days</strong>
+                <div>@Model.ExpiringWithin30DaysCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Current</strong>
+                <div>@Model.CurrentCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Missing</strong>
+                <div>@Model.MissingCount</div>
+            </div>
+        </div>
+    </div>
+
+    using (Html.BeginForm("ExportVaccineComplianceReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ExpirationStartDate)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ExpirationEndDate)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.CustomerId)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.PetId)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.Species)
+        @Html.HiddenFor(x => x.VaccineComplianceReportFilter.ComplianceStatus)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Vaccine</th>
+                    <th>Pet</th>
+                    <th>Customer</th>
+                    <th>Species</th>
+                    <th>Date Given</th>
+                    <th>Expiration Date</th>
+                    <th>Compliance Status</th>
+                    <th>Expiration Timing</th>
+                    <th>Document</th>
+                    <th>Notes</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var vaccine in Model.VaccineComplianceReportRows)
+                {
+                    <tr>
+                        <td>@vaccine.VaccineNameDisplay</td>
+                        <td>@vaccine.PetNameDisplay</td>
+                        <td>@vaccine.CustomerNameDisplay</td>
+                        <td>@vaccine.SpeciesDisplay</td>
+                        <td>@vaccine.DateGivenDisplay</td>
+                        <td>@vaccine.ExpirationDateDisplay</td>
+                        <td>@vaccine.VaccineComplianceStatusDisplay</td>
+
+                        <td>
+                            @if (!vaccine.DaysUntilExpiration.HasValue)
+                            {
+                                <span>N/A</span>
+                            }
+                            else if (vaccine.DaysUntilExpiration.Value < 0)
+                            {
+                                <span>@Math.Abs(vaccine.DaysUntilExpiration.Value) Day(s) Since Expiration</span>
+                            }
+                            else if (vaccine.DaysUntilExpiration.Value == 0)
+                            {
+                                <span>Expires Today</span>
+                            }
+                            else
+                            {
+                                <span>@vaccine.DaysUntilExpiration.Value Day(s) Until Expiration</span>
+                            }
+                        </td>
+
+                        <td>@vaccine.DocumentFilePathDisplay</td>
+                        <td>@vaccine.NotesDisplay</td>
+
+                        <td>
+                            @if (vaccine.PetVaccineId.HasValue)
+                            {
+                                @Html.ActionLink(
+                                    "View",
+                                    "Read",
+                                    "PetVaccines",
+                                    new { petVaccineId = vaccine.PetVaccineId.Value },
+                                    new { @class = "btn btn-sm btn-outline-primary" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (Model.HasSearched)
+{
+    <div class="alert alert-info text-center mt-4">
+        No vaccine compliance records matched the selected report filters.
+    </div>
+}

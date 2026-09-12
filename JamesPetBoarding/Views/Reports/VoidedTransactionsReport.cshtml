@@ -1,0 +1,179 @@
+﻿@model JamesPetBoarding.ViewModels.VoidedTransactionsReportVM
+
+@{
+    ViewBag.Title = "Voided Transactions Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Voided Transactions Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate a voided transactions report.
+    </p>
+</div>
+
+@using (Html.BeginForm("VoidedTransactionsReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Voided Start Date</label>
+        @Html.TextBoxFor(x => x.VoidedTransactionsReportFilter.VoidedStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.VoidedTransactionsReportFilter.VoidedStartDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Voided End Date</label>
+        @Html.TextBoxFor(x => x.VoidedTransactionsReportFilter.VoidedEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.ValidationMessageFor(x => x.VoidedTransactionsReportFilter.VoidedEndDate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Invoice Type</label>
+        @Html.EnumDropDownListFor(x => x.VoidedTransactionsReportFilter.InvoiceType, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VoidedTransactionsReportFilter.InvoiceType, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Payment Method</label>
+        @Html.EnumDropDownListFor(x => x.VoidedTransactionsReportFilter.PaymentMethod, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VoidedTransactionsReportFilter.PaymentMethod, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Voided By Employee Name</label>
+        @Html.DropDownListFor(x => x.VoidedTransactionsReportFilter.VoidedByEmployeeId, Model.EmployeeSelectList, "Select Employee...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.VoidedTransactionsReportFilter.VoidedByEmployeeId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Back to Reports",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+
+@if (Model.VoidedTransactionsReportRows != null && Model.VoidedTransactionsReportRows.Any())
+{
+    <div class="border rounded p-4 mt-5 mb-4">
+        <h3 class="text-center mb-4">Voided Transactions Summary</h3>
+
+        <div class="row text-center">
+            <div class="col-md-3 mb-3">
+                <strong>Voided Invoice Count</strong>
+                <div>@Model.VoidedInvoiceCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Total Invoice Amount Voided</strong>
+                <div>@Model.TotalInvoiceAmountVoidedDisplay</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Voided Payment Count</strong>
+                <div>@Model.VoidedPaymentCount</div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <strong>Total Payment Amount Voided</strong>
+                <div>@Model.TotalPaymentAmountVoidedDisplay</div>
+            </div>
+        </div>
+    </div>
+
+    using (Html.BeginForm("ExportVoidedTransactionsReportPdf", "Reports", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(x => x.VoidedTransactionsReportFilter.VoidedStartDate)
+        @Html.HiddenFor(x => x.VoidedTransactionsReportFilter.VoidedEndDate)
+        @Html.HiddenFor(x => x.VoidedTransactionsReportFilter.InvoiceType)
+        @Html.HiddenFor(x => x.VoidedTransactionsReportFilter.PaymentMethod)
+        @Html.HiddenFor(x => x.VoidedTransactionsReportFilter.VoidedByEmployeeId)
+
+        <div class="text-center mb-4">
+            <button type="submit" class="btn btn-success">
+                Export PDF
+            </button>
+        </div>
+    }
+
+    <div class="table-responsive mt-4">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th>Transaction Type</th>
+                    <th>Original Transaction Date</th>
+                    <th>Invoice Type</th>
+                    <th>Customer</th>
+                    <th>Pet</th>
+                    <th>Amount Voided</th>
+                    <th>Payment Method</th>
+                    <th>Transaction Reference</th>
+                    <th>Processed By</th>
+                    <th>Voided Date</th>
+                    <th>Voided By</th>
+                    <th>Void Reason</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var voidedTransactionsRow in Model.VoidedTransactionsReportRows)
+                {
+                    <tr>
+                        <td>@voidedTransactionsRow.TransactionTypeDisplay</td>
+                        <td>@voidedTransactionsRow.OriginalTransactionDateDisplay</td>
+                        <td>@voidedTransactionsRow.InvoiceTypeDisplay</td>
+                        <td>@voidedTransactionsRow.CustomerNameDisplay</td>
+                        <td>@voidedTransactionsRow.PetNameDisplay</td>
+                        <td>@voidedTransactionsRow.AmountVoidedDisplay</td>
+                        <td>@voidedTransactionsRow.PaymentMethodDisplay</td>
+                        <td>@voidedTransactionsRow.TransactionReferenceDisplay</td>
+                        <td>@voidedTransactionsRow.ProcessedByEmployeeNameDisplay</td>
+                        <td>@voidedTransactionsRow.VoidedDateDisplay</td>
+                        <td>@voidedTransactionsRow.VoidedByEmployeeNameDisplay</td>
+                        <td>@voidedTransactionsRow.VoidedReasonDisplay</td>
+
+                        <td>
+                            @if (voidedTransactionsRow.PaymentId.HasValue)
+                            {
+                                @Html.ActionLink(
+                                    "View",
+                                    "Read",
+                                    "Payments",
+                                    new { paymentId = voidedTransactionsRow.PaymentId.Value },
+                                    new { @class = "btn btn-sm btn-outline-primary" })
+                            }
+                            else
+                            {
+                                @Html.ActionLink(
+                                    "View",
+                                    "Read",
+                                    "Invoices",
+                                    new { invoiceId = voidedTransactionsRow.InvoiceId },
+                                    new { @class = "btn btn-sm btn-outline-primary" })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else if (Model.HasSearched)
+{
+    <div class="alert alert-info text-center mt-4">
+        No voided transactions matched the selected report filters.
+    </div>
+}

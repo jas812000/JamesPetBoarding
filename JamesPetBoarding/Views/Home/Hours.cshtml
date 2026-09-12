@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "Hours";
+}
+
+<main>
+    <section class="py-5" aria-labelledby="hoursTitle">
+        <h1 id="hoursTitle">Hours</h1>
+
+        <p class="lead">
+            Our team is available seven days a week to support scheduled boarding,
+            daycare, grooming, drop-off, and pick-up appointments.
+        </p>
+
+        <p>
+            Appointments are required so we can prepare for each pet’s arrival and
+            provide the appropriate care.
+        </p>
+    </section>
+
+    <section class="row g-4" aria-label="Business and appointment hours">
+        <div class="col-md-6">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Business Hours</h2>
+
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6">Monday–Friday</dt>
+                        <dd class="col-sm-6">7:00 AM–7:00 PM</dd>
+
+                        <dt class="col-sm-6">Saturday–Sunday</dt>
+                        <dd class="col-sm-6">8:00 AM–5:00 PM</dd>
+                    </dl>
+                </div>
+            </article>
+        </div>
+
+        <div class="col-md-6">
+            <article class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h4">Drop-Off and Pick-Up</h2>
+
+                    <p class="card-text">
+                        Drop-off and pick-up appointments are available during
+                        designated windows within normal business hours.
+                    </p>
+
+                    <p class="card-text mb-0">
+                        The scheduled appointment time must be confirmed before
+                        your pet’s arrival or departure.
+                    </p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="mt-5" aria-labelledby="appointmentTitle">
+        <h2 id="appointmentTitle">Appointments and After-Hours Requests</h2>
+
+        <p>
+            After-hours drop-off or pick-up may be considered when requested in
+            advance, but availability is not guaranteed. Additional charges may
+            apply when an exception is approved.
+        </p>
+
+        <p>
+            Contact us as soon as possible if your arrival time changes. This helps
+            our team maintain pet-care routines and ensure that an employee is
+            available to assist you.
+        </p>
+    </section>
+
+    <section class="mt-5" aria-labelledby="holidayTitle">
+        <h2 id="holidayTitle">Holiday Hours</h2>
+
+        <p>
+            Holiday hours and appointment availability may differ from our regular
+            schedule. Contact us in advance when planning a stay near a holiday.
+        </p>
+    </section>
+
+    <section class="mt-5" aria-labelledby="contactHoursTitle">
+        <h2 id="contactHoursTitle">Plan Your Visit</h2>
+
+        <p>
+            Contact us to confirm availability or discuss your pet’s scheduled
+            drop-off or pick-up.
+        </p>
+
+        <a class="btn btn-primary"
+           href="@Url.Action("Contact", "Home")">
+            Contact Us
+        </a>
+    </section>
+    <section class="mt-5 pt-4 border-top" aria-label="Page navigation">
+        <a class="btn btn-outline-secondary"
+           href="@Url.Action("Index", "Home")">
+            &larr; Return to Home
+        </a>
+    </section>
+</main>

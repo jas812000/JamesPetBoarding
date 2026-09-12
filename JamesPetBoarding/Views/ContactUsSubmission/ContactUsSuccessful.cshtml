@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Thank You";
+}
+
+<main>
+    <section class="py-5 text-center" aria-labelledby="confirmationTitle">
+        <h1 id="confirmationTitle">Message Sent Successfully</h1>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <p class="lead" role="status">
+                @TempData["SuccessMessage"]
+            </p>
+        }
+
+        <p>
+            If your matter is urgent, please call us directly at
+            <a href="tel:+12145550192">(214) 555-0192</a>.
+        </p>
+
+        <p>
+            You will be redirected to the Home page in five seconds.
+        </p>
+
+        <a class="btn btn-primary"
+           href="@Url.Action("Index", "Home")">
+            Continue to Home
+        </a>
+    </section>
+</main>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '@Url.Action("Index", "Home")';
+    }, 5000);
+</script>

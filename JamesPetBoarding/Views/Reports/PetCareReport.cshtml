@@ -1,0 +1,349 @@
+﻿@model JamesPetBoarding.ViewModels.PetCareReportVM
+
+@{
+    ViewBag.Title = "Pet Care Report";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1> Paws &amp; Reservations, LLC</h1>
+    <h2>Pet Care Report</h2>
+    <p class="lead">
+        Enter one or more optional filters to generate a pet care report.
+    </p>
+</div>
+
+@using (Html.BeginForm("PetCareReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+{
+
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+
+
+    <div class="col-md-6">
+        <label class="form-label">Customer</label>
+        @Html.DropDownListFor(x => x.PetCareReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select", id = "CustomerId" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.CustomerId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Pet</label>
+        @Html.DropDownListFor(x => x.PetCareReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select", id = "PetId" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.PetId, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-4">
+        <label class="form-label">Pet Name Search</label>
+        @Html.TextBoxFor(x => x.PetCareReportFilter.PetName, new { @class = "form-control", placeholder = "Roxy" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.PetName, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Species</label>
+        @Html.EnumDropDownListFor(x => x.PetCareReportFilter.Species, "Select...", new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.Species, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Has Diet</label>
+        @Html.DropDownListFor(
+            x => x.PetCareReportFilter.HasDiet,
+            new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Yes", Value = "true" },
+                new SelectListItem { Text = "No", Value = "false" }
+
+            },
+            "Select...",
+            new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.HasDiet, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-6">
+        <label class="form-label">Has Medication</label>
+        @Html.DropDownListFor(
+            x => x.PetCareReportFilter.HasMedication,
+            new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Yes", Value = "true" },
+                new SelectListItem { Text = "No", Value = "false" }
+
+            },
+            "Select...",
+            new { @class = "form-select" })
+        @Html.ValidationMessageFor(x => x.PetCareReportFilter.HasMedication, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="col-md-8 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+
+        @Html.ActionLink(
+             "Back to Reports",
+             "Index",
+             "Reports",
+             null,
+             new { @class = "btn btn-secondary ms-2" })
+    </div>
+}
+
+@if (Request.HttpMethod == "POST" && ViewData.ModelState.IsValid)
+{
+    <hr class="my-5" />
+
+    <div class="text-center mb-4">
+        <h3>Report Summary</h3>
+    </div>
+
+    <div class="row g-3 justify-content-center mb-4">
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Total Pets</h5>
+                <p class="fs-4 mb-0">@Model.TotalCount</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Total Diets</h5>
+                <p class="fs-4 mb-0">@Model.DietCount</p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="border rounded p-3 text-center">
+                <h5>Total Medications</h5>
+                <p class="fs-4 mb-0">@Model.MedicationCount</p>
+            </div>
+        </div>
+
+    </div>
+
+    if (Model.PetCareReportRows != null && Model.PetCareReportRows.Count > 0)
+    {
+
+        using (Html.BeginForm("ExportPetCareReportPdf", "Reports", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(x => x.PetCareReportFilter.CustomerId)
+            @Html.HiddenFor(x => x.PetCareReportFilter.PetId)
+            @Html.HiddenFor(x => x.PetCareReportFilter.PetName)
+            @Html.HiddenFor(x => x.PetCareReportFilter.Species)
+            @Html.HiddenFor(x => x.PetCareReportFilter.HasDiet)
+            @Html.HiddenFor(x => x.PetCareReportFilter.HasMedication)
+
+            <div class="text-center mb-4">
+                <button type="submit" class="btn btn-success">
+                    Export PDF
+                </button>
+            </div>
+        }
+
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Pet</th>
+                        <th>Customer</th>
+                        <th>Species</th>
+                        <th>Diet</th>
+                        <th>Feeding Amount</th>
+                        <th>Feeding Frequency</th>
+                        <th>Diet Notes</th>
+                        <th>Medication</th>
+                        <th>Dosage</th>
+                        <th>Route</th>
+                        <th>Medication Frequency</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Medication Notes</th>
+                        <th></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (JamesPetBoarding.ViewModels.PetCareReportRowVM pet in Model.PetCareReportRows)
+                    {
+                        <tr>
+                            <td>@pet.PetNameDisplay</td>
+
+                            <td>@pet.CustomerNameDisplay</td>
+
+                            <td>@pet.SpeciesDisplay</td>
+
+                            <td>@pet.DietNameDisplay</td>
+
+                            <td>@pet.FeedingAmountDisplay</td>
+
+                            <td>@pet.FeedingFrequencyDisplay</td>
+
+                            <td>@pet.DietNotesDisplay</td>
+
+                            <td>@pet.MedicationNameDisplay</td>
+
+                            <td>@pet.DosageDisplay</td>
+
+                            <td>@pet.MedicationRouteDisplay</td>
+
+                            <td>@pet.MedicationFrequencyDisplay</td>
+
+                            <td>@pet.MedicationStartDateDisplay</td>
+
+                            <td>@pet.MedicationEndDateDisplay</td>
+
+                            <td>@pet.MedicationNotesDisplay</td>
+
+                            <td>
+                                @Html.ActionLink(
+                                    "View Pet",
+                                    "Read",
+                                    "Pets",
+                                    new { petId = pet.PetId },
+                                    new { @class = "btn btn-sm btn-primary" })
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            No pets matched the selected pet care report filters.
+        </div>
+    }
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $("#CustomerId").change(function () {
+
+                var customerId = $(this).val();
+
+                if (customerId) {
+
+                    $.getJSON(
+                        '@Url.Action("GetPetsByCustomer", "Reports")',
+                        { customerId: customerId },
+                        function (pets) {
+
+                            var petDropdown = $("#PetId");
+
+                            petDropdown.empty();
+
+                            petDropdown.append(
+                                $('<option></option>')
+                                    .val("")
+                                    .text("Select Pet...")
+                            );
+
+                            $.each(pets, function (index, pet) {
+
+                                petDropdown.append(
+                                    $('<option></option>')
+                                        .val(pet.Value)
+                                        .text(pet.Text)
+                                );
+                            });
+                        }
+                    );
+                }
+                else {
+
+                    $.getJSON(
+                        '@Url.Action("GetAllPets", "Reports")',
+                        function (pets) {
+
+                            var petDropdown = $("#PetId");
+
+                            petDropdown.empty();
+
+                            petDropdown.append(
+                                $('<option></option>')
+                                    .val("")
+                                    .text("Select Pet...")
+                            );
+
+                            $.each(pets, function (index, pet) {
+
+                                petDropdown.append(
+                                    $('<option></option>')
+                                        .val(pet.Value)
+                                        .text(pet.Text)
+                                );
+                            });
+                        }
+                    );
+                }
+            });
+
+
+            $("#PetId").change(function () {
+
+                var petId = $(this).val();
+
+                if (petId) {
+
+                    $.getJSON(
+                        '@Url.Action("GetCustomersByPet", "Reports")',
+                        { petId: petId },
+                        function (customers) {
+
+                            var customerDropdown = $("#CustomerId");
+
+                            customerDropdown.empty();
+
+                            customerDropdown.append(
+                                $('<option></option>')
+                                    .val("")
+                                    .text("Select Customer...")
+                            );
+
+                            $.each(customers, function (index, customer) {
+
+                                customerDropdown.append(
+                                    $('<option></option>')
+                                        .val(customer.Value)
+                                        .text(customer.Text)
+                                );
+                            });
+                        }
+                    );
+                }
+                else {
+
+                    $.getJSON(
+                        '@Url.Action("GetAllCustomers", "Reports")',
+                        function (customers) {
+
+                            var customerDropdown = $("#CustomerId");
+
+                            customerDropdown.empty();
+
+                            customerDropdown.append(
+                                $('<option></option>')
+                                    .val("")
+                                    .text("Select Customer...")
+                            );
+
+                            $.each(customers, function (index, customer) {
+
+                                customerDropdown.append(
+                                    $('<option></option>')
+                                        .val(customer.Value)
+                                        .text(customer.Text)
+                                );
+                            });
+                        }
+                    );
+                }
+            });
+
+        });
+    </script>
+}

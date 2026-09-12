@@ -1,0 +1,60 @@
+﻿@using JamesPetBoarding.Models
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+}
+
+<main aria-labelledby="title">
+    <h2 id="title">@ViewBag.Title.</h2>
+    <div class="row">
+        <div class="col-md-12">
+            <section id="loginForm">
+                @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <h4>Use a local account to log in.</h4>
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="row mb-3">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 col-form-label" })
+                        <div class="col-md-10">
+                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 col-form-label" })
+                        <div class="col-md-10">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="offset-md-2 col-md-10">
+                            <input type="submit" value="Log in" class="btn btn-primary" />
+                        </div>
+                    </div>
+                    <p>
+                        @Html.ActionLink("Register as a new user", "Register")
+                    </p>
+
+                    <p>
+                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                    </p>
+                }
+            </section>
+        </div>
+    </div>
+    <section class="mt-5 pt-4 border-top" aria-label="Page navigation">
+        <a class="btn btn-outline-secondary"
+           href="@Url.Action("Index", "Home")">
+            &larr; Return to Home
+        </a>
+    </section>
+</main>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

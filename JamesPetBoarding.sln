@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.5.11716.220
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoarding", "JamesPetBoarding\JamesPetBoarding.csproj", "{5A1006CE-A481-4998-A6E9-B6F11849A585}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoardingTests", "JamesPetBoardingTests\JamesPetBoardingTests.csproj", "{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5A1006CE-A481-4998-A6E9-B6F11849A585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1006CE-A481-4998-A6E9-B6F11849A585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1006CE-A481-4998-A6E9-B6F11849A585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1006CE-A481-4998-A6E9-B6F11849A585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F1532FA8-A72F-49B5-8CC9-AFC91B67C5F7}
+	EndGlobalSection
+EndGlobal
