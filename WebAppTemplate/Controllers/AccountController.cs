@@ -2,6 +2,7 @@
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -69,6 +70,42 @@ namespace JamesPetBoarding.Controllers
                 return View(model);
             }
 
+            string normalizedEmail = model.Email.Trim().ToLower();
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel employee = dbContext.Employees
+                .FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
+
+            if (employee == null || !employee.IsActive)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Invalid login attempt.");
+
+                return View(model);
+            }
+
+            ApplicationUser identityUser = await UserManager.FindByEmailAsync(model.Email);
+
+            if (identityUser == null)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Invalid login attempt.");
+
+                return View(model);
+            }
+
+            if (!identityUser.EmailConfirmed)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "You must confirm your email address before logging in.");
+
+                return View(model);
+            }
+
             var result = await SignInManager.PasswordSignInAsync(
                 model.Email, 
                 model.Password, 
@@ -84,35 +121,27 @@ namespace JamesPetBoarding.Controllers
 
                 case SignInStatus.Failure:
                 default:
-                    var user = await UserManager.FindByNameAsync(model.Email);
 
-                    if (user != null)
+                    int failedAttempts = await UserManager.GetAccessFailedCountAsync(identityUser.Id);
+
+                    int maxAttempts = UserManager.MaxFailedAccessAttemptsBeforeLockout;
+
+                    int attemptsRemaining = maxAttempts - failedAttempts;
+
+                    if (attemptsRemaining == 1)
                     {
-                        int failedAttempts = await UserManager.GetAccessFailedCountAsync(user.Id);
-
-                        int maxAttempts = UserManager.MaxFailedAccessAttemptsBeforeLockout;
-
-                        int attemptsRemaining = maxAttempts - failedAttempts;
-
-                        if (attemptsRemaining == 1)
-                        {
-                            ModelState.AddModelError(
-                                "",
-                                "Invalid email or password. You have 1 attempt remaining. " +
-                                "One more failed attempt will temporarily lock your account.");
-                        }
-                        else
-                        {
-                            ModelState.AddModelError(
-                                "",
-                                "Invalid email or password. You have " +
-                                attemptsRemaining + 
-                                " attempts remaining.");
-                        }
+                        ModelState.AddModelError(
+                            "",
+                            "Invalid email or password. You have 1 attempt remaining. " +
+                            "One more failed attempt will temporarily lock your account.");
                     }
                     else
                     {
-                        ModelState.AddModelError("", "Invalid login attempt.");
+                        ModelState.AddModelError(
+                            "",
+                            "Invalid email or password. You have " +
+                            attemptsRemaining +
+                            " attempts remaining.");
                     }
                    
                     return View(model);
@@ -134,6 +163,39 @@ namespace JamesPetBoarding.Controllers
         {
             if (ModelState.IsValid)
             {
+                string normalizedEmail = model.Email.Trim().ToLower();
+
+                ApplicationDbContext dbContext = new ApplicationDbContext();
+
+                EmployeeModel employee = dbContext.Employees
+                    .FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
+
+                if (employee == null || !employee.IsActive)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Registration is not available for this email address. Please contact an administrator.");
+
+                    model.Email = "";
+
+                    return View(model);
+
+                }
+
+                ApplicationUser existingIdentityUser = UserManager.FindByEmail(model.Email.Trim());
+
+                if (existingIdentityUser != null)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "Registration is not available for this email address. Please contact an administrator.");
+
+                    model.Email = "";
+
+                    return View(model);
+
+                }
+
                 var user = new ApplicationUser 
                 { 
                     UserName = model.Email, 
@@ -144,10 +206,6 @@ namespace JamesPetBoarding.Controllers
                
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(
-                        user, 
-                        isPersistent:false, 
-                        rememberBrowser:false);
                     
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     
@@ -170,7 +228,7 @@ namespace JamesPetBoarding.Controllers
                         "<p>If you did not create this account, you can ignore this email.</p>" +
                         "<p>Thank you,<br />Paws & Reservations, LLC</p>");
 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("RegistrationConfirmation");
                 }
 
                 AddErrors(result);
@@ -178,6 +236,13 @@ namespace JamesPetBoarding.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        // GET: /Account/RegistrationConfirmation
+        [AllowAnonymous]
+        public ActionResult RegistrationConfirmation()
+        {
+            return View();
         }
 
         // GET: /Account/ConfirmEmail

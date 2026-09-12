@@ -39,7 +39,6 @@ namespace JamesPetBoarding.Controllers
             return View(employeeSearch);
         }
 
-
         //POST: Employees/Search
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -128,7 +127,6 @@ namespace JamesPetBoarding.Controllers
 
         }
 
-
         // GET: Employees/Create
         public ActionResult Create()
         {
@@ -140,12 +138,11 @@ namespace JamesPetBoarding.Controllers
             {
                 return RedirectToAction("Index", "User");
             }
-    
+
             EmployeeFormVM employeeForm = new EmployeeFormVM();
 
             return View(employeeForm);
         }
-
 
         // POST: Employees/Create
         [HttpPost]
@@ -166,32 +163,83 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeForm);
             }
 
+            if (!Enum.IsDefined(typeof(EmployeeRoleEnum), employeeForm.Role))
+            {
+                ModelState.AddModelError(
+                    "Role",
+                    "Please select a valid employee role.");
+
+                return View(employeeForm);
+            }
+
+            string normalizedEmail = employeeForm.Email.Trim().ToLower();
+
             EmployeeModel existingEmail = dbContext.Employees
                 .FirstOrDefault(x =>
-                x.Email == employeeForm.Email);
+                x.Email.ToLower() == normalizedEmail);
 
             if (existingEmail != null)
             {
-                ModelState.AddModelError("",
-                    "The email address " +
-                    employeeForm.Email +
-                    " for " +
-                    employeeForm.FirstName +
+                ModelState.AddModelError(
+                    "Email",
+                    "An employee with this email address already exists.");
+
+                return View(employeeForm);
+            }
+
+            ApplicationUser existingIdentityUser = UserManager.FindByEmail(employeeForm.Email.Trim());
+
+            if (existingIdentityUser != null)
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "An account already exists with this email address. " +
+                    "Please contact an administrator before creating the employee profile.");
+
+                return View(employeeForm);
+            }
+
+            string normalizedFirstName = employeeForm.FirstName.Trim().ToLower();
+
+            string normalizedLastName = employeeForm.LastName.Trim().ToLower();
+
+            string normalizedPhone = NormalizePhone(employeeForm.Phone);
+
+            List<EmployeeModel> employees = dbContext.Employees.ToList();
+
+            EmployeeModel possibleDuplicate = employees
+                .FirstOrDefault(x =>
+                    NormalizePhone(x.Phone) == normalizedPhone ||
+                    (
+                        x.FirstName.Trim().ToLower() == normalizedFirstName &&
+                        x.LastName.Trim().ToLower() == normalizedLastName
+                    ));
+
+            if (possibleDuplicate != null && !employeeForm.ConfirmPossibleDuplicate)
+            {
+                ViewBag.PossibleDuplicate = true;
+
+                ModelState.AddModelError(
+                    "",
+                    "A possible duplicate employee was found: " +
+                    possibleDuplicate.FirstName +
                     " " +
-                    employeeForm.LastName +
-                    " already exists.");
+                    possibleDuplicate.LastName +
+                    ". Review the existing employee before continuing.");
 
                 return View(employeeForm);
             }
 
             EmployeeModel employee = new EmployeeModel();
 
-            employee.LastName = employeeForm.LastName;
-            employee.FirstName = employeeForm.FirstName;
+            employee.LastName = employeeForm.LastName.Trim();
+            employee.FirstName = employeeForm.FirstName.Trim();
             employee.Role = employeeForm.Role;
-            employee.Phone = employeeForm.Phone;
-            employee.Email = employeeForm.Email;
-            employee.Notes = employeeForm.Notes;
+            employee.Phone = employeeForm.Phone.Trim();
+            employee.Email = employeeForm.Email.Trim();
+            employee.Notes = string.IsNullOrWhiteSpace(employeeForm.Notes)
+                ? null
+                : employeeForm.Notes.Trim();
             employee.IsActive = true;
 
             dbContext.Employees.Add(employee);
@@ -200,7 +248,6 @@ namespace JamesPetBoarding.Controllers
             return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
 
         }
-
 
         // GET: Employees/Read
         public ActionResult Read(Guid employeeId)
@@ -261,7 +308,6 @@ namespace JamesPetBoarding.Controllers
             return View(employeeDetails);
         }
 
-
         // GET: Employees/Update
         public ActionResult Update(Guid employeeId)
         {
@@ -284,16 +330,21 @@ namespace JamesPetBoarding.Controllers
             EmployeeFormVM employeeForm = new EmployeeFormVM();
 
             employeeForm.EmployeeId = employeeId;
+
             employeeForm.LastName = employee.LastName;
+
             employeeForm.FirstName = employee.FirstName;
+
             employeeForm.Role = employee.Role;
+
             employeeForm.Phone = employee.Phone;
+
             employeeForm.Email = employee.Email;
+
             employeeForm.Notes = employee.Notes;
 
             return View(employeeForm);
         }
-
 
         // POST: Employees/Update
         [HttpPost]
@@ -322,30 +373,143 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeForm);
             }
 
-            EmployeeModel existingEmployee = dbContext.Employees
-                .FirstOrDefault(x =>
-                x.Email == employeeForm.Email &&
-                x.EmployeeId != employeeForm.EmployeeId);
-
-            if (existingEmployee != null)
+            if (!Enum.IsDefined(typeof(EmployeeRoleEnum), employeeForm.Role))
             {
-                ModelState.AddModelError("", "An employee with this email address already exists.");
+                ModelState.AddModelError(
+                    "Role",
+                    "Please select a valid employee role.");
 
                 return View(employeeForm);
             }
 
-            employee.LastName = employeeForm.LastName;
-            employee.FirstName = employeeForm.FirstName;
+            string normalizedEmail = employeeForm.Email.Trim().ToLower();
+
+            string normalizedCurrentEmail = employee.Email.Trim().ToLower();
+
+            bool emailChanged = normalizedEmail != normalizedCurrentEmail;
+
+            EmployeeModel existingEmployee = dbContext.Employees
+                .FirstOrDefault(x =>
+                x.Email.ToLower() == normalizedEmail &&
+                x.EmployeeId != employeeForm.EmployeeId);
+
+            if (existingEmployee != null)
+            {
+                ModelState.AddModelError("Email", "An employee with this email address already exists.");
+
+                return View(employeeForm);
+            }
+
+            if (emailChanged)
+            {
+                ApplicationUser conflictingIdentityUser = UserManager.FindByEmail(employeeForm.Email.Trim());
+
+                if (conflictingIdentityUser != null)
+                {
+                    ModelState.AddModelError("Email", "An account already exists with this email address.");
+
+                    return View(employeeForm);
+                }
+            }
+
+            ApplicationUser employeeIdentityUser = UserManager.FindByEmail(employee.Email);
+
+            if (emailChanged && employeeIdentityUser != null && currentEmployee.Role != EmployeeRoleEnum.Admin)
+            {
+                ModelState.AddModelError(
+                    "Email",
+                    "Only an administrator can change the email address of an employee who already has an account.");
+
+                return View(employeeForm);
+            }
+
+            string normalizedFirstName = employeeForm.FirstName.Trim().ToLower();
+
+            string normalizedLastName = employeeForm.LastName.Trim().ToLower();
+
+            string normalizedPhone = NormalizePhone(employeeForm.Phone);
+
+            List<EmployeeModel> employees = dbContext.Employees
+                .Where(x => x.EmployeeId != employeeForm.EmployeeId)
+                .ToList();
+
+            EmployeeModel possibleDuplicate = employees
+                .FirstOrDefault(x =>
+                    NormalizePhone(x.Phone) == normalizedPhone ||
+                    (
+                        x.FirstName.Trim().ToLower() == normalizedFirstName &&
+                        x.LastName.Trim().ToLower() == normalizedLastName
+                    ));
+
+            if (possibleDuplicate != null && !employeeForm.ConfirmPossibleDuplicate)
+            {
+                ViewBag.PossibleDuplicate = true;
+
+                ModelState.AddModelError(
+                    "",
+                    "A possible duplicate employee was found: " +
+                    possibleDuplicate.FirstName +
+                    " " +
+                    possibleDuplicate.LastName +
+                    ". Review the existing employee before continuing."
+                );
+
+                return View(employeeForm);
+
+            }
+
+            if (emailChanged && employeeIdentityUser != null)
+            {
+                employeeIdentityUser.Email = employeeForm.Email.Trim();
+
+                employeeIdentityUser.UserName = employeeForm.Email.Trim();
+
+                IdentityResult identityResult = UserManager.Update(employeeIdentityUser);
+
+                if (!identityResult.Succeeded)
+                {
+                    foreach (string error in identityResult.Errors)
+                    {
+                        ModelState.AddModelError("Email", error);
+                    }
+
+                    return View(employeeForm);
+
+                }
+
+            }
+
+            bool currentUserEmailChanged =
+                emailChanged &&
+                employeeIdentityUser != null &&
+                currentEmployee.EmployeeId == employee.EmployeeId;
+
+            employee.LastName = employeeForm.LastName.Trim();
+
+            employee.FirstName = employeeForm.FirstName.Trim();
+
             employee.Role = employeeForm.Role;
-            employee.Phone = employeeForm.Phone;
-            employee.Email = employeeForm.Email;
-            employee.Notes = employeeForm.Notes;
+
+            employee.Phone = employeeForm.Phone.Trim();
+
+            employee.Email = employeeForm.Email.Trim();
+
+            employee.Notes = string.IsNullOrWhiteSpace(employeeForm.Notes)
+                ? null
+                : employeeForm.Notes.Trim();
 
             dbContext.SaveChanges();
 
-            return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
-        }
+            if (currentUserEmailChanged)
+            {
+                HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
+                return RedirectToAction("Login", "Account");
+            }
+
+            return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
+
+        }
 
         // GET: Employees/Delete
         public ActionResult Delete(Guid employeeId)
@@ -379,7 +543,6 @@ namespace JamesPetBoarding.Controllers
 
             return View(employeeDeactivate);
         }
-
 
         // POST: Employees/Delete
         [HttpPost]
@@ -429,7 +592,6 @@ namespace JamesPetBoarding.Controllers
             return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
 
         }
-
 
         // GET: Employees/Reactivate
         public ActionResult Reactivate(Guid employeeId)
@@ -482,7 +644,6 @@ namespace JamesPetBoarding.Controllers
 
             return View(employeeReactivate);
         }
-
 
         // POST: Employees/Reactivate
         [HttpPost]
@@ -555,8 +716,10 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            string normalizedEmail = email.Trim().ToLower();
+
             EmployeeModel employee = dbContext.Employees
-                .FirstOrDefault(x => x.Email == email);
+                .FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
 
             if (employee == null)
             {
@@ -589,7 +752,6 @@ namespace JamesPetBoarding.Controllers
             return View(employeeProfile);
         }
 
-
         // GET: Employees/UpdateMyProfile
         [Authorize]
         public ActionResult UpdateMyProfile()
@@ -598,8 +760,10 @@ namespace JamesPetBoarding.Controllers
 
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            string normalizedEmail = email.Trim().ToLower();
+
             EmployeeModel employee = dbContext.Employees
-                .FirstOrDefault(x => x.Email == email);
+                .FirstOrDefault(x => x.Email.ToLower() == normalizedEmail);
 
             if (employee == null)
             {
@@ -616,13 +780,11 @@ namespace JamesPetBoarding.Controllers
 
             EmployeeProfileUpdateVM employeeProfileUpdate = new EmployeeProfileUpdateVM();
 
-            employeeProfileUpdate.EmployeeId = employee.EmployeeId;
             employeeProfileUpdate.Email = employee.Email;
             employeeProfileUpdate.Phone = employee.Phone;
 
             return View(employeeProfileUpdate);
         }
-
 
         // POST: Employees/UpdateMyProfile
         [HttpPost]
@@ -631,11 +793,13 @@ namespace JamesPetBoarding.Controllers
         public ActionResult UpdateMyProfile(EmployeeProfileUpdateVM employeeProfileUpdate)
         {
             string email = User.Identity.Name;
-            
+
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
+            string normalizedCurrentEmail = email.Trim().ToLower();
+
             EmployeeModel employee = dbContext.Employees
-                .FirstOrDefault(x => x.Email == email);
+                .FirstOrDefault(x => x.Email.ToLower() == normalizedCurrentEmail);
 
             if (employee == null)
             {
@@ -645,7 +809,7 @@ namespace JamesPetBoarding.Controllers
                     " does not exist.");
             }
 
-            if (!employee.IsActive) 
+            if (!employee.IsActive)
             {
                 return Content("This employee account is inactive.");
             }
@@ -656,8 +820,10 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeProfileUpdate);
             }
 
-            bool duplicateEmail = dbContext.Employees.Any(x => 
-                x.Email == employeeProfileUpdate.Email && 
+            string normalizedNewEmail = employeeProfileUpdate.Email.Trim().ToLower();
+
+            bool duplicateEmail = dbContext.Employees.Any(x =>
+                x.Email.ToLower() == normalizedNewEmail &&
                 x.EmployeeId != employee.EmployeeId);
 
             if (duplicateEmail)
@@ -669,13 +835,13 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeProfileUpdate);
             }
 
-            bool emailChanged = employee.Email != employeeProfileUpdate.Email;
+            bool emailChanged = employee.Email.Trim().ToLower() != normalizedNewEmail;
 
             if (emailChanged)
             {
                 ApplicationUser identityUser = UserManager.FindByName(email);
 
-                if (identityUser == null) 
+                if (identityUser == null)
                 {
                     return Content(
                     "The identity account with the email address " +
@@ -684,24 +850,24 @@ namespace JamesPetBoarding.Controllers
 
                 }
 
-                identityUser.Email = employeeProfileUpdate.Email;
-                identityUser.UserName = employeeProfileUpdate.Email;
+                identityUser.Email = employeeProfileUpdate.Email.Trim();
+                identityUser.UserName = employeeProfileUpdate.Email.Trim();
 
                 IdentityResult identityResult = UserManager.Update(identityUser);
 
-                if (!identityResult.Succeeded) 
-                { 
+                if (!identityResult.Succeeded)
+                {
                     foreach (string error in identityResult.Errors)
                     {
                         ModelState.AddModelError("Email", error);
                     }
-                    
+
                     return View(employeeProfileUpdate);
                 }
             }
 
-            employee.Email = employeeProfileUpdate.Email;
-            employee.Phone = employeeProfileUpdate.Phone; 
+            employee.Email = employeeProfileUpdate.Email.Trim();
+            employee.Phone = employeeProfileUpdate.Phone.Trim();
 
             dbContext.SaveChanges();
 
@@ -714,22 +880,23 @@ namespace JamesPetBoarding.Controllers
             }
 
             return RedirectToAction("MyProfile");
-        
+
         }
 
-
-        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext) 
-        { 
+        private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
+        {
             string loggedInEmail = User.Identity.Name;
 
+            string normalizedEmail = loggedInEmail.Trim().ToLower();
+
             return dbContext.Employees
-                .FirstOrDefault(x => 
-                    x.Email == loggedInEmail && 
+                .FirstOrDefault(x =>
+                    x.Email.ToLower() == normalizedEmail &&
                     x.IsActive);
 
         }
 
-        private bool CanViewEmployees(EmployeeModel employee) 
+        private bool CanViewEmployees(EmployeeModel employee)
         {
             return employee != null &&
                 (employee.Role == EmployeeRoleEnum.Admin ||
@@ -747,15 +914,23 @@ namespace JamesPetBoarding.Controllers
 
         }
 
+        private string NormalizePhone(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+            {
+                return "";
+            }
+
+            return new string(phone.Where(char.IsDigit).ToArray());
+        }
 
         private ApplicationUserManager _userManager;
-
 
         public ApplicationUserManager UserManager
         {
             get
             {
-                return _userManager 
+                return _userManager
                     ?? HttpContext.GetOwinContext()
                     .GetUserManager<ApplicationUserManager>();
             }

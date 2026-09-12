@@ -19,6 +19,29 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    @if (ViewBag.PossibleDuplicate == true)
+    {
+        <div class="col-md-12">
+            <div class="alert alert-warning">
+                <strong>Possible duplicate employee found.</strong>
+
+                <p class="mb-2">
+                    An existing employee has similar identifying information.
+                    Review the existing employee information before proceeding.
+                </p>
+
+                <div class="form-check">
+                    @Html.CheckBoxFor(
+                        x => x.ConfirmPossibleDuplicate,
+                        new { @class = "form-check-input" })
+
+                    <label class="form-check-label">
+                        I reviewed the possible duplicate information and confirm this is a different employee.
+                    </label>
+                </div>
+            </div>
+        </div>
+    }
 
     <div class="col-md-4">
         <label class="form-label">Last Name</label>

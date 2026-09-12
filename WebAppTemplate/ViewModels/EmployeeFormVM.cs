@@ -29,5 +29,7 @@ namespace JamesPetBoarding.ViewModels
         [MaxLength(500)]
         public string Notes { get; set; }
 
+        public bool ConfirmPossibleDuplicate { get; set; }
+
     }
 }

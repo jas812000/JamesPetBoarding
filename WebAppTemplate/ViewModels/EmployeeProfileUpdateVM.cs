@@ -9,7 +9,6 @@ namespace JamesPetBoarding.ViewModels
 {
     public class EmployeeProfileUpdateVM
     {
-        public Guid EmployeeId { get; set; }
 
         [Required, EmailAddress, MaxLength(256)]
         public string Email { get; set; }
