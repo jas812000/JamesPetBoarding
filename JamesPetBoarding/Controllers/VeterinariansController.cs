@@ -13,12 +13,11 @@ using System.Web.ClientServices.Providers;
 using System.Web.Mvc;
 using System.Xml.Linq;
 
-namespace WebAppTemplate.Controllers
+namespace JamesPetBoarding.Controllers
 {
     [Authorize]
     public class VeterinariansController : Controller
     {
-
         // GET: Veterinarians/Search
         public ActionResult Search()
         {

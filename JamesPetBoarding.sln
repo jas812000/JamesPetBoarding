@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.5.11716.220
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoarding", "WebAppTemplate\JamesPetBoarding.csproj", "{5A1006CE-A481-4998-A6E9-B6F11849A585}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoarding", "JamesPetBoarding\JamesPetBoarding.csproj", "{5A1006CE-A481-4998-A6E9-B6F11849A585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoardingTests", "WebAppTemplateTests\JamesPetBoardingTests.csproj", "{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoardingTests", "JamesPetBoardingTests\JamesPetBoardingTests.csproj", "{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
