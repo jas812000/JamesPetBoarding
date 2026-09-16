@@ -7,6 +7,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoarding", "JamesPe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JamesPetBoardingTests", "JamesPetBoardingTests\JamesPetBoardingTests.csproj", "{12C2F94C-8874-40C4-9E94-DC1D4B5ADE94}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{505CC100-3ADF-4103-8761-85C912F9F637}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F751EEE8-3047-475B-ABE4-DC39252BD29E}"
+	ProjectSection(SolutionItems) = preProject
+		docs\README.md = docs\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wireframes", "wireframes", "{19E21CAF-40A5-4CF1-8333-7F627FE2E2E0}"
+	ProjectSection(SolutionItems) = preProject
+		docs\wireframes\README.md = docs\wireframes\README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,6 +40,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F751EEE8-3047-475B-ABE4-DC39252BD29E} = {505CC100-3ADF-4103-8761-85C912F9F637}
+		{19E21CAF-40A5-4CF1-8333-7F627FE2E2E0} = {F751EEE8-3047-475B-ABE4-DC39252BD29E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1532FA8-A72F-49B5-8CC9-AFC91B67C5F7}
