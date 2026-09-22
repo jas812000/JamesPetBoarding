@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -116,6 +117,15 @@ namespace JamesPetBoarding.Controllers
                 case SignInStatus.Success:
                     return RedirectToAction("Index", "Dashboard");
 
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction(
+                        "SendCode",
+                        new
+                        {
+                            ReturnUrl = returnUrl,
+                            RememberMe = false
+                        });
+
                 case SignInStatus.LockedOut:
                     return View("Lockout");
 
@@ -144,6 +154,100 @@ namespace JamesPetBoarding.Controllers
                             " attempts remaining.");
                     }
                    
+                    return View(model);
+            }
+        }
+
+        // GET: /Account/SendCode
+        [AllowAnonymous]
+        public async Task<ActionResult> SendCode(string returnUrl, bool rememberMe)
+        {
+            string userId = await SignInManager.GetVerifiedUserIdAsync();
+
+            if (userId == null)
+            {
+                return View("Error");
+            }
+
+            IList<string> providers =
+                await UserManager.GetValidTwoFactorProvidersAsync(userId);
+
+            if (!providers.Contains("Email Code"))
+            {
+                return View("Error");
+            }
+
+            bool sent = await SignInManager.SendTwoFactorCodeAsync("Email Code");
+
+            if (!sent)
+            {
+                return View("Error");
+            }
+
+            return RedirectToAction(
+                "VerifyCode",
+                new
+                {
+                    Provider = "Email Code",
+                    ReturnUrl = returnUrl,
+                    RememberMe = rememberMe
+                });
+        }
+
+        // GET: /Account/VerifyCode
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyCode(
+            string provider,
+            string returnUrl,
+            bool rememberMe)
+        {
+            bool hasBeenVerified = await SignInManager.HasBeenVerifiedAsync();
+
+            if (!hasBeenVerified)
+            {
+                return View("Error");
+            }
+
+            return View(
+                new VerifyCodeViewModel
+                {
+                    Provider = provider,
+                    ReturnUrl = returnUrl,
+                    RememberMe = rememberMe
+                });
+        }
+
+        // POST: /Account/VerifyCode
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            SignInStatus result = await SignInManager.TwoFactorSignInAsync(
+                model.Provider,
+                model.Code,
+                model.RememberMe,
+                model.RememberBrowser);
+
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToAction("Index", "Dashboard");
+
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError(
+                        "",
+                        "That security code is incorrect. Please check the code in your email and try again.");
+
                     return View(model);
             }
         }

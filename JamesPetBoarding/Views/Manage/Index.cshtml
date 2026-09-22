@@ -77,7 +77,53 @@
                 }
 
             </div>
-        </div>
 
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+
+                <h4 class="card-title">Two-Factor Authentication</h4>
+
+                @if (Model.TwoFactor)
+                {
+                    <p class="card-text">
+                        Two-factor authentication is currently enabled.
+                        A security code will be sent to your email address when you sign in.
+                    </p>
+
+                    using (Html.BeginForm(
+                        "DisableTwoFactorAuthentication",
+                        "Manage",
+                        FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="btn btn-danger">
+                            Disable Two-Factor Authentication
+                        </button>
+                    }
+                }
+                else
+                {
+                    <p class="card-text">
+                        Add an extra layer of security to your account.
+                        When enabled, a security code will be sent to your email address when you sign in.
+                    </p>
+
+                    using (Html.BeginForm(
+                        "EnableTwoFactorAuthentication",
+                        "Manage",
+                        FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <button type="submit" class="btn btn-primary">
+                            Enable Two-Factor Authentication
+                        </button>
+                    }
+                }
+
+            </div>
+        </div>
     </div>
 </div>

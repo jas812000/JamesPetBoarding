@@ -562,6 +562,7 @@
     <Content Include="Views\Boardings\CheckOut.cshtml" />
     <Content Include="Views\Boardings\NoShow.cshtml" />
     <Content Include="Views\Account\RegistrationConfirmation.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
     <None Include="Views\Boardings\Update.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
