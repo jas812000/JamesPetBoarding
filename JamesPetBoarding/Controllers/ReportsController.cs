@@ -1347,44 +1347,6 @@ namespace JamesPetBoarding.Controllers
             return File(pdfBytes, "application/pdf", fileName);
 
         }
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         // GET: Reports/SpeciesReport
@@ -5336,24 +5298,6 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         // GET: Reports/TestDailyBoardingReportPdf
         [AllowAnonymous]
         public ActionResult TestDailyBoardingReportPdf()
@@ -5435,35 +5379,5 @@ namespace JamesPetBoarding.Controllers
                 "TestDailyBoardingReport.pdf"
             );
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
