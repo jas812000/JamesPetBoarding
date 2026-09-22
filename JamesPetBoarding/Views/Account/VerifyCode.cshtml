@@ -1,0 +1,78 @@
+﻿@model JamesPetBoarding.Models.VerifyCodeViewModel
+
+@{
+    ViewBag.Title = "Verify Security Code";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    A security code has been sent to your email address.
+    Enter the code below to complete your sign in.
+</p>
+
+@using (Html.BeginForm("VerifyCode", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.Provider)
+    @Html.HiddenFor(m => m.ReturnUrl)
+    @Html.HiddenFor(m => m.RememberMe)
+
+    <hr />
+
+    <div class="validation-summary-no-bullets">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Code, new { @class = "control-label col-md-2" })
+
+        <div class="col-md-10">
+            @Html.TextBoxFor(
+                m => m.Code,
+                new
+                {
+                    @class = "form-control",
+                    autocomplete = "one-time-code",
+                    autofocus = "autofocus"
+                })
+
+            @Html.ValidationMessageFor(
+                m => m.Code,
+                "",
+                new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="checkbox">
+                <label>
+                    @Html.CheckBoxFor(m => m.RememberBrowser)
+                    Remember this browser
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit"
+                   value="Verify"
+                   class="btn btn-primary" />
+        </div>
+    </div>
+}
+
+<style>
+    .validation-summary-no-bullets ul {
+        list-style: none;
+        padding-left: 0;
+        margin-bottom: 1rem;
+    }
+</style>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
