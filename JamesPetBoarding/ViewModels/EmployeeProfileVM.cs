@@ -19,6 +19,8 @@ namespace JamesPetBoarding.ViewModels
 
         public string ActiveStatusDisplay { get; set; }
 
+        public string ProfileImagePath { get; set; }
+
         public bool IsAdmin { get; set; }
 
     }

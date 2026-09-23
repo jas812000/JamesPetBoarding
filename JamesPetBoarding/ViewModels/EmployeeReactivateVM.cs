@@ -29,5 +29,8 @@ namespace JamesPetBoarding.ViewModels
 
         [MaxLength(500)]
         public string ReactivationNotes { get; set; }
+
+        public string ProfileImagePath { get; set; }
+
     }
 }

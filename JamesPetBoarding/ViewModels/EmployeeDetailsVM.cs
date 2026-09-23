@@ -11,6 +11,8 @@ namespace JamesPetBoarding.ViewModels
     {
         public Guid EmployeeId { get; set; }
 
+        public string ProfileImagePath { get; set; }
+
         public string EmployeeNameDisplay { get; set; }
 
         public string RoleDisplay { get; set; }
