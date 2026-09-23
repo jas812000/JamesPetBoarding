@@ -1,0 +1,172 @@
+﻿@model JamesPetBoarding.ViewModels.OurTeamManagementVM
+
+@{
+    ViewBag.Title = "Our Team Management";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Our Team Management</h2>
+    <p class="lead">
+        Add, update, remove, and organize employees displayed on the public Our Team page.
+    </p>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<div class="text-center mb-4">
+    @Html.ActionLink(
+        "Add Team Member",
+        "Create",
+        "OurTeam",
+        null,
+        new { @class = "btn btn-success me-2" })
+
+    @Html.ActionLink(
+        "Back to Admin Dashboard",
+        "Index",
+        "Admin",
+        null,
+        new { @class = "btn btn-secondary ms-2" })
+</div>
+
+@if (Model.OurTeamMembers != null &&
+     Model.OurTeamMembers.Any())
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead>
+                <tr>
+                    <th class="text-center">Position</th>
+                    <th class="text-center">Photo</th>
+                    <th>Employee</th>
+                    <th>Public Job Title</th>
+                    <th class="text-center">Employee Status</th>
+                    <th class="text-center">Order</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var teamMember in Model.OurTeamMembers)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @teamMember.DisplayOrder
+                        </td>
+
+                        <td class="text-center">
+                            <img src="@Url.Content(teamMember.ProfileImagePath)"
+                                 alt="@teamMember.EmployeeNameDisplay"
+                                 class="img-thumbnail"
+                                 style="width: 90px; height: 90px; object-fit: cover;" />
+                        </td>
+
+                        <td>
+                            @teamMember.EmployeeNameDisplay
+                        </td>
+
+                        <td>
+                            @teamMember.PublicJobTitle
+                        </td>
+
+                        <td class="text-center">
+                            @(teamMember.IsEmployeeActive
+                                ? "Active"
+                                : "Inactive")
+                        </td>
+
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+
+                                @using (Html.BeginForm(
+                                    "MoveUp",
+                                    "OurTeam",
+                                    FormMethod.Post,
+                                    new { @class = "d-inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    @Html.Hidden(
+                                        "ourTeamMemberId",
+                                        teamMember.OurTeamMemberId)
+
+                                    <button type="submit"
+                                            class="btn btn-outline-primary btn-sm"
+                                            title="Move Up"
+                                            @(teamMember.DisplayOrder == 1 ? "disabled" : null)>
+                                        Move Up
+                                    </button>
+                                }
+
+                                @using (Html.BeginForm(
+                                    "MoveDown",
+                                    "OurTeam",
+                                    FormMethod.Post,
+                                    new { @class = "d-inline" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    @Html.Hidden(
+                                        "ourTeamMemberId",
+                                        teamMember.OurTeamMemberId)
+
+                                    <button type="submit"
+                                            class="btn btn-outline-primary btn-sm"
+                                            title="Move Down"
+                                            @(teamMember.DisplayOrder == Model.OurTeamMembers.Count ? "disabled" : null)>
+                                        Move Down
+                                    </button>
+                                }
+
+                            </div>
+                        </td>
+
+                        <td class="text-center">
+                            @Html.ActionLink(
+                                "Update",
+                                "Update",
+                                "OurTeam",
+                                new
+                                {
+                                    ourTeamMemberId =
+                                        teamMember.OurTeamMemberId
+                                },
+                                new
+                                {
+                                    @class =
+                                        "btn btn-warning btn-sm me-1"
+                                })
+
+                            @Html.ActionLink(
+                                "Delete",
+                                "Delete",
+                                "OurTeam",
+                                new
+                                {
+                                    ourTeamMemberId =
+                                        teamMember.OurTeamMemberId
+                                },
+                                new
+                                {
+                                    @class =
+                                        "btn btn-danger btn-sm"
+                                })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-info text-center">
+        No employees have been added to the public Our Team page.
+    </div>
+}

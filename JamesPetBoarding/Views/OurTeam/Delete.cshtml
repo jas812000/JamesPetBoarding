@@ -1,0 +1,67 @@
+﻿@model JamesPetBoarding.ViewModels.OurTeamMemberSummaryVM
+
+@{
+    ViewBag.Title = "Remove Team Member";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Remove Team Member</h2>
+    <p class="lead">
+        Remove this employee from the public Our Team page.
+    </p>
+</div>
+
+<div class="alert alert-warning text-center">
+    This removes only the public team tile. The employee profile and
+    employee photograph will not be deleted.
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-auto">
+        <div class="card" style="width: 350px;">
+
+            <img src="@Url.Content(Model.ProfileImagePath)"
+                 alt="@Model.EmployeeNameDisplay"
+                 class="card-img-top"
+                 style="height: 300px; object-fit: cover;" />
+
+            <div class="card-body text-center">
+                <h4 class="card-title">
+                    @Model.EmployeeNameDisplay
+                </h4>
+
+                <p class="card-text">
+                    @Model.PublicJobTitle
+                </p>
+
+                <p class="card-text">
+                    Display Position: @Model.DisplayOrder
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(
+    "DeleteConfirmed",
+    "OurTeam",
+    FormMethod.Post,
+    new { @class = "text-center mt-4" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => x.OurTeamMemberId)
+
+    <button type="submit"
+            class="btn btn-danger me-2">
+        Remove Team Member
+    </button>
+
+    @Html.ActionLink(
+        "Cancel",
+        "Index",
+        "OurTeam",
+        null,
+        new { @class = "btn btn-secondary ms-2" })
+}

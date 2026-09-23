@@ -22,11 +22,14 @@
     new { @class = "row g-3 justify-content-center" }))
 {
     @Html.AntiForgeryToken()
-
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
     @Html.HiddenFor(x => x.EmployeeId)
 
+    <div class="col-12">
+        @Html.ValidationSummary(
+            false,
+            "",
+            new { @class = "text-danger text-center" })
+    </div>
 
     <div class="col-12 text-center">
         <img src="@Url.Content(profileImagePath)"
@@ -35,99 +38,92 @@
              style="width: 200px; height: 200px; object-fit: cover;" />
     </div>
 
-
     <div class="col-12">
-        <div style="width: 960px; margin: 0 auto; position: relative; left: 40px;">
-            <div class="d-flex gap-3">
+        <div class="row g-3 justify-content-center">
 
-                <div style="width: 304px;">
-                    <label class="form-label">Employee ID</label>
-
-                    @Html.TextBoxFor(
-                        x => x.EmployeeId,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Employee Name</label>
-
-                    @Html.TextBoxFor(
-                        x => x.EmployeeNameDisplay,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Active Status</label>
-
-                    @Html.TextBoxFor(
-                        x => x.ActiveStatusDisplay,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Employee ID</label>
+                @Html.TextBoxFor(
+                    x => x.EmployeeId,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
             </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Employee Name</label>
+                @Html.TextBoxFor(
+                    x => x.EmployeeNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Active Status</label>
+                @Html.TextBoxFor(
+                    x => x.ActiveStatusDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
         </div>
     </div>
 
-
     <div class="col-12">
-        <div style="width: 960px; margin: 0 auto; position: relative; left: 40px;">
-            <div class="d-flex gap-3">
+        <div class="row g-3 justify-content-center">
 
-                <div style="width: 304px;">
-                    <label class="form-label">Role</label>
-
-                    @Html.TextBoxFor(
-                        x => x.RoleDisplay,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Email Address</label>
-
-                    @Html.TextBoxFor(
-                        x => x.EmailDisplay,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Phone Number</label>
-
-                    @Html.TextBoxFor(
-                        x => x.PhoneDisplay,
-                        new
-                        {
-                            @class = "form-control",
-                            @readonly = "readonly"
-                        })
-                </div>
-
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Role</label>
+                @Html.TextBoxFor(
+                    x => x.RoleDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
             </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Email Address</label>
+                @Html.TextBoxFor(
+                    x => x.EmailDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Phone Number</label>
+                @Html.TextBoxFor(
+                    x => x.PhoneDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
         </div>
     </div>
 
-
     <div class="col-12">
-        <div style="width: 304px; margin: 0 auto;">
+        <div style="width: 300px; max-width: 100%; margin: 0 auto;">
             <label class="form-label">Inactivation Reason</label>
 
             @Html.EnumDropDownListFor(
@@ -135,7 +131,8 @@
                 "Select...",
                 new
                 {
-                    @class = "form-select"
+                    @class = "form-select",
+                    style = "max-width: none;"
                 })
 
             @Html.ValidationMessageFor(
@@ -145,9 +142,8 @@
         </div>
     </div>
 
-
     <div class="col-12">
-        <div style="width: 360px; margin: 0 auto; position: relative; left: -80px;">
+        <div style="width: 960px; max-width: 100%; margin: 0 auto;">
             <label class="form-label">Inactivation Notes</label>
 
             @Html.TextAreaFor(
@@ -155,9 +151,9 @@
                 new
                 {
                     @class = "form-control",
-                    rows = "4",
+                    rows = "5",
                     placeholder = "Enter notes",
-                    style = "width: 550px; max-width: none;"
+                    style = "max-width: none;"
                 })
 
             @Html.ValidationMessageFor(
@@ -167,18 +163,14 @@
         </div>
     </div>
 
-
-    <div class="col-md-12">
-        <div class="alert alert-warning">
+    <div class="col-12" style="max-width: 960px;">
+        <div class="alert alert-warning mb-0">
             This action will deactivate this employee profile.
         </div>
     </div>
 
-
-    <div class="col-md-12 text-center mt-4">
-
-        <button type="submit"
-                class="btn btn-danger me-2">
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-danger me-2">
             Deactivate Employee Profile
         </button>
 
@@ -188,6 +180,5 @@
             "Employees",
             new { employeeId = Model.EmployeeId },
             new { @class = "btn btn-secondary ms-2" })
-
     </div>
 }
