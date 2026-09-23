@@ -17,43 +17,97 @@
 
     @Html.AntiForgeryToken()
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+
+        @Html.TextBoxFor(
+            x => x.FirstName,
+            new
+            {
+                @class = "form-control",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+
+        @Html.TextBoxFor(
+            x => x.LastName,
+            new
+            {
+                @class = "form-control",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+
+        @Html.TextBoxFor(
+            x => x.Phone,
+            new
+            {
+                @class = "form-control",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+
+        @Html.TextBoxFor(
+            x => x.Email,
+            new
+            {
+                @class = "form-control",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Active Status</label>
+
         @Html.DropDownListFor(
             x => x.IsActive,
             new List<SelectListItem>
             {
-                new SelectListItem { Text = "All Customers", Value = "" },
-                new SelectListItem { Text = "Active", Value = "true" },
-                new SelectListItem { Text = "Inactive", Value = "false" }
+                new SelectListItem
+                {
+                    Text = "All Customers",
+                    Value = ""
+                },
+                new SelectListItem
+                {
+                    Text = "Active",
+                    Value = "true"
+                },
+                new SelectListItem
+                {
+                    Text = "Inactive",
+                    Value = "false"
+                }
             },
-            new { @class = "form-select" })
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-        <small class="text-muted">Select All Customers, Active or Inactive.</small>
+        <small class="text-muted">
+            Select All Customers, Active or Inactive.
+        </small>
     </div>
 
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Customers</button>
+
+        @Html.ActionLink(
+            "Create Customer",
+            "Create",
+            "Customers",
+            null,
+            new { @class = "btn btn-success ms-2" })
 
         @Html.ActionLink(
             "Clear Search",
@@ -99,10 +153,10 @@
                         <td>@customer.CustomerNameDisplay</td>
                         <td>@customer.PhoneDisplay</td>
                         <td>@customer.EmailDisplay</td>
-      
+
                         <td>
                             @if (customer.IsActive)
-                            { 
+                            {
                                 <span class="badge bg-success">Active</span>
                             }
                             else

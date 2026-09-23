@@ -4,69 +4,157 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Daily Boarding Report</h2>
+
     <p class="lead">
         Enter one or more optional filters to generate a daily boarding report.
     </p>
 </div>
 
-
-@using (Html.BeginForm("DailyBoardingReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "DailyBoardingReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
 
-    <div class="col-md-6">
-        <label class="form-label">Start Date</label>
-        @Html.TextBoxFor(x => x.DailyBoardingReportFilter.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.DailyBoardingReportFilter.StartDate, "", new { @class = "text-danger" })
+            <div style="width: 250px;">
+                <label class="form-label">Start Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.DailyBoardingReportFilter.StartDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.DailyBoardingReportFilter.StartDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">End Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.DailyBoardingReportFilter.EndDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.DailyBoardingReportFilter.EndDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">End Date</label>
-        @Html.TextBoxFor(x => x.DailyBoardingReportFilter.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.DailyBoardingReportFilter.EndDate, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+
+            <div style="width: 350px;">
+                <label class="form-label">Customer Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.DailyBoardingReportFilter.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.DailyBoardingReportFilter.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Pet Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.DailyBoardingReportFilter.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.DailyBoardingReportFilter.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.DropDownListFor(x => x.DailyBoardingReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.DailyBoardingReportFilter.CustomerId, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div style="width: 300px; margin: 0 auto;">
+            <label class="form-label">Boarding Status</label>
+
+            @Html.EnumDropDownListFor(
+                x => x.DailyBoardingReportFilter.BoardingStatus,
+                "Select...",
+                new
+                {
+                    @class = "form-select",
+                    style = "max-width: none;"
+                })
+
+            @Html.ValidationMessageFor(
+                x => x.DailyBoardingReportFilter.BoardingStatus,
+                "",
+                new { @class = "text-danger" })
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Pet Name</label>
-        @Html.DropDownListFor(x => x.DailyBoardingReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.DailyBoardingReportFilter.PetId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Boarding Status</label>
-        @Html.EnumDropDownListFor(x => x.DailyBoardingReportFilter.BoardingStatus, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.DailyBoardingReportFilter.BoardingStatus, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-
-@if (Model.DailyBoardingReportRows != null && Model.DailyBoardingReportRows.Any())
+@if (Model.DailyBoardingReportRows != null &&
+     Model.DailyBoardingReportRows.Any())
 {
     <div class="border rounded p-4 mt-5 mb-4">
-        <h3 class="text-center mb-4">Daily Boarding Summary</h3>
+        <h3 class="text-center mb-4">
+            Daily Boarding Summary
+        </h3>
 
         <div class="row text-center justify-content-center">
             <div class="col-md-3 mb-3">
@@ -91,15 +179,27 @@
         </div>
     </div>
 
-    using (Html.BeginForm("ExportDailyBoardingReportPdf", "Reports", FormMethod.Post))
+    using (Html.BeginForm(
+        "ExportDailyBoardingReportPdf",
+        "Reports",
+        FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
-        @Html.HiddenFor(x => x.DailyBoardingReportFilter.StartDate)
-        @Html.HiddenFor(x => x.DailyBoardingReportFilter.EndDate)
-        @Html.HiddenFor(x => x.DailyBoardingReportFilter.CustomerId)
-        @Html.HiddenFor(x => x.DailyBoardingReportFilter.PetId)
-        @Html.HiddenFor(x => x.DailyBoardingReportFilter.BoardingStatus)
+        @Html.HiddenFor(
+            x => x.DailyBoardingReportFilter.StartDate)
+
+        @Html.HiddenFor(
+            x => x.DailyBoardingReportFilter.EndDate)
+
+        @Html.HiddenFor(
+            x => x.DailyBoardingReportFilter.CustomerId)
+
+        @Html.HiddenFor(
+            x => x.DailyBoardingReportFilter.PetId)
+
+        @Html.HiddenFor(
+            x => x.DailyBoardingReportFilter.BoardingStatus)
 
         <div class="text-center mb-4">
             <button type="submit" class="btn btn-success">
@@ -128,7 +228,9 @@
             </thead>
 
             <tbody>
-                @foreach (var boarding in Model.DailyBoardingReportRows)
+                @foreach (
+                    var boarding in
+                    Model.DailyBoardingReportRows)
                 {
                     <tr>
                         <td>@boarding.PetNameDisplay</td>
@@ -148,8 +250,16 @@
                                 "View",
                                 "Read",
                                 "Boardings",
-                                new { boardingId = boarding.BoardingId },
-                                new { @class = "btn btn-sm btn-outline-primary" })
+                                new
+                                {
+                                    boardingId =
+                                        boarding.BoardingId
+                                },
+                                new
+                                {
+                                    @class =
+                                        "btn btn-sm btn-outline-primary"
+                                })
                         </td>
                     </tr>
                 }

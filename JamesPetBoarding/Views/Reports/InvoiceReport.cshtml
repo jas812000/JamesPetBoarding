@@ -4,72 +4,163 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Invoice Report</h2>
     <p class="lead">
         Enter one or more optional filters to generate an invoice report.
     </p>
 </div>
 
-
-@using (Html.BeginForm("InvoiceReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "InvoiceReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 250px;">
+                <label class="form-label">Invoice Start Date</label>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice Start Date</label>
-        @Html.TextBoxFor(x => x.InvoiceReportFilter.InvoiceStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceStartDate, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(
+                    x => x.InvoiceReportFilter.InvoiceStartDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.InvoiceStartDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">Invoice End Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.InvoiceReportFilter.InvoiceEndDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.InvoiceEndDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice End Date</label>
-        @Html.TextBoxFor(x => x.InvoiceReportFilter.InvoiceEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceEndDate, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 300px;">
+                <label class="form-label">Invoice Type</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.InvoiceReportFilter.InvoiceType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.InvoiceType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Invoice Status</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.InvoiceReportFilter.InvoiceStatus,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.InvoiceStatus,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice Type</label>
-        @Html.EnumDropDownListFor(x => x.InvoiceReportFilter.InvoiceType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceType, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 350px;">
+                <label class="form-label">Customer Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.InvoiceReportFilter.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Pet Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.InvoiceReportFilter.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.InvoiceReportFilter.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice Status</label>
-        @Html.EnumDropDownListFor(x => x.InvoiceReportFilter.InvoiceStatus, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.InvoiceStatus, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.DropDownListFor(x => x.InvoiceReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.CustomerId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Pet Name</label>
-        @Html.DropDownListFor(x => x.InvoiceReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InvoiceReportFilter.PetId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-
-@if (Model.InvoiceReportRows != null && Model.InvoiceReportRows.Any())
+@if (Model.InvoiceReportRows != null &&
+     Model.InvoiceReportRows.Any())
 {
     <div class="border rounded p-4 mt-5 mb-4">
         <h3 class="text-center mb-4">Invoice Summary</h3>
@@ -112,7 +203,10 @@
         </div>
     </div>
 
-    using (Html.BeginForm("ExportInvoiceReportPdf", "Reports", FormMethod.Post))
+    using (Html.BeginForm(
+        "ExportInvoiceReportPdf",
+        "Reports",
+        FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
@@ -175,7 +269,11 @@
                                 "Read",
                                 "Invoices",
                                 new { invoiceId = invoice.InvoiceId },
-                                new { @class = "btn btn-sm btn-outline-primary" })
+                                new
+                                {
+                                    @class =
+                                        "btn btn-sm btn-outline-primary"
+                                })
                         </td>
                     </tr>
                 }
@@ -189,4 +287,3 @@ else if (Model.HasSearched)
         No invoices matched the selected report filters.
     </div>
 }
-

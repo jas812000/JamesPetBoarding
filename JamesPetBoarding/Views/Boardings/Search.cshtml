@@ -20,28 +20,87 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-5">
-        @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Customer</label>
+
+        @Html.DropDownListFor(
+            x => x.CustomerId,
+            Model.CustomerSelectList,
+            "Select Customer...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-5">
-        @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Pet</label>
+
+        @Html.DropDownListFor(
+            x => x.PetId,
+            Model.PetSelectList,
+            "Select Pet...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-5">
-        @Html.DropDownListFor(x => x.BoardingUnitId, Model.BoardingUnitSelectList, "Select Boarding Unit...", new { @class = "form-select" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Boarding Unit</label>
+
+        @Html.DropDownListFor(
+            x => x.BoardingUnitId,
+            Model.BoardingUnitSelectList,
+            "Select Boarding Unit...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-5">
-        @Html.EnumDropDownListFor(x => x.BoardingStatus, "Select Status...", new { @class = "form-select" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Boarding Status</label>
+
+        @Html.EnumDropDownListFor(
+            x => x.BoardingStatus,
+            "Select Status...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-5">
-        @Html.TextBoxFor(x => x.StartDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Start Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.StartDateTime,
+            "{0:yyyy-MM-ddTHH:mm}",
+            new
+            {
+                @class = "form-control",
+                type = "datetime-local",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-5">
-        @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">End Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.EndDateTime,
+            "{0:yyyy-MM-ddTHH:mm}",
+            new
+            {
+                @class = "form-control",
+                type = "datetime-local",
+                style = "max-width: none;"
+            })
     </div>
 
     <div class="col-12 text-center mt-4">

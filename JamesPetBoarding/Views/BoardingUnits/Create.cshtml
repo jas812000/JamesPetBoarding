@@ -19,52 +19,216 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    @* Unit Type / Unit Name / Unit Number *@
+    <div class="col-md-10">
+        <div class="row g-3">
 
-    <div class="col-md-4">
-        <label class="form-label">Unit Type</label>
-        @Html.EnumDropDownListFor(x => x.UnitType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.UnitType, "", new { @class = "text-danger" })
+            <div class="col-md-4">
+                <label class="form-label">Unit Type</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.UnitType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.UnitType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Unit Name</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.UnitName,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.UnitName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Unit Number</label>
+
+                @Html.TextBoxFor(
+                    x => x.UnitNumber,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.UnitNumber,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Unit Name</label>
-        @Html.EnumDropDownListFor(x => x.UnitName, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.UnitName, "", new { @class = "text-danger" })
+    @* Species Allowed / Size Category *@
+    <div class="col-12">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <div style="width: 304px;">
+                <label class="form-label">Species Allowed</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.SpeciesAllowed,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.SpeciesAllowed,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 304px;">
+                <label class="form-label">Size Category</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.SizeCategory,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.SizeCategory,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Unit Number</label>
-        @Html.TextBoxFor(x => x.UnitNumber, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.UnitNumber, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Species Allowed</label>
-        @Html.EnumDropDownListFor(x => x.SpeciesAllowed, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.SpeciesAllowed, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Size Category</label>
-        @Html.EnumDropDownListFor(x => x.SizeCategory, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.SizeCategory, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-12">
+    @* Notes *@
+    <div class="col-md-10">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Boarding Unit</button>
+    @* Actions *@
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                id="CreateBoardingUnitButton"
+                class="btn btn-secondary me-2"
+                disabled>
+            Create Boarding Unit
+        </button>
 
         @Html.ActionLink(
-            "Cancel", 
-            "Search", 
-            "BoardingUnits", 
-            null, 
+            "Cancel",
+            "Search",
+            "BoardingUnits",
+            null,
             new { @class = "btn btn-secondary ms-2" })
     </div>
 
+}
+
+@section Scripts
+{
+    <script>
+        (function () {
+
+            var unitType = document.getElementById("UnitType");
+            var unitName = document.getElementById("UnitName");
+            var unitNumber = document.getElementById("UnitNumber");
+            var speciesAllowed =
+                document.getElementById("SpeciesAllowed");
+            var sizeCategory =
+                document.getElementById("SizeCategory");
+            var createButton =
+                document.getElementById(
+                    "CreateBoardingUnitButton");
+
+            function hasSelection(element) {
+                return element.value !== "";
+            }
+
+            function hasValidUnitNumber(element) {
+                var value = parseInt(element.value, 10);
+
+                return !isNaN(value) && value > 0;
+            }
+
+            function updateCreateButton() {
+
+                var formIsComplete =
+                    hasSelection(unitType) &&
+                    hasSelection(unitName) &&
+                    hasValidUnitNumber(unitNumber) &&
+                    hasSelection(speciesAllowed) &&
+                    hasSelection(sizeCategory);
+
+                createButton.disabled = !formIsComplete;
+
+                createButton.classList.toggle(
+                    "btn-primary",
+                    formIsComplete);
+
+                createButton.classList.toggle(
+                    "btn-secondary",
+                    !formIsComplete);
+            }
+
+            unitType.addEventListener(
+                "change",
+                updateCreateButton);
+
+            unitName.addEventListener(
+                "change",
+                updateCreateButton);
+
+            unitNumber.addEventListener(
+                "input",
+                updateCreateButton);
+
+            speciesAllowed.addEventListener(
+                "change",
+                updateCreateButton);
+
+            sizeCategory.addEventListener(
+                "change",
+                updateCreateButton);
+
+            updateCreateButton();
+
+        })();
+    </script>
 }

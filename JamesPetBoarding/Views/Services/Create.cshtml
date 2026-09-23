@@ -19,39 +19,110 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Service Name</label>
-        @Html.EnumDropDownListFor(x => x.ServiceName, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.ServiceName, "", new { @class = "text-danger" })
+
+        @Html.EnumDropDownListFor(
+            x => x.ServiceName,
+            "Select...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.ServiceName,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Species</label>
-        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
+
+        @Html.EnumDropDownListFor(
+            x => x.Species,
+            "Select...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Species,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Base Price</label>
-        @Html.TextBoxFor(x => x.BasePrice, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.BasePrice, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(
+            x => x.BasePrice,
+            new
+            {
+                @class = "form-control",
+                type = "number",
+                min = "0.01",
+                step = "0.01",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.BasePrice,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Pricing Type</label>
-        @Html.EnumDropDownListFor(x => x.PricingType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PricingType, "", new { @class = "text-danger" })
+
+        @Html.EnumDropDownListFor(
+            x => x.PricingType,
+            "Select...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.PricingType,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 864px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Service Profile</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                id="CreateServiceButton"
+                class="btn btn-secondary me-2"
+                disabled>
+            Create Service Profile
+        </button>
 
         @Html.ActionLink(
             "Cancel",
@@ -60,5 +131,75 @@
             null,
             new { @class = "btn btn-secondary ms-2" })
     </div>
+    }
 
+    @section Scripts
+    {
+    <script>
+        (function () {
+
+            var serviceName =
+                document.getElementById("ServiceName");
+
+            var species =
+                document.getElementById("Species");
+
+            var basePrice =
+                document.getElementById("BasePrice");
+
+            var pricingType =
+                document.getElementById("PricingType");
+
+            var createButton =
+                document.getElementById("CreateServiceButton");
+
+            function hasSelection(element) {
+                return element && element.value !== "";
+            }
+
+            function hasValidPrice(element) {
+                return element &&
+                    element.value !== "" &&
+                    parseFloat(element.value) > 0;
+            }
+
+            function updateCreateButton() {
+
+                var formIsComplete =
+                    hasSelection(serviceName) &&
+                    hasSelection(species) &&
+                    hasValidPrice(basePrice) &&
+                    hasSelection(pricingType);
+
+                createButton.disabled = !formIsComplete;
+
+                createButton.classList.toggle(
+                    "btn-primary",
+                    formIsComplete);
+
+                createButton.classList.toggle(
+                    "btn-secondary",
+                    !formIsComplete);
+            }
+
+            serviceName.addEventListener(
+                "change",
+                updateCreateButton);
+
+            species.addEventListener(
+                "change",
+                updateCreateButton);
+
+            basePrice.addEventListener(
+                "input",
+                updateCreateButton);
+
+            pricingType.addEventListener(
+                "change",
+                updateCreateButton);
+
+            updateCreateButton();
+
+        })();
+    </script>
 }

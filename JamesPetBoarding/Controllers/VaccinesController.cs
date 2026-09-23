@@ -40,39 +40,57 @@ namespace JamesPetBoarding.Controllers
         // POST: Vaccines/Search
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Search (VaccineSearchVM vaccineSearch)
+        public ActionResult Search(VaccineSearchVM vaccineSearch)
         {
-            ApplicationDbContext dbContext = new ApplicationDbContext();
+            ApplicationDbContext dbContext =
+                new ApplicationDbContext();
 
-            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+            EmployeeModel currentEmployee =
+                GetCurrentEmployee(dbContext);
 
             if (!CanViewVaccines(currentEmployee))
             {
-                return RedirectToAction("Index", "Staff");
+                return RedirectToAction(
+                    "Index",
+                    "Staff");
             }
 
-            ViewBag.CanManageVaccines = CanManageVaccines(currentEmployee);
+            ViewBag.CanManageVaccines =
+                CanManageVaccines(currentEmployee);
 
-            List<VaccineModel> vaccines = dbContext.Vaccines.ToList();
+            List<VaccineModel> vaccines =
+                dbContext.Vaccines.ToList();
 
-            if (!string.IsNullOrWhiteSpace(vaccineSearch.VaccineName))
+            if (!string.IsNullOrWhiteSpace(
+                vaccineSearch.VaccineName))
             {
+                string vaccineNameSearch =
+                    vaccineSearch.VaccineName.Trim();
+
                 vaccines = vaccines
-                    .Where(x => x.VaccineName.ToLower().Contains(vaccineSearch.VaccineName.ToLower()))
+                    .Where(x =>
+                        !string.IsNullOrWhiteSpace(x.VaccineName) &&
+                        x.VaccineName.IndexOf(
+                            vaccineNameSearch,
+                            StringComparison.OrdinalIgnoreCase) >= 0)
                     .ToList();
             }
 
             if (vaccineSearch.Species.HasValue)
             {
                 vaccines = vaccines
-                    .Where(x => x.Species == vaccineSearch.Species.Value)
+                    .Where(x =>
+                        x.Species ==
+                        vaccineSearch.Species.Value)
                     .ToList();
             }
 
             if (vaccineSearch.RequiredFlag.HasValue)
             {
                 vaccines = vaccines
-                    .Where(x => x.RequiredFlag == vaccineSearch.RequiredFlag.Value)
+                    .Where(x =>
+                        x.RequiredFlag ==
+                        vaccineSearch.RequiredFlag.Value)
                     .ToList();
             }
 
@@ -80,17 +98,18 @@ namespace JamesPetBoarding.Controllers
 
             foreach (VaccineModel vaccine in vaccines)
             {
-                vaccineSearch.VaccineSummaryResults.Add(new VaccineSummaryVM
-
-                { 
-                    VaccineId = vaccine.VaccineId,
-                    VaccineName = vaccine.VaccineName,
-                    SpeciesDisplay = vaccine.Species.ToString(),
-                    RequiredDisplay = vaccine.RequiredFlag
-                    ? "Yes" 
-                    : "No"
-                     
-                });
+                vaccineSearch.VaccineSummaryResults.Add(
+                    new VaccineSummaryVM
+                    {
+                        VaccineId = vaccine.VaccineId,
+                        VaccineName = vaccine.VaccineName,
+                        SpeciesDisplay =
+                            vaccine.Species.ToString(),
+                        RequiredDisplay =
+                            vaccine.RequiredFlag
+                                ? "Yes"
+                                : "No"
+                    });
             }
 
             return View(vaccineSearch);

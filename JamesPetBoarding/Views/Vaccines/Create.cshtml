@@ -4,57 +4,198 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Create Vaccine Profile</h2>
+
     <p class="lead">
         Enter vaccine information to create a new vaccine profile.
     </p>
 </div>
 
-
-@using (Html.BeginForm("Create", "Vaccines", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "Vaccines",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
 
-    <div class="col-md-4">
-        <label class="form-label">Vaccine Name</label>
-        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.VaccineName, "", new { @class = "text-danger" })
+            <div style="width: 420px;">
+                <label class="form-label">Vaccine Name</label>
+
+                @Html.TextBoxFor(
+                    x => x.VaccineName,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.VaccineName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 304px;">
+                <label class="form-label">Species</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.Species,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.Species,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 304px;">
+                <label class="form-label">Required Status</label>
+
+                @Html.DropDownListFor(
+                    x => x.RequiredFlag,
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem
+                        {
+                            Text = "Select...",
+                            Value = ""
+                        },
+                        new SelectListItem
+                        {
+                            Text = "Required",
+                            Value = "true"
+                        },
+                        new SelectListItem
+                        {
+                            Text = "Not Required",
+                            Value = "false"
+                        }
+                    },
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.RequiredFlag,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <label class="form-label">Species</label>
-        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Required Status</label>
-        @Html.DropDownListFor(x => x.RequiredFlag,
-            new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Select...", Value = "" },
-                new SelectListItem { Text = "Required", Value = "true" },
-                new SelectListItem { Text = "Not Required", Value = "false" },
-            },
-            new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.RequiredFlag, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8">
+    <div class="col-auto" style="width: 1060px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Vaccine Profile</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                id="CreateVaccineButton"
+                class="btn btn-secondary me-2"
+                disabled>
+            Create Vaccine Profile
+        </button>
 
-        @Html.ActionLink("Cancel", "Search", "Vaccines", null, new { @class = "btn btn-secondary ms-2" })
+        @Html.ActionLink(
+            "Cancel",
+            "Search",
+            "Vaccines",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
+}
 
+@section Scripts
+{
+    <script>
+        (function () {
+
+            var vaccineName =
+                document.getElementById("VaccineName");
+
+            var species =
+                document.getElementById("Species");
+
+            var requiredFlag =
+                document.getElementById("RequiredFlag");
+
+            var createButton =
+                document.getElementById("CreateVaccineButton");
+
+            function hasText(element) {
+                return element &&
+                    element.value.trim() !== "";
+            }
+
+            function hasSelection(element) {
+                return element &&
+                    element.value !== "";
+            }
+
+            function updateCreateButton() {
+
+                var formIsComplete =
+                    hasText(vaccineName) &&
+                    hasSelection(species) &&
+                    hasSelection(requiredFlag);
+
+                createButton.disabled = !formIsComplete;
+
+                createButton.classList.toggle(
+                    "btn-primary",
+                    formIsComplete);
+
+                createButton.classList.toggle(
+                    "btn-secondary",
+                    !formIsComplete);
+            }
+
+            vaccineName.addEventListener(
+                "input",
+                updateCreateButton);
+
+            species.addEventListener(
+                "change",
+                updateCreateButton);
+
+            requiredFlag.addEventListener(
+                "change",
+                updateCreateButton);
+
+            updateCreateButton();
+
+        })();
+    </script>
 }
