@@ -1,0 +1,99 @@
+﻿@model JamesPetBoarding.ViewModels.OurTeamMemberFormVM
+
+@{
+    ViewBag.Title = "Add Team Member";
+}
+
+<div class="text-center border-bottom pb-4 mb-4">
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Add Team Member</h2>
+    <p class="lead">
+        Select an active employee to display on the public Our Team page.
+    </p>
+</div>
+
+@using (Html.BeginForm(
+    "Create",
+    "OurTeam",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-12">
+        @Html.ValidationSummary(
+            false,
+            "",
+            new { @class = "text-danger text-center" })
+    </div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Employee</label>
+
+        @Html.DropDownListFor(
+            x => x.EmployeeId,
+            Model.EmployeeSelectList,
+            "Select Employee...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.EmployeeId,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Public Job Title</label>
+
+        @Html.TextBoxFor(
+            x => x.PublicJobTitle,
+            new
+            {
+                @class = "form-control",
+                maxlength = "100",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.PublicJobTitle,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-auto" style="width: 200px;">
+        <label class="form-label">Display Position</label>
+
+        @Html.TextBoxFor(
+            x => x.DisplayOrder,
+            new
+            {
+                @class = "form-control",
+                type = "number",
+                min = "1",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.DisplayOrder,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                class="btn btn-primary me-2">
+            Add Team Member
+        </button>
+
+        @Html.ActionLink(
+            "Cancel",
+            "Index",
+            "OurTeam",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
+    </div>
+}

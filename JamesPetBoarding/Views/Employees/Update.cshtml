@@ -26,12 +26,18 @@
     }))
 {
     @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.EmployeeId)
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    <div class="col-12">
+        @Html.ValidationSummary(
+            false,
+            "",
+            new { @class = "text-danger text-center" })
+    </div>
 
     if (ViewBag.PossibleDuplicate == true)
     {
-        <div class="col-md-12">
+        <div class="col-12" style="max-width: 960px;">
             <div class="alert alert-warning">
                 <strong>Possible duplicate employee found.</strong>
 
@@ -46,14 +52,13 @@
                         new { @class = "form-check-input" })
 
                     <label class="form-check-label">
-                        I reviewed the possible duplicate information and confirm this is a different employee.
+                        I reviewed the possible duplicate information and confirm
+                        this is a different employee.
                     </label>
                 </div>
             </div>
         </div>
     }
-
-    @Html.HiddenFor(x => x.EmployeeId)
 
     <div class="col-12 text-center">
         <img src="@Url.Content(profileImagePath)"
@@ -63,14 +68,15 @@
     </div>
 
     <div class="col-12">
-        <div style="width: 360px; margin: 0 auto; position: relative; left: 40px;">
+        <div style="width: 420px; max-width: 100%; margin: 0 auto;">
             <label class="form-label">Profile Photo</label>
 
             <input type="file"
                    id="ProfileImageFile"
                    name="ProfileImageFile"
                    class="form-control"
-                   accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+                   accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                   style="max-width: none;" />
 
             @Html.ValidationMessageFor(
                 x => x.ProfileImageFile,
@@ -90,8 +96,7 @@
                         id = "RemoveProfileImage"
                     })
 
-                <label class="form-check-label"
-                       for="RemoveProfileImage">
+                <label class="form-check-label" for="RemoveProfileImage">
                     Remove current profile photo
                 </label>
             </div>
@@ -99,95 +104,98 @@
     </div>
 
     <div class="col-12">
-        <div style="width: 960px; margin: 0 auto; position: relative; left: 40px;">
-            <div class="d-flex gap-3">
+        <div class="row g-3 justify-content-center">
 
-                <div style="width: 304px;">
-                    <label class="form-label">First Name</label>
-
-                    @Html.TextBoxFor(
-                        x => x.FirstName,
-                        new { @class = "form-control" })
-
-                    @Html.ValidationMessageFor(
-                        x => x.FirstName,
-                        "",
-                        new { @class = "text-danger" })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Last Name</label>
-
-                    @Html.TextBoxFor(
-                        x => x.LastName,
-                        new { @class = "form-control" })
-
-                    @Html.ValidationMessageFor(
-                        x => x.LastName,
-                        "",
-                        new { @class = "text-danger" })
-                </div>
-
-                <div style="width: 304px;">
-                    <label class="form-label">Role</label>
-
-                    @Html.EnumDropDownListFor(
-                        x => x.Role,
-                        "Select...",
-                        new { @class = "form-select" })
-
-                    @Html.ValidationMessageFor(
-                        x => x.Role,
-                        "",
-                        new { @class = "text-danger" })
-                </div>
-
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Last Name</label>
+                @Html.TextBoxFor(
+                    x => x.LastName,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+                @Html.ValidationMessageFor(
+                    x => x.LastName,
+                    "",
+                    new { @class = "text-danger" })
             </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">First Name</label>
+                @Html.TextBoxFor(
+                    x => x.FirstName,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+                @Html.ValidationMessageFor(
+                    x => x.FirstName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-auto" style="width: 300px;">
+                <label class="form-label">Role</label>
+                @Html.EnumDropDownListFor(
+                    x => x.Role,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+                @Html.ValidationMessageFor(
+                    x => x.Role,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
         </div>
     </div>
 
     <div class="col-12">
-        <div style="width: 744px; margin: 0 auto; position: relative; left: 40px;">
-            <div class="d-flex gap-4">
+        <div class="row g-3 justify-content-center">
 
-                <div style="width: 360px;">
-                    <label class="form-label">Email Address</label>
-
-                    @Html.TextBoxFor(
-                        x => x.Email,
-                        new { @class = "form-control" })
-
-                    @Html.ValidationMessageFor(
-                        x => x.Email,
-                        "",
-                        new { @class = "text-danger" })
-                </div>
-
-                <div style="width: 360px;">
-                    <label class="form-label">Phone Number</label>
-
-                    @Html.TextBoxFor(
-                        x => x.Phone,
-                        new
-                        {
-                            @class = "form-control",
-                            maxLength = "12",
-                            inputmode = "numeric",
-                            id = "Phone"
-                        })
-
-                    @Html.ValidationMessageFor(
-                        x => x.Phone,
-                        "",
-                        new { @class = "text-danger" })
-                </div>
-
+            <div class="col-auto" style="width: 350px;">
+                <label class="form-label">Email Address</label>
+                @Html.TextBoxFor(
+                    x => x.Email,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+                @Html.ValidationMessageFor(
+                    x => x.Email,
+                    "",
+                    new { @class = "text-danger" })
             </div>
+
+            <div class="col-auto" style="width: 350px;">
+                <label class="form-label">Phone Number</label>
+                @Html.TextBoxFor(
+                    x => x.Phone,
+                    new
+                    {
+                        @class = "form-control",
+                        maxlength = "12",
+                        inputmode = "numeric",
+                        id = "Phone",
+                        style = "max-width: none;"
+                    })
+                @Html.ValidationMessageFor(
+                    x => x.Phone,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
         </div>
     </div>
 
     <div class="col-12">
-        <div style="width: 360px; margin: 0 auto; position: relative; left: -80px;">
+        <div style="width: 960px; max-width: 100%; margin: 0 auto;">
             <label class="form-label">Notes</label>
 
             @Html.TextAreaFor(
@@ -195,9 +203,9 @@
                 new
                 {
                     @class = "form-control",
-                    rows = "4",
+                    rows = "5",
                     placeholder = "Enter notes",
-                    style = "width: 550px; max-width: none;"
+                    style = "max-width: none;"
                 })
 
             @Html.ValidationMessageFor(
@@ -208,8 +216,7 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit"
-                class="btn btn-success me-2">
+        <button type="submit" class="btn btn-success me-2">
             Update Employee Profile
         </button>
 
@@ -226,7 +233,6 @@
 {
     <script>
         document.getElementById("Phone").addEventListener("input", function () {
-
             var phone = this.value.replace(/\D/g, "").substring(0, 10);
 
             if (phone.length > 6) {
@@ -256,16 +262,13 @@
                 : "false");
 
         function updateProfileImageControls() {
-
             var hasSelectedFile =
                 profileImageFile.files &&
                 profileImageFile.files.length > 0;
 
             if (removeProfileImage.checked) {
-
                 profileImageFile.value = "";
                 profileImageFile.disabled = true;
-
                 return;
             }
 

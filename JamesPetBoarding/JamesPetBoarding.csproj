@@ -196,6 +196,7 @@
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MedicationsController.cs" />
+    <Compile Include="Controllers\OurTeamController.cs" />
     <Compile Include="Controllers\PaymentsController.cs" />
     <Compile Include="Controllers\PetsController.cs" />
     <Compile Include="Controllers\PetVaccinesController.cs" />
@@ -371,6 +372,10 @@
     <Compile Include="Migrations\202609221748493_AddEmployeeProfileImagePath.Designer.cs">
       <DependentUpon>202609221748493_AddEmployeeProfileImagePath.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609231845115_AddOurTeamMemberModel.cs" />
+    <Compile Include="Migrations\202609231845115_AddOurTeamMemberModel.Designer.cs">
+      <DependentUpon>202609231845115_AddOurTeamMemberModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -384,6 +389,7 @@
     <Compile Include="Models\InvoiceItemModel.cs" />
     <Compile Include="Models\InvoiceModel.cs" />
     <Compile Include="Models\MedicationModel.cs" />
+    <Compile Include="Models\OurTeamMemberModel.cs" />
     <Compile Include="Services\PdfReportService.cs" />
     <Compile Include="ViewModels\BoardingCancelVM.cs" />
     <Compile Include="ViewModels\BoardingNoShowVM.cs" />
@@ -427,6 +433,10 @@
     <Compile Include="ViewModels\InvoiceSummaryVM.cs" />
     <Compile Include="ViewModels\InvoiceVoidVM.cs" />
     <Compile Include="ViewModels\MedicationDeleteVM.cs" />
+    <Compile Include="ViewModels\OurTeamManagementVM.cs" />
+    <Compile Include="ViewModels\OurTeamMemberDisplayVM.cs" />
+    <Compile Include="ViewModels\OurTeamMemberFormVM.cs" />
+    <Compile Include="ViewModels\OurTeamMemberSummaryVM.cs" />
     <Compile Include="ViewModels\OutstandingBalanceReportFilterVM.cs" />
     <Compile Include="ViewModels\OutstandingBalanceReportVM.cs" />
     <Compile Include="ViewModels\OutstandingBalanceReportRowVM.cs" />
@@ -696,6 +706,10 @@
     <Content Include="Views\Reports\DailyBoardingReport.cshtml" />
     <Content Include="Views\Staff\BoardingManagement.cshtml" />
     <Content Include="Views\Staff\Billing.cshtml" />
+    <Content Include="Views\OurTeam\Index.cshtml" />
+    <Content Include="Views\OurTeam\Create.cshtml" />
+    <Content Include="Views\OurTeam\Update.cshtml" />
+    <Content Include="Views\OurTeam\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -807,6 +821,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202609221748493_AddEmployeeProfileImagePath.resx">
       <DependentUpon>202609221748493_AddEmployeeProfileImagePath.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609231845115_AddOurTeamMemberModel.resx">
+      <DependentUpon>202609231845115_AddOurTeamMemberModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

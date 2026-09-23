@@ -40,6 +40,8 @@ namespace JamesPetBoarding.Models
 
         public DbSet<EmployeeModel> Employees { get; set; }
 
+        public DbSet<OurTeamMemberModel> OurTeamMembers { get; set; }
+
         public DbSet<BoardingUnitModel> BoardingUnits { get; set; }
 
         public DbSet<ContactUsSubmissionModel> ContactUsSubmissions { get; set; }

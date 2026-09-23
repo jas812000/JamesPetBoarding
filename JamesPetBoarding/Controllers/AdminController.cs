@@ -42,6 +42,9 @@ namespace JamesPetBoarding.Controllers
                 employee.Role == EmployeeRoleEnum.Admin ||
                 employee.Role == EmployeeRoleEnum.Manager;
 
+            ViewBag.IsAdmin =
+                employee.Role == EmployeeRoleEnum.Admin;
+
             ViewBag.IsSupervisor =
                 employee.Role == EmployeeRoleEnum.Supervisor;
 

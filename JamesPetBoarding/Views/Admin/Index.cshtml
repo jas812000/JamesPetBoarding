@@ -116,6 +116,18 @@
         </div>
     }
 
+    @if (ViewBag.IsAdmin == true)
+    {
+        <div class="col-md-5">
+            @Html.ActionLink(
+                "Our Team Management",
+                "Index",
+                "OurTeam",
+                null,
+                new { @class = "btn btn-primary w-100 py-5" })
+        </div>
+    }
+
 </div>
 
 <div class="text-center border-top mt-5 pt-4">
