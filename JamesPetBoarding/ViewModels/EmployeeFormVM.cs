@@ -33,7 +33,14 @@ namespace JamesPetBoarding.ViewModels
         [MaxLength(500)]
         public string Notes { get; set; }
 
+        public string ProfileImagePath { get; set; }
+
+        public HttpPostedFileBase ProfileImageFile { get; set; }
+
+        public bool RemoveProfileImage { get; set; }
+
         public bool ConfirmPossibleDuplicate { get; set; }
+
 
     }
 }

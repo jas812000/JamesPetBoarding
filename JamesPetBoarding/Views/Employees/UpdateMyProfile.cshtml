@@ -1,45 +1,129 @@
 ﻿@model JamesPetBoarding.ViewModels.EmployeeProfileUpdateVM
 @{
     ViewBag.Title = "Update My Profile";
+
+    string profileImagePath = string.IsNullOrWhiteSpace(Model.ProfileImagePath)
+        ? "~/Content/Images/Employees/default-profile.png"
+        : Model.ProfileImagePath;
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Update My Profile</h2>
     <p class="lead">
-        Update My profile information.
+        Update my profile information.
     </p>
 </div>
 
-@using (Html.BeginForm("UpdateMyProfile", "Employees", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "UpdateMyProfile",
+    "Employees",
+    FormMethod.Post,
+    new
+    {
+        @class = "row g-3 justify-content-center",
+        enctype = "multipart/form-data"
+    }))
 {
-
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-
-    <div class="col-md-6">
-        <label class="form-label">Email Address</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+    <div class="col-12 text-center">
+        <img src="@Url.Content(profileImagePath)"
+             alt="Current profile photo"
+             class="img-thumbnail"
+             style="width: 200px; height: 200px; object-fit: cover;" />
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Phone Number</label>
-        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", maxLength = "12", inputmode = "numeric", id = "Phone" })
-        @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div style="width: 360px; margin: 0 auto; position: relative; left: 40px;">
+            <label class="form-label">Profile Photo</label>
+
+            <input type="file"
+                   id="ProfileImageFile"
+                   name="ProfileImageFile"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+
+            @Html.ValidationMessageFor(
+                x => x.ProfileImageFile,
+                "",
+                new { @class = "text-danger" })
+
+            <div class="form-text">
+                JPG, JPEG, or PNG. Maximum file size: 5 MB.
+            </div>
+
+            <div class="form-check mt-2">
+                @Html.CheckBoxFor(
+                    x => x.RemoveProfileImage,
+                    new
+                    {
+                        @class = "form-check-input",
+                        id = "RemoveProfileImage"
+                    })
+
+                <label class="form-check-label"
+                       for="RemoveProfileImage">
+                    Remove current profile photo
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <div style="width: 744px; margin: 0 auto; position: relative; left: 40px;">
+            <div class="d-flex gap-4">
+
+                <div style="width: 360px;">
+                    <label class="form-label">Email Address</label>
+
+                    @Html.TextBoxFor(
+                        x => x.Email,
+                        new { @class = "form-control" })
+
+                    @Html.ValidationMessageFor(
+                        x => x.Email,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div style="width: 360px;">
+                    <label class="form-label">Phone Number</label>
+
+                    @Html.TextBoxFor(
+                        x => x.Phone,
+                        new
+                        {
+                            @class = "form-control",
+                            maxLength = "12",
+                            inputmode = "numeric",
+                            id = "Phone"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        x => x.Phone,
+                        "",
+                        new { @class = "text-danger" })
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update My Profile</button>
+        <button type="submit"
+                class="btn btn-success me-2">
+            Update My Profile
+        </button>
 
         @Html.ActionLink(
-             "Back to Account Settings",
-             "Index",
-             "Manage",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Account Settings",
+            "Index",
+            "Manage",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
@@ -64,5 +148,47 @@
 
             this.value = phone;
         });
+
+        var profileImageFile =
+            document.getElementById("ProfileImageFile");
+
+        var removeProfileImage =
+            document.getElementById("RemoveProfileImage");
+
+        var hasSavedProfileImage =
+            @(!string.IsNullOrWhiteSpace(Model.ProfileImagePath)
+                ? "true"
+                : "false");
+
+        function updateProfileImageControls() {
+
+            var hasSelectedFile =
+                profileImageFile.files &&
+                profileImageFile.files.length > 0;
+
+            if (removeProfileImage.checked) {
+
+                profileImageFile.value = "";
+                profileImageFile.disabled = true;
+
+                return;
+            }
+
+            profileImageFile.disabled = false;
+
+            removeProfileImage.disabled =
+                !hasSavedProfileImage &&
+                !hasSelectedFile;
+        }
+
+        profileImageFile.addEventListener(
+            "change",
+            updateProfileImageControls);
+
+        removeProfileImage.addEventListener(
+            "change",
+            updateProfileImageControls);
+
+        updateProfileImageControls();
     </script>
 }

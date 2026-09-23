@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -230,6 +231,19 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeForm);
             }
 
+            string profileImageError;
+
+            if (!ValidateProfileImage(
+                employeeForm.ProfileImageFile,
+                out profileImageError))
+            {
+                ModelState.AddModelError(
+                    "ProfileImageFile",
+                    profileImageError);
+
+                return View(employeeForm);
+            }
+
             EmployeeModel employee = new EmployeeModel();
 
             employee.LastName = FormatName(employeeForm.LastName.Trim());
@@ -241,6 +255,10 @@ namespace JamesPetBoarding.Controllers
                 ? null
                 : employeeForm.Notes.Trim();
             employee.IsActive = true;
+
+            SaveProfileImage(
+                employeeForm.ProfileImageFile,
+                employee);
 
             dbContext.Employees.Add(employee);
             dbContext.SaveChanges();
@@ -306,6 +324,7 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : employee.Notes;
 
+            employeeDetails.ProfileImagePath = employee.ProfileImagePath;
 
             return View(employeeDetails);
         }
@@ -345,8 +364,11 @@ namespace JamesPetBoarding.Controllers
 
             employeeForm.Notes = employee.Notes;
 
+            employeeForm.ProfileImagePath = employee.ProfileImagePath;
+
             return View(employeeForm);
         }
+
 
         // POST: Employees/Update
         [HttpPost]
@@ -362,16 +384,21 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            EmployeeModel employee = dbContext.Employees.FirstOrDefault(x => x.EmployeeId == employeeForm.EmployeeId);
+            EmployeeModel employee = dbContext.Employees.FirstOrDefault(
+                x => x.EmployeeId == employeeForm.EmployeeId);
 
             if (employee == null)
             {
-                return Content("Employee ID #" + employeeForm.EmployeeId + " does not exist.");
+                return Content(
+                    "Employee ID #" +
+                    employeeForm.EmployeeId +
+                    " does not exist.");
             }
+
+            employeeForm.ProfileImagePath = employee.ProfileImagePath;
 
             if (!ModelState.IsValid)
             {
-
                 return View(employeeForm);
             }
 
@@ -384,39 +411,50 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeForm);
             }
 
-            string normalizedEmail = employeeForm.Email.Trim().ToLower();
+            string normalizedEmail =
+                employeeForm.Email.Trim().ToLower();
 
-            string normalizedCurrentEmail = employee.Email.Trim().ToLower();
+            string normalizedCurrentEmail =
+                employee.Email.Trim().ToLower();
 
-            bool emailChanged = normalizedEmail != normalizedCurrentEmail;
+            bool emailChanged =
+                normalizedEmail != normalizedCurrentEmail;
 
             EmployeeModel existingEmployee = dbContext.Employees
                 .FirstOrDefault(x =>
-                x.Email.ToLower() == normalizedEmail &&
-                x.EmployeeId != employeeForm.EmployeeId);
+                    x.Email.ToLower() == normalizedEmail &&
+                    x.EmployeeId != employeeForm.EmployeeId);
 
             if (existingEmployee != null)
             {
-                ModelState.AddModelError("Email", "An employee with this email address already exists.");
+                ModelState.AddModelError(
+                    "Email",
+                    "An employee with this email address already exists.");
 
                 return View(employeeForm);
             }
 
             if (emailChanged)
             {
-                ApplicationUser conflictingIdentityUser = UserManager.FindByEmail(employeeForm.Email.Trim());
+                ApplicationUser conflictingIdentityUser =
+                    UserManager.FindByEmail(employeeForm.Email.Trim());
 
                 if (conflictingIdentityUser != null)
                 {
-                    ModelState.AddModelError("Email", "An account already exists with this email address.");
+                    ModelState.AddModelError(
+                        "Email",
+                        "An account already exists with this email address.");
 
                     return View(employeeForm);
                 }
             }
 
-            ApplicationUser employeeIdentityUser = UserManager.FindByEmail(employee.Email);
+            ApplicationUser employeeIdentityUser =
+                UserManager.FindByEmail(employee.Email);
 
-            if (emailChanged && employeeIdentityUser != null && currentEmployee.Role != EmployeeRoleEnum.Admin)
+            if (emailChanged &&
+                employeeIdentityUser != null &&
+                currentEmployee.Role != EmployeeRoleEnum.Admin)
             {
                 ModelState.AddModelError(
                     "Email",
@@ -425,11 +463,14 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeForm);
             }
 
-            string normalizedFirstName = employeeForm.FirstName.Trim().ToLower();
+            string normalizedFirstName =
+                employeeForm.FirstName.Trim().ToLower();
 
-            string normalizedLastName = employeeForm.LastName.Trim().ToLower();
+            string normalizedLastName =
+                employeeForm.LastName.Trim().ToLower();
 
-            string normalizedPhone = NormalizePhone(employeeForm.Phone);
+            string normalizedPhone =
+                NormalizePhone(employeeForm.Phone);
 
             List<EmployeeModel> employees = dbContext.Employees
                 .Where(x => x.EmployeeId != employeeForm.EmployeeId)
@@ -443,7 +484,8 @@ namespace JamesPetBoarding.Controllers
                         x.LastName.Trim().ToLower() == normalizedLastName
                     ));
 
-            if (possibleDuplicate != null && !employeeForm.ConfirmPossibleDuplicate)
+            if (possibleDuplicate != null &&
+                !employeeForm.ConfirmPossibleDuplicate)
             {
                 ViewBag.PossibleDuplicate = true;
 
@@ -453,20 +495,34 @@ namespace JamesPetBoarding.Controllers
                     possibleDuplicate.FirstName +
                     " " +
                     possibleDuplicate.LastName +
-                    ". Review the existing employee before continuing."
-                );
+                    ". Review the existing employee before continuing.");
 
                 return View(employeeForm);
+            }
 
+            string profileImageError;
+
+            if (!ValidateProfileImage(
+                employeeForm.ProfileImageFile,
+                out profileImageError))
+            {
+                ModelState.AddModelError(
+                    "ProfileImageFile",
+                    profileImageError);
+
+                return View(employeeForm);
             }
 
             if (emailChanged && employeeIdentityUser != null)
             {
-                employeeIdentityUser.Email = employeeForm.Email.Trim();
+                employeeIdentityUser.Email =
+                    employeeForm.Email.Trim();
 
-                employeeIdentityUser.UserName = employeeForm.Email.Trim();
+                employeeIdentityUser.UserName =
+                    employeeForm.Email.Trim();
 
-                IdentityResult identityResult = UserManager.Update(employeeIdentityUser);
+                IdentityResult identityResult =
+                    UserManager.Update(employeeIdentityUser);
 
                 if (!identityResult.Succeeded)
                 {
@@ -476,9 +532,7 @@ namespace JamesPetBoarding.Controllers
                     }
 
                     return View(employeeForm);
-
                 }
-
             }
 
             bool currentUserEmailChanged =
@@ -486,32 +540,53 @@ namespace JamesPetBoarding.Controllers
                 employeeIdentityUser != null &&
                 currentEmployee.EmployeeId == employee.EmployeeId;
 
-            employee.LastName = FormatName(employeeForm.LastName.Trim());
+            employee.LastName =
+                FormatName(employeeForm.LastName.Trim());
 
-            employee.FirstName = FormatName(employeeForm.FirstName.Trim());
+            employee.FirstName =
+                FormatName(employeeForm.FirstName.Trim());
 
-            employee.Role = employeeForm.Role;
+            employee.Role =
+                employeeForm.Role;
 
-            employee.Phone = employeeForm.Phone.Trim();
+            employee.Phone =
+                employeeForm.Phone.Trim();
 
-            employee.Email = employeeForm.Email.Trim();
+            employee.Email =
+                employeeForm.Email.Trim();
 
-            employee.Notes = string.IsNullOrWhiteSpace(employeeForm.Notes)
-                ? null
-                : employeeForm.Notes.Trim();
+            employee.Notes =
+                string.IsNullOrWhiteSpace(employeeForm.Notes)
+                    ? null
+                    : employeeForm.Notes.Trim();
+
+            if (employeeForm.ProfileImageFile != null &&
+                employeeForm.ProfileImageFile.ContentLength > 0)
+            {
+                SaveProfileImage(
+                    employeeForm.ProfileImageFile,
+                    employee);
+            }
+            else if (employeeForm.RemoveProfileImage)
+            {
+                DeleteProfileImageFile(employee);
+            }
 
             dbContext.SaveChanges();
 
             if (currentUserEmailChanged)
             {
-                HttpContext.GetOwinContext().Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                HttpContext.GetOwinContext().Authentication
+                    .SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
                 return RedirectToAction("Login", "Account");
             }
 
-            return RedirectToAction("Read", new { employeeId = employee.EmployeeId });
-
+            return RedirectToAction(
+                "Read",
+                new { employeeId = employee.EmployeeId });
         }
+
 
         // GET: Employees/Delete
         public ActionResult Delete(Guid employeeId)
@@ -647,6 +722,7 @@ namespace JamesPetBoarding.Controllers
             return View(employeeReactivate);
         }
 
+
         // POST: Employees/Reactivate
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -743,6 +819,7 @@ namespace JamesPetBoarding.Controllers
             employeeProfile.RoleDisplay = employee.Role.ToString();
             employeeProfile.EmailDisplay = employee.Email;
             employeeProfile.PhoneDisplay = employee.Phone;
+            employeeProfile.ProfileImagePath = employee.ProfileImagePath;
             employeeProfile.ActiveStatusDisplay = employee.IsActive
                 ? "Active"
                 : "Inactive";
@@ -780,28 +857,35 @@ namespace JamesPetBoarding.Controllers
                 return Content("This employee account is inactive.");
             }
 
-            EmployeeProfileUpdateVM employeeProfileUpdate = new EmployeeProfileUpdateVM();
+            EmployeeProfileUpdateVM employeeProfileUpdate =
+                new EmployeeProfileUpdateVM();
 
             employeeProfileUpdate.Email = employee.Email;
             employeeProfileUpdate.Phone = employee.Phone;
+            employeeProfileUpdate.ProfileImagePath = employee.ProfileImagePath;
 
             return View(employeeProfileUpdate);
         }
+
 
         // POST: Employees/UpdateMyProfile
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult UpdateMyProfile(EmployeeProfileUpdateVM employeeProfileUpdate)
+        public ActionResult UpdateMyProfile(
+            EmployeeProfileUpdateVM employeeProfileUpdate)
         {
             string email = User.Identity.Name;
 
-            ApplicationDbContext dbContext = new ApplicationDbContext();
+            ApplicationDbContext dbContext =
+                new ApplicationDbContext();
 
-            string normalizedCurrentEmail = email.Trim().ToLower();
+            string normalizedCurrentEmail =
+                email.Trim().ToLower();
 
             EmployeeModel employee = dbContext.Employees
-                .FirstOrDefault(x => x.Email.ToLower() == normalizedCurrentEmail);
+                .FirstOrDefault(x =>
+                    x.Email.ToLower() == normalizedCurrentEmail);
 
             if (employee == null)
             {
@@ -813,16 +897,20 @@ namespace JamesPetBoarding.Controllers
 
             if (!employee.IsActive)
             {
-                return Content("This employee account is inactive.");
+                return Content(
+                    "This employee account is inactive.");
             }
+
+            employeeProfileUpdate.ProfileImagePath =
+                employee.ProfileImagePath;
 
             if (!ModelState.IsValid)
             {
-
                 return View(employeeProfileUpdate);
             }
 
-            string normalizedNewEmail = employeeProfileUpdate.Email.Trim().ToLower();
+            string normalizedNewEmail =
+                employeeProfileUpdate.Email.Trim().ToLower();
 
             bool duplicateEmail = dbContext.Employees.Any(x =>
                 x.Email.ToLower() == normalizedNewEmail &&
@@ -837,39 +925,75 @@ namespace JamesPetBoarding.Controllers
                 return View(employeeProfileUpdate);
             }
 
-            bool emailChanged = employee.Email.Trim().ToLower() != normalizedNewEmail;
+            bool emailChanged =
+                employee.Email.Trim().ToLower() !=
+                normalizedNewEmail;
+
+            string profileImageError;
+
+            if (!ValidateProfileImage(
+                employeeProfileUpdate.ProfileImageFile,
+                out profileImageError))
+            {
+                ModelState.AddModelError(
+                    "ProfileImageFile",
+                    profileImageError);
+
+                return View(employeeProfileUpdate);
+            }
 
             if (emailChanged)
             {
-                ApplicationUser identityUser = UserManager.FindByName(email);
+                ApplicationUser identityUser =
+                    UserManager.FindByName(email);
 
                 if (identityUser == null)
                 {
                     return Content(
-                    "The identity account with the email address " +
-                    email +
-                    " does not exist.");
-
+                        "The identity account with the email address " +
+                        email +
+                        " does not exist.");
                 }
 
-                identityUser.Email = employeeProfileUpdate.Email.Trim();
-                identityUser.UserName = employeeProfileUpdate.Email.Trim();
+                identityUser.Email =
+                    employeeProfileUpdate.Email.Trim();
 
-                IdentityResult identityResult = UserManager.Update(identityUser);
+                identityUser.UserName =
+                    employeeProfileUpdate.Email.Trim();
+
+                IdentityResult identityResult =
+                    UserManager.Update(identityUser);
 
                 if (!identityResult.Succeeded)
                 {
                     foreach (string error in identityResult.Errors)
                     {
-                        ModelState.AddModelError("Email", error);
+                        ModelState.AddModelError(
+                            "Email",
+                            error);
                     }
 
                     return View(employeeProfileUpdate);
                 }
             }
 
-            employee.Email = employeeProfileUpdate.Email.Trim();
-            employee.Phone = employeeProfileUpdate.Phone.Trim();
+            employee.Email =
+                employeeProfileUpdate.Email.Trim();
+
+            employee.Phone =
+                employeeProfileUpdate.Phone.Trim();
+
+            if (employeeProfileUpdate.ProfileImageFile != null &&
+                employeeProfileUpdate.ProfileImageFile.ContentLength > 0)
+            {
+                SaveProfileImage(
+                    employeeProfileUpdate.ProfileImageFile,
+                    employee);
+            }
+            else if (employeeProfileUpdate.RemoveProfileImage)
+            {
+                DeleteProfileImageFile(employee);
+            }
 
             dbContext.SaveChanges();
 
@@ -878,12 +1002,224 @@ namespace JamesPetBoarding.Controllers
                 HttpContext.GetOwinContext().Authentication
                     .SignOut(DefaultAuthenticationTypes.ApplicationCookie);
 
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction(
+                    "Login",
+                    "Account");
             }
 
             return RedirectToAction("MyProfile");
-
         }
+
+
+        // POST: Employees/DeleteMyProfileImage
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public ActionResult DeleteMyProfileImage()
+        {
+            string email = User.Identity.Name;
+
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            string normalizedEmail = email.Trim().ToLower();
+
+            EmployeeModel employee = dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.Email.ToLower() == normalizedEmail);
+
+            if (employee == null)
+            {
+                return Content(
+                    "The employee with the email address " +
+                    email +
+                    " does not exist.");
+            }
+
+            if (!employee.IsActive)
+            {
+                return Content("This employee account is inactive.");
+            }
+
+            DeleteProfileImageFile(employee);
+
+            employee.ProfileImagePath = null;
+
+            dbContext.SaveChanges();
+
+            TempData["SuccessMessage"] =
+                "Profile photo deleted successfully.";
+
+            return RedirectToAction("UpdateMyProfile");
+        }
+
+        // POST: Employees/DeleteProfileImage
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteProfileImage(Guid employeeId)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageEmployees(currentEmployee))
+            {
+                return RedirectToAction("Index", "Staff");
+            }
+
+            EmployeeModel employee = dbContext.Employees
+                .FirstOrDefault(x =>
+                    x.EmployeeId == employeeId);
+
+            if (employee == null)
+            {
+                return Content(
+                    "Employee ID #" +
+                    employeeId +
+                    " does not exist.");
+            }
+
+            DeleteProfileImageFile(employee);
+
+            dbContext.SaveChanges();
+
+            TempData["SuccessMessage"] =
+                "Employee profile photo deleted successfully.";
+
+            return RedirectToAction(
+                "Update",
+                new { employeeId = employee.EmployeeId });
+        }
+
+        private bool ValidateProfileImage(
+            HttpPostedFileBase profileImageFile,
+            out string errorMessage)
+        {
+            errorMessage = null;
+
+            if (profileImageFile == null || profileImageFile.ContentLength == 0)
+            {
+                return true;
+            }
+
+            const int maxFileSize = 5 * 1024 * 1024;
+
+            if (profileImageFile.ContentLength > maxFileSize)
+            {
+                errorMessage = "The profile photo must be 5 MB or smaller.";
+                return false;
+            }
+
+            string extension = Path.GetExtension(profileImageFile.FileName);
+
+            if (string.IsNullOrWhiteSpace(extension))
+            {
+                errorMessage = "Please select a JPG, JPEG, or PNG image.";
+                return false;
+            }
+
+            extension = extension.ToLowerInvariant();
+
+            string[] allowedExtensions =
+            {
+                ".jpg",
+                ".jpeg",
+                ".png"
+            };
+
+            if (!allowedExtensions.Contains(extension))
+            {
+                errorMessage = "Please select a JPG, JPEG, or PNG image.";
+                return false;
+            }
+
+            string[] allowedContentTypes =
+            {
+                "image/jpeg",
+                "image/png"
+            };
+
+            if (!allowedContentTypes.Contains(
+                profileImageFile.ContentType,
+                StringComparer.OrdinalIgnoreCase))
+            {
+                errorMessage = "Please select a valid JPG, JPEG, or PNG image.";
+                return false;
+            }
+
+            return true;
+        }
+
+        private void SaveProfileImage(
+            HttpPostedFileBase profileImageFile,
+            EmployeeModel employee)
+        {
+            if (profileImageFile == null ||
+                profileImageFile.ContentLength == 0)
+            {
+                return;
+            }
+
+            string extension =
+                Path.GetExtension(profileImageFile.FileName)
+                    .ToLowerInvariant();
+
+            string fileName =
+                "employee-" +
+                employee.EmployeeId.ToString("N") +
+                extension;
+
+            string relativePath =
+                "~/Content/Images/Employees/" +
+                fileName;
+
+            string directoryPath =
+                Server.MapPath("~/Content/Images/Employees");
+
+            Directory.CreateDirectory(directoryPath);
+
+            string physicalPath =
+                Path.Combine(directoryPath, fileName);
+
+            if (!string.IsNullOrWhiteSpace(employee.ProfileImagePath) &&
+                !employee.ProfileImagePath.Equals(
+                    relativePath,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                DeleteProfileImageFile(employee);
+            }
+
+            profileImageFile.SaveAs(physicalPath);
+
+            employee.ProfileImagePath = relativePath;
+        }
+
+
+        private void DeleteProfileImageFile(EmployeeModel employee)
+        {
+            if (string.IsNullOrWhiteSpace(employee.ProfileImagePath))
+            {
+                return;
+            }
+
+            string defaultProfileImagePath =
+                "~/Content/Images/Employees/default-profile.png";
+
+            if (!employee.ProfileImagePath.Equals(
+                defaultProfileImagePath,
+                StringComparison.OrdinalIgnoreCase))
+            {
+                string physicalPath =
+                    Server.MapPath(employee.ProfileImagePath);
+
+                if (System.IO.File.Exists(physicalPath))
+                {
+                    System.IO.File.Delete(physicalPath);
+                }
+            }
+
+            employee.ProfileImagePath = null;
+        }
+
 
         private EmployeeModel GetCurrentEmployee(ApplicationDbContext dbContext)
         {
@@ -955,6 +1291,7 @@ namespace JamesPetBoarding.Controllers
 
             return string.Join(" ", words);
         }
+
 
         private ApplicationUserManager _userManager;
 

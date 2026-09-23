@@ -1,6 +1,10 @@
 ﻿@model JamesPetBoarding.ViewModels.EmployeeProfileVM
 @{
-    ViewBag.Title = "Read Employee";
+    ViewBag.Title = "View My Profile";
+
+    string profileImagePath = string.IsNullOrWhiteSpace(Model.ProfileImagePath)
+        ? "~/Content/Images/Employees/default-profile.png"
+        : Model.ProfileImagePath;
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
@@ -9,6 +13,13 @@
     <p class="lead">
         View My profile information.
     </p>
+</div>
+
+<div class="text-center mb-4">
+    <img src="@Url.Content(profileImagePath)"
+         alt="@Model.EmployeeNameDisplay"
+         class="img-thumbnail"
+         style="width: 200px; height: 200px; object-fit: cover;" />
 </div>
 
 <div class="row g-3 justify-content-center">
@@ -45,16 +56,13 @@
 
     <div class="col-md-10 text-center mt-3">
 
-        <div class="col-md-10 text-center mt-3">
-
-            @Html.ActionLink(
-                "Back to Account Settings",
-                "Index",
-                "Manage",
-                null,
-                new { @class = "btn btn-secondary" })
-
-        </div>
+        @Html.ActionLink(
+            "Back to Account Settings",
+            "Index",
+            "Manage",
+            null,
+            new { @class = "btn btn-secondary" })
 
     </div>
+
 </div>

@@ -38,12 +38,12 @@
         @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
     </div>
 
-    <div class="col-md-2">
+    <div class="col-md-4">
         <label class="form-label">Role</label>
         @Html.EnumDropDownListFor(x => x.Role, "Select...", new { @class = "form-select" })
     </div>
 
-    <div class="col-6">
+    <div class="col-md-4">
         <label class="form-label">Active Status</label>
         @Html.DropDownListFor(
              x => x.IsActive,

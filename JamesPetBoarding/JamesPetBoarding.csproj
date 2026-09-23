@@ -367,6 +367,10 @@
     <Compile Include="Migrations\202608270630366_AddedSubmissionDateTimeToContactUsSubmission.Designer.cs">
       <DependentUpon>202608270630366_AddedSubmissionDateTimeToContactUsSubmission.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202609221748493_AddEmployeeProfileImagePath.cs" />
+    <Compile Include="Migrations\202609221748493_AddEmployeeProfileImagePath.Designer.cs">
+      <DependentUpon>202609221748493_AddEmployeeProfileImagePath.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationUser.cs" />
     <Compile Include="Models\BoardingModel.cs" />
@@ -800,6 +804,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202608270630366_AddedSubmissionDateTimeToContactUsSubmission.resx">
       <DependentUpon>202608270630366_AddedSubmissionDateTimeToContactUsSubmission.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202609221748493_AddEmployeeProfileImagePath.resx">
+      <DependentUpon>202609221748493_AddEmployeeProfileImagePath.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

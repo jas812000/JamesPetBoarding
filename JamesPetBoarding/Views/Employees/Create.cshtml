@@ -11,10 +11,16 @@
     </p>
 </div>
 
-
-@using (Html.BeginForm("Create", "Employees", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "Employees",
+    FormMethod.Post,
+    new
+    {
+        @class = "row g-3 justify-content-center",
+        enctype = "multipart/form-data"
+    }))
 {
-
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
@@ -43,6 +49,24 @@
         </div>
     }
 
+    <div class="col-md-6">
+        <label class="form-label">Profile Photo</label>
+
+        <input type="file"
+               name="ProfileImageFile"
+               class="form-control"
+               accept=".jpg,.jpeg,.png,image/jpeg,image/png" />
+
+        @Html.ValidationMessageFor(
+            x => x.ProfileImageFile,
+            "",
+            new { @class = "text-danger" })
+
+        <div class="form-text">
+            JPG, JPEG, or PNG. Maximum file size: 5 MB.
+        </div>
+    </div>
+
     <div class="col-md-4">
         <label class="form-label">Last Name</label>
         @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
@@ -57,7 +81,10 @@
 
     <div class="col-md-4">
         <label class="form-label">Role</label>
-        @Html.EnumDropDownListFor(x => x.Role, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(
+            x => x.Role,
+            "Select...",
+            new { @class = "form-select" })
         @Html.ValidationMessageFor(x => x.Role, "", new { @class = "text-danger" })
     </div>
 
@@ -83,12 +110,21 @@
 
     <div class="col-md-12">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes"
+            })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Employee Profile</button>
+        <button type="submit" class="btn btn-primary me-2">
+            Create Employee Profile
+        </button>
 
         @Html.ActionLink(
             "Cancel",
@@ -97,21 +133,24 @@
             null,
             new { @class = "btn btn-secondary ms-2" })
     </div>
-
 }
 
-@section Scripts {
+@section Scripts
+{
     <script>
         document.getElementById("Phone").addEventListener("input", function () {
+
             var phone = this.value.replace(/\D/g, "").substring(0, 10);
 
             if (phone.length > 6) {
-                phone = phone.substring(0, 3) + "-" +
+                phone =
+                    phone.substring(0, 3) + "-" +
                     phone.substring(3, 6) + "-" +
                     phone.substring(6);
             }
             else if (phone.length > 3) {
-                phone = phone.substring(0, 3) + "-" +
+                phone =
+                    phone.substring(0, 3) + "-" +
                     phone.substring(3);
             }
 

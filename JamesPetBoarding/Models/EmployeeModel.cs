@@ -54,6 +54,9 @@ namespace JamesPetBoarding.Models
         [MaxLength(500)]
         public string Notes { get; set; }
 
+        [MaxLength(500)]
+        public string ProfileImagePath { get; set; }
+
         [InverseProperty("CheckedInByEmployee")]
         public List<BoardingModel> CheckedInBoardings { get; set; }
 
