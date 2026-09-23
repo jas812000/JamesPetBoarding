@@ -1,5 +1,6 @@
 ﻿using JamesPetBoarding.Enums;
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -26,6 +27,13 @@ namespace JamesPetBoarding.ViewModels
         public SexEnum? Sex { get; set; }
 
         public DateTime? BirthDate { get; set; }
+
+        [Range(
+            typeof(decimal),
+            "0.01",
+            "9999.99",
+            ErrorMessage = "Weight must be greater than zero.")]
+        public decimal? Weight { get; set; }
 
         public WeightUnitEnum WeightUnit { get; set; }
 

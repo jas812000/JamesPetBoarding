@@ -4,89 +4,229 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Customer Activity Report</h2>
+
     <p class="lead">
         Enter one or more optional filters to generate a customer activity report.
     </p>
 </div>
 
-
-@using (Html.BeginForm("CustomerActivityReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "CustomerActivityReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
 
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.DropDownListFor(x => x.CustomerActivityReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.CustomerId, "", new { @class = "text-danger" })
+            <div style="width: 350px;">
+                <label class="form-label">Customer Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.CustomerActivityReportFilter.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Active Status</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.CustomerActivityReportFilter.ActiveStatus,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.ActiveStatus,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Active Status</label>
-        @Html.EnumDropDownListFor(x => x.CustomerActivityReportFilter.ActiveStatus, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.ActiveStatus, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+
+            <div style="width: 300px;">
+                <label class="form-label">First Name</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.FirstName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "John",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.FirstName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Last Name</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.LastName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Doe",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.LastName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.FirstName, new { @class = "form-control", placeholder = "John" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.FirstName, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+
+            <div style="width: 350px;">
+                <label class="form-label">City</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.City,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.City,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">State</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.CustomerActivityReportFilter.State,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.State,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">Zip Code</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.ZipCode,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.ZipCode,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.LastName, new { @class = "form-control", placeholder = "Doe" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.LastName, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+
+            <div style="width: 300px;">
+                <label class="form-label">Phone</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.Phone,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "202-555-1212",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.Phone,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Email</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerActivityReportFilter.Email,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "johndoe@anymail.com",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.CustomerActivityReportFilter.Email,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">City</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.City, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.City, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-2">
-        <label class="form-label">State</label>
-        @Html.EnumDropDownListFor(x => x.CustomerActivityReportFilter.State, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.State, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-2">
-        <label class="form-label">Zip Code</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.ZipCode, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.ZipCode, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.Phone, new { @class = "form-control", placeholder = "202-555-1212" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.Phone, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.CustomerActivityReportFilter.Email, new { @class = "form-control", placeholder = "johndoe@anymail.com" })
-        @Html.ValidationMessageFor(x => x.CustomerActivityReportFilter.Email, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-@if (Request.HttpMethod == "POST" && ViewData.ModelState.IsValid)
+@if (Request.HttpMethod == "POST" &&
+     ViewData.ModelState.IsValid)
 {
     <hr class="my-5" />
 
@@ -95,7 +235,6 @@
     </div>
 
     <div class="row g-3 justify-content-center mb-4">
-
         <div class="col-md-4">
             <div class="border rounded p-3 text-center">
                 <h5>Total Customers</h5>
@@ -116,26 +255,44 @@
                 <p class="fs-4 mb-0">@Model.InactiveCount</p>
             </div>
         </div>
-
     </div>
 
-
-    if (Model.CustomerActivityReportRows != null && Model.CustomerActivityReportRows.Count > 0)
+    if (Model.CustomerActivityReportRows != null &&
+        Model.CustomerActivityReportRows.Count > 0)
     {
-
-        using (Html.BeginForm("ExportCustomerActivityReportPdf", "Reports", FormMethod.Post))
+        using (Html.BeginForm(
+            "ExportCustomerActivityReportPdf",
+            "Reports",
+            FormMethod.Post))
         {
             @Html.AntiForgeryToken()
 
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.CustomerId)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.ActiveStatus)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.FirstName)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.LastName)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.City)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.State)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.ZipCode)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.Phone)
-            @Html.HiddenFor(x => x.CustomerActivityReportFilter.Email)
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.CustomerId)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.ActiveStatus)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.FirstName)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.LastName)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.City)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.State)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.ZipCode)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.Phone)
+
+            @Html.HiddenFor(
+                x => x.CustomerActivityReportFilter.Email)
 
             <div class="text-center mb-4">
                 <button type="submit" class="btn btn-success">
@@ -169,42 +326,33 @@
                 </thead>
 
                 <tbody>
-                    @foreach (JamesPetBoarding.ViewModels.CustomerActivityReportRowVM customer in Model.CustomerActivityReportRows)
+                    @foreach (
+                        JamesPetBoarding.ViewModels.CustomerActivityReportRowVM
+                        customer in Model.CustomerActivityReportRows)
                     {
                         <tr>
                             <td>@customer.CustomerNameDisplay</td>
-
                             <td>@customer.ActiveStatusDisplay</td>
 
                             <td>
                                 @customer.AddressDisplay<br />
-                                @customer.CityDisplay, @customer.StateDisplay @customer.ZipCodeDisplay
+                                @customer.CityDisplay,
+                                @customer.StateDisplay
+                                @customer.ZipCodeDisplay
                             </td>
 
                             <td>@customer.PhoneDisplay</td>
-
                             <td>@customer.EmailDisplay</td>
-
                             <td>@customer.EmergencyContactCount</td>
-
                             <td>@customer.PetCount</td>
-
                             <td>@customer.BoardingCount</td>
-
                             <td>@customer.LastBoardingDateDisplay</td>
-
                             <td>@customer.InvoiceCount</td>
-
                             <td>@customer.TotalInvoiceAmountDisplay</td>
-
                             <td>@customer.TotalPaymentAmountDisplay</td>
-
                             <td>@customer.OutstandingBalanceDisplay</td>
-
                             <td>@customer.LastActivityDateDisplay</td>
-
                             <td>@customer.IsFrequentCustomerDisplay</td>
-
                             <td>@customer.NotesDisplay</td>
 
                             <td>
@@ -212,8 +360,16 @@
                                     "View Customer",
                                     "Read",
                                     "Customers",
-                                    new { customerId = customer.CustomerId },
-                                    new { @class = "btn btn-sm btn-primary" })
+                                    new
+                                    {
+                                        customerId =
+                                            customer.CustomerId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-sm btn-primary"
+                                    })
                             </td>
                         </tr>
                     }

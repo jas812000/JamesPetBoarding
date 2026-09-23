@@ -17,45 +17,121 @@
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-2">
-        <label class="form-label">Unit Type</label>
-        @Html.EnumDropDownListFor(x => x.UnitType, "Select...", new { @class = "form-select" })
+    @* Unit Type / Unit Name / Unit Number *@
+    <div class="col-md-10">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <label class="form-label">Unit Type</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.UnitType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Unit Name</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.UnitName,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Unit Number</label>
+
+                @Html.TextBoxFor(
+                    x => x.UnitNumber,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.UnitNumber,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <label class="form-label">Unit Name</label>
-        @Html.EnumDropDownListFor(x => x.UnitName, "Select...", new { @class = "form-select" })
-    </div>
+    @* Species Allowed / Size Category / Active Status *@
+    <div class="col-md-10">
+        <div class="row g-3">
 
-    <div class="col-md-4">
-        <label class="form-label">Unit Number</label>
-        @Html.TextBoxFor(x => x.UnitNumber, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.UnitNumber, "", new { @class = "text-danger" })
-    </div>
+            <div class="col-md-4">
+                <label class="form-label">Species Allowed</label>
 
-    <div class="col-md-2">
-        <label class="form-label">Species Allowed</label>
-        @Html.EnumDropDownListFor(x => x.SpeciesAllowed, "Select...", new { @class = "form-select" })
-    </div>
+                @Html.EnumDropDownListFor(
+                    x => x.SpeciesAllowed,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    <div class="col-md-2">
-        <label class="form-label">Size Category</label>
-        @Html.EnumDropDownListFor(x => x.SizeCategory, "Select...", new { @class = "form-select" })
-    </div>
+            <div class="col-md-4">
+                <label class="form-label">Size Category</label>
 
-    <div class="col-6">
-        <label class="form-label">Active Status</label>
-        @Html.DropDownListFor(
-            x => x.IsActive,
-            new List<SelectListItem>
-            {
-                new SelectListItem { Text = "All Boarding Units", Value = "" },
-                new SelectListItem { Text = "Active", Value = "true" },
-                new SelectListItem { Text = "Inactive", Value = "false" }
-            },
-            new { @class = "form-select" })
+                @Html.EnumDropDownListFor(
+                    x => x.SizeCategory,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-        <small class="text-muted">Select All Boarding Units, Active or Inactive.</small>
+            <div class="col-md-4">
+                <label class="form-label">Active Status</label>
+
+                @Html.DropDownListFor(
+                    x => x.IsActive,
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem
+                        {
+                            Text = "All Boarding Units",
+                            Value = ""
+                        },
+                        new SelectListItem
+                        {
+                            Text = "Active",
+                            Value = "true"
+                        },
+                        new SelectListItem
+                        {
+                            Text = "Inactive",
+                            Value = "false"
+                        }
+                    },
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                <small class="text-muted">
+                    Select All Boarding Units, Active or Inactive.
+                </small>
+            </div>
+
+        </div>
     </div>
 
     <div class="col-12 text-center mt-4">

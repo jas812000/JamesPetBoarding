@@ -19,40 +19,171 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    @Html.DropDownListFor(x => x.InvoiceId, Model.InvoiceSelectList, "Select Invoice...", new { @class = "form-select" })
+    @* Invoice *@
+    <div class="col-12">
+        <div style="width: 420px; margin: 0 auto;">
+            <label class="form-label">Invoice</label>
 
-    @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+            @Html.DropDownListFor(
+                x => x.InvoiceId,
+                Model.InvoiceSelectList,
+                "Select Invoice...",
+                new
+                {
+                    @class = "form-select",
+                    style = "max-width: none;"
+                })
+        </div>
+    </div>
 
-    @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+    @* Customer / Pet *@
+    <div class="col-12">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-    @Html.DropDownListFor(x => x.ProcessedByEmployeeId, Model.EmployeeSelectList, "Select Processed Employee...", new { @class = "form-select" })
+            <div style="width: 420px;">
+                <label class="form-label">Customer</label>
 
-    @Html.TextBoxFor(x => x.StartPaymentDateTime, new { @class = "form-control", type = "date" })
+                @Html.DropDownListFor(
+                    x => x.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    @Html.TextBoxFor(x => x.EndPaymentDateTime, new { @class = "form-control", type = "date" })
+            <div style="width: 420px;">
+                <label class="form-label">Pet</label>
 
-    @Html.TextBoxFor(x => x.TransactionReference, new { @class = "form-control", placeholder = "Transaction Reference" })
+                @Html.DropDownListFor(
+                    x => x.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    @Html.EnumDropDownListFor(x => x.PaymentMethod, "Select Payment Method...", new { @class = "form-select" })
+        </div>
+    </div>
 
-    @Html.DropDownListFor(
-        x => x.IsVoided,
-        new List<SelectListItem>
-        {
-            new SelectListItem
-            {
-                Text = "Processed",
-                Value = "false"
-            },
-            new SelectListItem
-            {
-                Text = "Voided",
-                Value = "true"
-            }
-        },
-        "Select Payment Status...",
-        new { @class = "form-select" })
+    @* Processed Employee *@
+    <div class="col-12">
+        <div style="width: 420px; margin: 0 auto;">
+            <label class="form-label">Processed Employee</label>
 
+            @Html.DropDownListFor(
+                x => x.ProcessedByEmployeeId,
+                Model.EmployeeSelectList,
+                "Select Processed Employee...",
+                new
+                {
+                    @class = "form-select",
+                    style = "max-width: none;"
+                })
+        </div>
+    </div>
+
+    @* Start Date / End Date *@
+    <div class="col-12">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <div style="width: 420px;">
+                <label class="form-label">Start Payment Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.StartPaymentDateTime,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div style="width: 420px;">
+                <label class="form-label">End Payment Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.EndPaymentDateTime,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
+    </div>
+
+    @* Transaction Reference *@
+    <div class="col-12">
+        <div style="width: 420px; margin: 0 auto;">
+            <label class="form-label">Transaction Reference</label>
+
+            @Html.TextBoxFor(
+                x => x.TransactionReference,
+                new
+                {
+                    @class = "form-control",
+                    placeholder = "Transaction Reference",
+                    style = "max-width: none;"
+                })
+        </div>
+    </div>
+
+    @* Payment Method / Payment Status *@
+    <div class="col-12">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <div style="width: 420px;">
+                <label class="form-label">Payment Method</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.PaymentMethod,
+                    "Select Payment Method...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div style="width: 420px;">
+                <label class="form-label">Payment Status</label>
+
+                @Html.DropDownListFor(
+                    x => x.IsVoided,
+                    new List<SelectListItem>
+                    {
+                        new SelectListItem
+                        {
+                            Text = "Processed",
+                            Value = "false"
+                        },
+                        new SelectListItem
+                        {
+                            Text = "Voided",
+                            Value = "true"
+                        }
+                    },
+                    "Select Payment Status...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
+    </div>
 
     <div class="col-12 text-center mt-4">
         <button type="submit" class="btn btn-primary me-2">Search Payments</button>

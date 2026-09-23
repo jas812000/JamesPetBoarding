@@ -19,13 +19,66 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
+    <div class="col-md-10">
+        <div class="row g-3">
 
-    @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
+            <div class="col-md-4">
+                <label class="form-label">Customer</label>
 
-    @Html.DropDownListFor(x => x.BoardingId, Model.BoardingSelectList, "Select Boarding...", new { @class = "form-select" })
+                @Html.DropDownListFor(
+                    x => x.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    @Html.EnumDropDownListFor(x => x.InvoiceStatus, "Select Status...", new { @class = "form-select" })
+            <div class="col-md-4">
+                <label class="form-label">Pet</label>
+
+                @Html.DropDownListFor(
+                    x => x.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Boarding</label>
+
+                @Html.DropDownListFor(
+                    x => x.BoardingId,
+                    Model.BoardingSelectList,
+                    "Select Boarding...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Invoice Status</label>
+
+        @Html.EnumDropDownListFor(
+            x => x.InvoiceStatus,
+            "Select Status...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+    </div>
 
 
     <div class="col-12 text-center mt-4">

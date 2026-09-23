@@ -18,44 +18,76 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-5">
-        <label class="form-label">Customer</label>
-        @Html.DropDownListFor(x => x.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.CustomerId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-5">
-        <label class="form-label">Pet</label>
-        @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PetId, "", new { @class = "text-danger" })
-    </div>
-
     <div class="col-md-10">
-        <label class="form-label">Boarding Unit</label>
-        @Html.DropDownListFor(x => x.BoardingUnitId, Model.BoardingUnitSelectList, "Select Boarding Unit...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.BoardingUnitId, "", new { @class = "text-danger" })
-    </div>
+        <div class="row g-3">
 
-    <div class="col-md-5">
-        <label class="form-label">Start Date/Time</label>
-        @Html.TextBoxFor(x => x.StartDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
-        @Html.ValidationMessageFor(x => x.StartDateTime, "", new { @class = "text-danger" })
-    </div>
+            <div class="col-md-4">
+                <label class="form-label">Customer</label>
 
-    <div class="col-md-5">
-        <label class="form-label">End Date/Time</label>
-        @Html.TextBoxFor(x => x.EndDateTime, "{0:yyyy-MM-ddTHH:mm}", new { @class = "form-control", type = "datetime-local" })
-        @Html.ValidationMessageFor(x => x.EndDateTime, "", new { @class = "text-danger" })
-    </div>
+                @Html.DropDownListFor(
+                    x => x.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
 
-    <div class="col-md-10">
-        <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(
+                    x => x.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Pet</label>
+
+                @Html.DropDownListFor(
+                    x => x.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Boarding Unit</label>
+
+                @Html.DropDownListFor(
+                    x => x.BoardingUnitId,
+                    Model.BoardingUnitSelectList,
+                    "Select Boarding Unit...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.BoardingUnitId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Boarding</button>
+        <button type="submit"
+                id="CreateBoardingButton"
+                class="btn btn-secondary me-2"
+                disabled>
+            Create Boarding
+        </button>
 
         @Html.ActionLink(
             "Back to Boarding Management",
@@ -65,4 +97,58 @@
             new { @class = "btn btn-secondary ms-2" })
     </div>
 
+}
+
+@section Scripts
+{
+    <script>
+        (function () {
+
+            var customer = document.getElementById("CustomerId");
+            var pet = document.getElementById("PetId");
+            var boardingUnit = document.getElementById("BoardingUnitId");
+            var startDateTime = document.getElementById("StartDateTime");
+            var endDateTime = document.getElementById("EndDateTime");
+            var createButton = document.getElementById("CreateBoardingButton");
+
+            function hasSelection(element) {
+                return element.value &&
+                    element.value !== "00000000-0000-0000-0000-000000000000";
+            }
+
+            function hasValidDate(element) {
+                return element.value &&
+                    !element.value.startsWith("0001-01-01");
+            }
+
+            function updateCreateButton() {
+
+                var formIsComplete =
+                    hasSelection(customer) &&
+                    hasSelection(pet) &&
+                    hasSelection(boardingUnit) &&
+                    hasValidDate(startDateTime) &&
+                    hasValidDate(endDateTime);
+
+                createButton.disabled = !formIsComplete;
+
+                createButton.classList.toggle(
+                    "btn-primary",
+                    formIsComplete);
+
+                createButton.classList.toggle(
+                    "btn-secondary",
+                    !formIsComplete);
+            }
+
+            customer.addEventListener("change", updateCreateButton);
+            pet.addEventListener("change", updateCreateButton);
+            boardingUnit.addEventListener("change", updateCreateButton);
+            startDateTime.addEventListener("input", updateCreateButton);
+            endDateTime.addEventListener("input", updateCreateButton);
+
+            updateCreateButton();
+
+        })();
+    </script>
 }

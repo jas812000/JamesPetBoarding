@@ -590,6 +590,24 @@ namespace JamesPetBoarding.Controllers
                     .ToList();
             }
 
+            if (petReport.PetReportFilter.Weight.HasValue)
+            {
+                decimal weightInPounds =
+                    petReport.PetReportFilter.Weight.Value;
+
+                if (petReport.PetReportFilter.WeightUnit ==
+                    WeightUnitEnum.Kilograms)
+                {
+                    weightInPounds =
+                        weightInPounds / 0.45359237m;
+                }
+
+                pets = pets
+                    .Where(x =>
+                        Math.Abs(x.Weight - weightInPounds) < 0.01m)
+                    .ToList();
+            }
+
             petReport.PetReportRows = new List<PetReportRowVM>();
 
             pets = pets
@@ -772,6 +790,24 @@ namespace JamesPetBoarding.Controllers
             {
                 pets = pets
                     .Where(x => x.BirthDate.Date == petReport.PetReportFilter.BirthDate.Value.Date)
+                    .ToList();
+            }
+
+            if (petReport.PetReportFilter.Weight.HasValue)
+            {
+                decimal weightInPounds =
+                    petReport.PetReportFilter.Weight.Value;
+
+                if (petReport.PetReportFilter.WeightUnit ==
+                    WeightUnitEnum.Kilograms)
+                {
+                    weightInPounds =
+                        weightInPounds / 0.45359237m;
+                }
+
+                pets = pets
+                    .Where(x =>
+                        Math.Abs(x.Weight - weightInPounds) < 0.01m)
                     .ToList();
             }
 

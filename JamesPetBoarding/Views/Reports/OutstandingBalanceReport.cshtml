@@ -4,75 +4,170 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Outstanding Balance Report</h2>
     <p class="lead">
         Enter one or more optional filters to generate an outstanding balance report.
     </p>
 </div>
 
-
-@using (Html.BeginForm("OutstandingBalanceReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "OutstandingBalanceReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 250px;">
+                <label class="form-label">Invoice Start Date</label>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice Start Date</label>
-        @Html.TextBoxFor(x => x.OutstandingBalanceReportFilter.InvoiceStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.InvoiceStartDate, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceStartDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceStartDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">Invoice End Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceEndDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceEndDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice End Date</label>
-        @Html.TextBoxFor(x => x.OutstandingBalanceReportFilter.InvoiceEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.InvoiceEndDate, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 350px;">
+                <label class="form-label">Customer Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.OutstandingBalanceReportFilter.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Pet Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.OutstandingBalanceReportFilter.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.DropDownListFor(x => x.OutstandingBalanceReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.CustomerId, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 300px;">
+                <label class="form-label">Minimum Balance</label>
+
+                @Html.TextBoxFor(
+                    x => x.OutstandingBalanceReportFilter.MinimumBalance,
+                    new
+                    {
+                        @class = "form-control",
+                        step = "0.01",
+                        min = "0",
+                        type = "number",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.MinimumBalance,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Invoice Status</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceStatus,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.OutstandingBalanceReportFilter.InvoiceStatus,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Pet Name</label>
-        @Html.DropDownListFor(x => x.OutstandingBalanceReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.PetId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Minimum Balance</label>
-        @Html.TextBoxFor(x => x.OutstandingBalanceReportFilter.MinimumBalance, new { @class = "form-control", step = "0.01", min = "0", type = "number" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.MinimumBalance, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Invoice Status</label>
-        @Html.EnumDropDownListFor(x => x.OutstandingBalanceReportFilter.InvoiceStatus, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.OutstandingBalanceReportFilter.InvoiceStatus, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-
-@if (Model.OutstandingBalanceReportRows != null && Model.OutstandingBalanceReportRows.Any())
+@if (Model.OutstandingBalanceReportRows != null &&
+     Model.OutstandingBalanceReportRows.Any())
 {
     <div class="border rounded p-4 mt-5 mb-4">
-        <h3 class="text-center mb-4">Outstanding Balance Summary</h3>
+        <h3 class="text-center mb-4">
+            Outstanding Balance Summary
+        </h3>
 
         <div class="row text-center justify-content-center">
             <div class="col-md-4 mb-3">
@@ -87,16 +182,30 @@
         </div>
     </div>
 
-    using (Html.BeginForm("ExportOutstandingBalanceReportPdf", "Reports", FormMethod.Post))
+    using (Html.BeginForm(
+        "ExportOutstandingBalanceReportPdf",
+        "Reports",
+        FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.InvoiceStartDate)
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.InvoiceEndDate)
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.CustomerId)
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.PetId)
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.MinimumBalance)
-        @Html.HiddenFor(x => x.OutstandingBalanceReportFilter.InvoiceStatus)
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.InvoiceStartDate)
+
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.InvoiceEndDate)
+
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.CustomerId)
+
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.PetId)
+
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.MinimumBalance)
+
+        @Html.HiddenFor(
+            x => x.OutstandingBalanceReportFilter.InvoiceStatus)
 
         <div class="text-center mb-4">
             <button type="submit" class="btn btn-success">
@@ -122,7 +231,9 @@
             </thead>
 
             <tbody>
-                @foreach (var outstandingBalanceRow in Model.OutstandingBalanceReportRows)
+                @foreach (
+                    var outstandingBalanceRow in
+                    Model.OutstandingBalanceReportRows)
                 {
                     <tr>
                         <td>@outstandingBalanceRow.CustomerNameDisplay</td>
@@ -139,8 +250,16 @@
                                 "View",
                                 "Read",
                                 "Invoices",
-                                new { invoiceId = outstandingBalanceRow.InvoiceId },
-                                new { @class = "btn btn-sm btn-outline-primary" })
+                                new
+                                {
+                                    invoiceId =
+                                        outstandingBalanceRow.InvoiceId
+                                },
+                                new
+                                {
+                                    @class =
+                                        "btn btn-sm btn-outline-primary"
+                                })
                         </td>
                     </tr>
                 }

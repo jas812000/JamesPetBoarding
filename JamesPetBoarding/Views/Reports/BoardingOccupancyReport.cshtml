@@ -4,65 +4,134 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Boarding Occupancy Report</h2>
+
     <p class="lead">
         Enter one or more optional filters to generate a boarding occupancy report.
     </p>
 </div>
 
-
-@using (Html.BeginForm("BoardingOccupancyReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "BoardingOccupancyReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
 
-    <div class="col-md-6">
-        <label class="form-label">Report Date</label>
-        @Html.TextBoxFor(x => x.BoardingOccupancyReportFilter.ReportDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.BoardingOccupancyReportFilter.ReportDate, "", new { @class = "text-danger" })
+            <div style="width: 300px;">
+                <label class="form-label">Report Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.BoardingOccupancyReportFilter.ReportDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.BoardingOccupancyReportFilter.ReportDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Unit Type</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.BoardingOccupancyReportFilter.UnitType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.BoardingOccupancyReportFilter.UnitType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Unit Type</label>
-        @Html.EnumDropDownListFor(x => x.BoardingOccupancyReportFilter.UnitType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.BoardingOccupancyReportFilter.UnitType, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+
+            <div style="width: 300px;">
+                <label class="form-label">Species Allowed</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.BoardingOccupancyReportFilter.SpeciesAllowed,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.BoardingOccupancyReportFilter.SpeciesAllowed,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Size Category</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.BoardingOccupancyReportFilter.SizeCategory,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.BoardingOccupancyReportFilter.SizeCategory,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-
-    <div class="col-md-6">
-        <label class="form-label">Species Allowed</label>
-        @Html.EnumDropDownListFor(x => x.BoardingOccupancyReportFilter.SpeciesAllowed, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.BoardingOccupancyReportFilter.SpeciesAllowed, "", new { @class = "text-danger" })
-    </div>
-
-
-    <div class="col-md-6">
-        <label class="form-label">Size Category</label>
-        @Html.EnumDropDownListFor(x => x.BoardingOccupancyReportFilter.SizeCategory, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.BoardingOccupancyReportFilter.SizeCategory, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-
-@if (Model.BoardingOccupancyReportRows != null && Model.BoardingOccupancyReportRows.Any())
+@if (Model.BoardingOccupancyReportRows != null &&
+     Model.BoardingOccupancyReportRows.Any())
 {
     <div class="border rounded p-4 mt-5 mb-4">
-        <h3 class="text-center mb-4">Boarding Occupancy Summary</h3>
+        <h3 class="text-center mb-4">
+            Boarding Occupancy Summary
+        </h3>
 
         <div class="row text-center justify-content-center">
             <div class="col-md-3 mb-3">
@@ -87,14 +156,24 @@
         </div>
     </div>
 
-    using (Html.BeginForm("ExportBoardingOccupancyReportPdf", "Reports", FormMethod.Post))
+    using (Html.BeginForm(
+        "ExportBoardingOccupancyReportPdf",
+        "Reports",
+        FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
-        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.ReportDate)
-        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.UnitType)
-        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.SpeciesAllowed)
-        @Html.HiddenFor(x => x.BoardingOccupancyReportFilter.SizeCategory)
+        @Html.HiddenFor(
+            x => x.BoardingOccupancyReportFilter.ReportDate)
+
+        @Html.HiddenFor(
+            x => x.BoardingOccupancyReportFilter.UnitType)
+
+        @Html.HiddenFor(
+            x => x.BoardingOccupancyReportFilter.SpeciesAllowed)
+
+        @Html.HiddenFor(
+            x => x.BoardingOccupancyReportFilter.SizeCategory)
 
         <div class="text-center mb-4">
             <button type="submit" class="btn btn-success">
@@ -122,7 +201,9 @@
             </thead>
 
             <tbody>
-                @foreach (var boardingUnit in Model.BoardingOccupancyReportRows)
+                @foreach (
+                    var boardingUnit in
+                    Model.BoardingOccupancyReportRows)
                 {
                     <tr>
                         <td>@boardingUnit.UnitNameDisplay</td>
@@ -164,8 +245,16 @@
                                     "View",
                                     "Read",
                                     "Boardings",
-                                    new { boardingId = boardingUnit.BoardingId.Value },
-                                    new { @class = "btn btn-sm btn-outline-primary" })
+                                    new
+                                    {
+                                        boardingId =
+                                            boardingUnit.BoardingId.Value
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-sm btn-outline-primary"
+                                    })
                             }
                         </td>
                     </tr>

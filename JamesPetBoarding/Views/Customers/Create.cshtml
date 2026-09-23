@@ -19,44 +19,121 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "John" })
-        @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(
+            x => x.FirstName,
+            new
+            {
+                @class = "form-control",
+                placeholder = "John",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.FirstName,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Doe" })
-        @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(
+            x => x.LastName,
+            new
+            {
+                @class = "form-control",
+                placeholder = "Doe",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.LastName,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-10">
         <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.Address, new { @class = "form-control", placeholder = "1234 Main Street" })
-        @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(
+            x => x.Address,
+            new
+            {
+                @class = "form-control",
+                placeholder = "1234 Main Street",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Address,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">City</label>
-        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
+    <div class="col-md-10">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <label class="form-label">City</label>
+
+                @Html.TextBoxFor(
+                    x => x.City,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.City,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">State</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.State,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.State,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Zip Code</label>
+
+                @Html.TextBoxFor(
+                    x => x.ZipCode,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.ZipCode,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <label class="form-label">State</label>
-        @Html.EnumDropDownListFor(x => x.State, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-2">
-        <label class="form-label">Zip Code</label>
-        @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.ZipCode, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Phone</label>
+
         @Html.TextBoxFor(
             x => x.Phone,
             new
@@ -65,29 +142,64 @@
                 placeholder = "972-555-1212",
                 maxlength = "12",
                 inputmode = "numeric",
-                id = "Phone"
+                id = "Phone",
+                style = "max-width: none;"
             })
-        @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+
+        @Html.ValidationMessageFor(
+            x => x.Phone,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "johndoe@anymail.com" })
-        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+
+        @Html.TextBoxFor(
+            x => x.Email,
+            new
+            {
+                @class = "form-control",
+                placeholder = "johndoe@anymail.com",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Email,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-10">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Create Customer Profile</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit"
+                id="CreateCustomerButton"
+                class="btn btn-secondary me-2"
+                disabled>
+            Create Customer Profile
+        </button>
 
         @Html.ActionLink(
             "Cancel",
-            "Index",
+            "Search",
             "Customers",
             null,
             new { @class = "btn btn-secondary ms-2" })
@@ -95,31 +207,86 @@
 
 }
 
-@section Scripts {
+@section Scripts
+{
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const phoneInput = document.getElementById("Phone");
+        (function () {
 
-            if (phoneInput) {
-                phoneInput.addEventListener("input", function () {
-                    let digits = this.value.replace(/\D/g, "").substring(0, 10);
+            var firstName = document.getElementById("FirstName");
+            var lastName = document.getElementById("LastName");
+            var address = document.getElementById("Address");
+            var city = document.getElementById("City");
+            var state = document.getElementById("State");
+            var zipCode = document.getElementById("ZipCode");
+            var phone = document.getElementById("Phone");
+            var email = document.getElementById("Email");
+            var createButton =
+                document.getElementById("CreateCustomerButton");
 
-                    if (digits.length > 6) {
-                        this.value =
-                            digits.substring(0, 3) + "-" +
-                            digits.substring(3, 6) + "-" +
-                            digits.substring(6);
-                    }
-                    else if (digits.length > 3) {
-                        this.value =
-                            digits.substring(0, 3) + "-" +
-                            digits.substring(3);
-                    }
-                    else {
-                        this.value = digits;
-                    }
-                });
+            function hasText(element) {
+                return element.value.trim().length > 0;
             }
-        });
+
+            function hasSelection(element) {
+                return element.value !== "";
+            }
+
+            function updateCreateButton() {
+
+                var formIsComplete =
+                    hasText(firstName) &&
+                    hasText(lastName) &&
+                    hasText(address) &&
+                    hasText(city) &&
+                    hasSelection(state) &&
+                    hasText(zipCode) &&
+                    hasText(phone) &&
+                    hasText(email);
+
+                createButton.disabled = !formIsComplete;
+
+                createButton.classList.toggle(
+                    "btn-primary",
+                    formIsComplete);
+
+                createButton.classList.toggle(
+                    "btn-secondary",
+                    !formIsComplete);
+            }
+
+            phone.addEventListener("input", function () {
+
+                var digits =
+                    this.value.replace(/\D/g, "").substring(0, 10);
+
+                if (digits.length > 6) {
+                    this.value =
+                        digits.substring(0, 3) + "-" +
+                        digits.substring(3, 6) + "-" +
+                        digits.substring(6);
+                }
+                else if (digits.length > 3) {
+                    this.value =
+                        digits.substring(0, 3) + "-" +
+                        digits.substring(3);
+                }
+                else {
+                    this.value = digits;
+                }
+
+                updateCreateButton();
+            });
+
+            firstName.addEventListener("input", updateCreateButton);
+            lastName.addEventListener("input", updateCreateButton);
+            address.addEventListener("input", updateCreateButton);
+            city.addEventListener("input", updateCreateButton);
+            state.addEventListener("change", updateCreateButton);
+            zipCode.addEventListener("input", updateCreateButton);
+            email.addEventListener("input", updateCreateButton);
+
+            updateCreateButton();
+
+        })();
     </script>
 }

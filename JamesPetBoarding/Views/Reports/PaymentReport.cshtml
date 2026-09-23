@@ -1,82 +1,191 @@
 ﻿@model JamesPetBoarding.ViewModels.PaymentReportVM
-
 @{
     ViewBag.Title = "Payment Report";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Payment Report</h2>
     <p class="lead">
         Enter one or more optional filters to generate a payment report.
     </p>
 </div>
 
-@using (Html.BeginForm("PaymentReport", "Reports", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "PaymentReport",
+    "Reports",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 250px;">
+                <label class="form-label">Payment Start Date</label>
 
-    <div class="col-md-6">
-        <label class="form-label">Payment Start Date</label>
-        @Html.TextBoxFor(x => x.PaymentReportFilter.PaymentStartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentStartDate, "", new { @class = "text-danger" })
+                @Html.TextBoxFor(
+                    x => x.PaymentReportFilter.PaymentStartDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.PaymentStartDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 250px;">
+                <label class="form-label">Payment End Date</label>
+
+                @Html.TextBoxFor(
+                    x => x.PaymentReportFilter.PaymentEndDate,
+                    "{0:yyyy-MM-dd}",
+                    new
+                    {
+                        @class = "form-control",
+                        type = "date",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.PaymentEndDate,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Payment End Date</label>
-        @Html.TextBoxFor(x => x.PaymentReportFilter.PaymentEndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentEndDate, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 350px;">
+                <label class="form-label">Customer Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.PaymentReportFilter.CustomerId,
+                    Model.CustomerSelectList,
+                    "Select Customer...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.CustomerId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Pet Name</label>
+
+                @Html.DropDownListFor(
+                    x => x.PaymentReportFilter.PetId,
+                    Model.PetSelectList,
+                    "Select Pet...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.DropDownListFor(x => x.PaymentReportFilter.CustomerId, Model.CustomerSelectList, "Select Customer...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.CustomerId, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div class="d-flex gap-3 justify-content-center flex-nowrap">
+            <div style="width: 300px;">
+                <label class="form-label">Invoice Type</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.PaymentReportFilter.InvoiceType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.InvoiceType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div style="width: 300px;">
+                <label class="form-label">Payment Method</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.PaymentReportFilter.PaymentMethod,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PaymentReportFilter.PaymentMethod,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Pet Name</label>
-        @Html.DropDownListFor(x => x.PaymentReportFilter.PetId, Model.PetSelectList, "Select Pet...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PetId, "", new { @class = "text-danger" })
+    <div class="col-12">
+        <div style="width: 350px; margin: 0 auto;">
+            <label class="form-label">
+                Processed By Employee
+            </label>
+
+            @Html.DropDownListFor(
+                x => x.PaymentReportFilter.ProcessedByEmployeeId,
+                Model.EmployeeSelectList,
+                "Select Employee...",
+                new
+                {
+                    @class = "form-select",
+                    style = "max-width: none;"
+                })
+
+            @Html.ValidationMessageFor(
+                x => x.PaymentReportFilter.ProcessedByEmployeeId,
+                "",
+                new { @class = "text-danger" })
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Invoice Type</label>
-        @Html.EnumDropDownListFor(x => x.PaymentReportFilter.InvoiceType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.InvoiceType, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Payment Method</label>
-        @Html.EnumDropDownListFor(x => x.PaymentReportFilter.PaymentMethod, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.PaymentMethod, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Processed By Employee</label>
-        @Html.DropDownListFor(x => x.PaymentReportFilter.ProcessedByEmployeeId, Model.EmployeeSelectList, "Select Employee...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PaymentReportFilter.ProcessedByEmployeeId, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Generate Report</button>
+    <div class="col-12 text-center mt-4">
+        <button type="submit" class="btn btn-primary me-2">
+            Generate Report
+        </button>
 
         @Html.ActionLink(
-             "Back to Reports",
-             "Index",
-             "Reports",
-             null,
-             new { @class = "btn btn-secondary ms-2" })
+            "Back to Reports",
+            "Index",
+            "Reports",
+            null,
+            new { @class = "btn btn-secondary ms-2" })
     </div>
 }
 
-
-@if ((Model.PaymentReportRows != null && Model.PaymentReportRows.Any()) ||
-     (Model.PaymentMethodSummaryRows != null && Model.PaymentMethodSummaryRows.Any()))
+@if ((Model.PaymentReportRows != null &&
+      Model.PaymentReportRows.Any()) ||
+     (Model.PaymentMethodSummaryRows != null &&
+      Model.PaymentMethodSummaryRows.Any()))
 {
     <div class="border rounded p-4 mt-5 mb-4">
         <h3 class="text-center mb-4">Payment Summary</h3>
@@ -99,7 +208,10 @@
         </div>
     </div>
 
-    using (Html.BeginForm("ExportPaymentReportPdf", "Reports", FormMethod.Post))
+    using (Html.BeginForm(
+        "ExportPaymentReportPdf",
+        "Reports",
+        FormMethod.Post))
     {
         @Html.AntiForgeryToken()
 
@@ -109,7 +221,8 @@
         @Html.HiddenFor(x => x.PaymentReportFilter.PetId)
         @Html.HiddenFor(x => x.PaymentReportFilter.InvoiceType)
         @Html.HiddenFor(x => x.PaymentReportFilter.PaymentMethod)
-        @Html.HiddenFor(x => x.PaymentReportFilter.ProcessedByEmployeeId)
+        @Html.HiddenFor(
+            x => x.PaymentReportFilter.ProcessedByEmployeeId)
 
         <div class="text-center mb-4">
             <button type="submit" class="btn btn-success">
@@ -118,10 +231,13 @@
         </div>
     }
 
-    if (Model.PaymentMethodSummaryRows != null && Model.PaymentMethodSummaryRows.Any())
+    if (Model.PaymentMethodSummaryRows != null &&
+        Model.PaymentMethodSummaryRows.Any())
     {
         <div class="table-responsive mt-4">
-            <h3 class="text-center mb-4">Payment Method Summary</h3>
+            <h3 class="text-center mb-4">
+                Payment Method Summary
+            </h3>
 
             <table class="table table-striped table-bordered align-middle">
                 <thead>
@@ -136,7 +252,9 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var paymentMethod in Model.PaymentMethodSummaryRows)
+                    @foreach (
+                        var paymentMethod in
+                        Model.PaymentMethodSummaryRows)
                     {
                         <tr>
                             <td>@paymentMethod.PaymentMethodDisplay</td>
@@ -152,10 +270,13 @@
         </div>
     }
 
-    if (Model.PaymentReportRows != null && Model.PaymentReportRows.Any())
+    if (Model.PaymentReportRows != null &&
+        Model.PaymentReportRows.Any())
     {
         <div class="table-responsive mt-5">
-            <h3 class="text-center mb-4">Payment Details</h3>
+            <h3 class="text-center mb-4">
+                Payment Details
+            </h3>
 
             <table class="table table-striped table-bordered align-middle">
                 <thead>
@@ -173,7 +294,9 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var payment in Model.PaymentReportRows)
+                    @foreach (
+                        var payment in
+                        Model.PaymentReportRows)
                     {
                         <tr>
                             <td>@payment.PaymentDateDisplay</td>
@@ -190,8 +313,16 @@
                                     "View",
                                     "Read",
                                     "Payments",
-                                    new { paymentId = payment.PaymentId },
-                                    new { @class = "btn btn-sm btn-outline-primary" })
+                                    new
+                                    {
+                                        paymentId =
+                                            payment.PaymentId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-sm btn-outline-primary"
+                                    })
                             </td>
                         </tr>
                     }
