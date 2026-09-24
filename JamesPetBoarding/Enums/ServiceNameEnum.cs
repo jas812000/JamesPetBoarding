@@ -63,7 +63,7 @@ namespace JamesPetBoarding.Enums
         BehavioralAssessment = 18,
 
         [Display(Name = "Detangling")]
-        Detangling = 18
+        Detangling = 19
 
 
     }
