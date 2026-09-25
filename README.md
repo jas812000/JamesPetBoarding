@@ -476,6 +476,22 @@ For a fresh environment:
 
 ---
 
+## Troubleshooting
+
+### IIS Express Cannot Load a Razor View Assembly
+
+On some Windows systems, ASP.NET MVC 5 dynamically compiles Razor views under `%LOCALAPPDATA%\Temp\Temporary ASP.NET Files`. Windows Application Control may block a generated DLL, causing the application to fail while loading a view with error `0x800711C7`.
+
+To retry after the blocked assembly has been removed:
+
+1. Stop IIS Express and close Visual Studio.
+2. Clear the contents of `%LOCALAPPDATA%\Temp\Temporary ASP.NET Files`.
+3. Reopen Visual Studio, clean and rebuild the solution, and start the application again.
+
+If the error persists, the Windows Application Control policy may need an appropriate exception for the development environment.
+
+---
+
 ## Testing
 
 The repository contains an NUnit test project and test infrastructure, but meaningful automated application test coverage has not yet been implemented. The existing test project should not be interpreted as evidence of production test coverage.
