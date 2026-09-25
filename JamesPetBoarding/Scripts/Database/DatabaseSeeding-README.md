@@ -20,7 +20,7 @@ The normal reset deletes all application-created and manually added business rec
 
 ## Full database deletion and rebuild
 
-Use this only when the entire LocalDB database—including login accountsâ€”should be discarded.
+Use this only when the entire LocalDB database—including login accounts—should be discarded.
 
 Back up anything that must be retained, stop IIS Express, connect to `(localdb)\MSSQLLocalDB`, open a query against `master`, and run:
 
