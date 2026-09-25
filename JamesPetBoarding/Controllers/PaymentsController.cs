@@ -1,4 +1,4 @@
-﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Enums;
 using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
 using System;
@@ -32,13 +32,17 @@ namespace JamesPetBoarding.Controllers
 
             PaymentSearchVM paymentSearch = new PaymentSearchVM();
 
-            paymentSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
+            paymentSearch.InvoiceSelectList =
+                BuildInvoiceSelectList(dbContext);
 
-            paymentSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
+            paymentSearch.CustomerSelectList =
+                BuildCustomerSelectList(dbContext);
 
-            paymentSearch.PetSelectList = BuildPetSelectList(dbContext);
+            paymentSearch.PetSelectList =
+                BuildPetSelectList(dbContext);
 
-            paymentSearch.EmployeeSelectList = BuildEmployeeSelectList(dbContext);
+            paymentSearch.EmployeeSelectList =
+                BuildEmployeeSelectList(dbContext);
 
 
             return View(paymentSearch);
@@ -61,13 +65,54 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            paymentSearch.InvoiceSelectList = BuildInvoiceSelectList(dbContext);
+            if (paymentSearch.InvoiceId.HasValue)
+            {
+                InvoiceModel selectedInvoice = dbContext.Invoices
+                    .FirstOrDefault(x =>
+                        x.InvoiceId == paymentSearch.InvoiceId.Value);
 
-            paymentSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
+                if (selectedInvoice == null)
+                {
+                    ModelState.AddModelError(
+                        "InvoiceId",
+                        "The selected invoice no longer exists.");
 
-            paymentSearch.PetSelectList = BuildPetSelectList(dbContext);
+                    paymentSearch.InvoiceId = null;
+                    paymentSearch.CustomerId = null;
+                    paymentSearch.PetId = null;
+                }
+                else
+                {
+                    // Disabled Customer/Pet controls are not posted.
+                    paymentSearch.CustomerId = selectedInvoice.CustomerId;
+                    paymentSearch.PetId = selectedInvoice.PetId;
+                }
+            }
 
-            paymentSearch.EmployeeSelectList = BuildEmployeeSelectList(dbContext);
+            paymentSearch.InvoiceSelectList =
+                BuildInvoiceSelectList(
+                    dbContext,
+                    paymentSearch.CustomerId,
+                    paymentSearch.PetId);
+
+            if (paymentSearch.InvoiceId.HasValue)
+            {
+                paymentSearch.InvoiceSelectList =
+                    paymentSearch.InvoiceSelectList
+                        .Where(x =>
+                            x.Value ==
+                            paymentSearch.InvoiceId.Value.ToString())
+                        .ToList();
+            }
+
+            paymentSearch.CustomerSelectList =
+                BuildCustomerSelectList(dbContext, paymentSearch.PetId);
+
+            paymentSearch.PetSelectList =
+                BuildPetSelectList(dbContext, paymentSearch.CustomerId);
+
+            paymentSearch.EmployeeSelectList =
+                BuildEmployeeSelectList(dbContext);
 
             List<PaymentModel> paymentQuery = dbContext.Payments
                 .Include(x => x.Invoice)
@@ -198,7 +243,64 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-        // GET: Payments/Create
+                // GET: Payments/GetPaymentSearchSelections
+        public JsonResult GetPaymentSearchSelections(
+            Guid? invoiceId,
+            Guid? customerId,
+            Guid? petId)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return Json(
+                    new { Error = "Unable to load payment search selections." },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            if (invoiceId.HasValue)
+            {
+                InvoiceModel selectedInvoice = dbContext.Invoices
+                    .FirstOrDefault(x => x.InvoiceId == invoiceId.Value);
+
+                if (selectedInvoice == null)
+                {
+                    return Json(
+                        new { Error = "The selected invoice no longer exists." },
+                        JsonRequestBehavior.AllowGet);
+                }
+
+                customerId = selectedInvoice.CustomerId;
+                petId = selectedInvoice.PetId;
+            }
+
+            List<SelectListItem> invoices =
+                BuildInvoiceSelectList(dbContext, customerId, petId);
+
+            if (invoiceId.HasValue)
+            {
+                invoices = invoices
+                    .Where(x => x.Value == invoiceId.Value.ToString())
+                    .ToList();
+            }
+
+            return Json(
+                new
+                {
+                    InvoiceId = invoiceId,
+                    CustomerId = customerId,
+                    PetId = petId,
+                    Invoices = invoices,
+                    Customers = BuildCustomerSelectList(dbContext, petId),
+                    Pets = BuildPetSelectList(dbContext, customerId)
+                },
+                JsonRequestBehavior.AllowGet);
+        }
+
+
+// GET: Payments/Create
         public ActionResult Create(Guid invoiceId)
         {
 
@@ -739,9 +841,12 @@ namespace JamesPetBoarding.Controllers
         }
 
 
-        private List<SelectListItem> BuildInvoiceSelectList(ApplicationDbContext dbContext)
+                private List<SelectListItem> BuildInvoiceSelectList(
+            ApplicationDbContext dbContext,
+            Guid? customerId = null,
+            Guid? petId = null)
         {
-            return dbContext.Invoices
+            List<InvoiceModel> invoices = dbContext.Invoices
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
                 .OrderBy(x => x.Customer.LastName)
@@ -749,44 +854,106 @@ namespace JamesPetBoarding.Controllers
                 .ThenBy(x => x.Pet.PetName)
                 .ThenBy(x => x.InvoiceDateTime)
                 .ThenBy(x => x.InvoiceId)
-                .ToList()
+                .ToList();
+
+            if (customerId.HasValue)
+            {
+                invoices = invoices
+                    .Where(x => x.CustomerId == customerId.Value)
+                    .ToList();
+            }
+
+            if (petId.HasValue)
+            {
+                invoices = invoices
+                    .Where(x => x.PetId == petId.Value)
+                    .ToList();
+            }
+
+            return invoices
                 .Select(x => new SelectListItem
                 {
                     Value = x.InvoiceId.ToString(),
-                    Text = $"{x.Customer.LastName}, " +
-                    $"{x.Customer.FirstName}, " +
-                    $"{x.Pet.PetName} - " +
-                    $"{x.InvoiceDateTime.ToString("MM/dd/yyyy")} - " +
-                    $"{x.InvoiceStatus} - (#" +
-                    $"{x.InvoiceId.ToString().Substring(0, 6)})"
+                    Text =
+                        $"{x.Customer.LastName}, {x.Customer.FirstName}, " +
+                        $"{x.Pet.PetName} - " +
+                        $"{x.InvoiceDateTime:MM/dd/yyyy} - " +
+                        $"{x.InvoiceStatus} - " +
+                        $"(#{x.InvoiceId.ToString().Substring(0, 6)})"
                 })
                 .ToList();
         }
 
 
-        private List<SelectListItem> BuildCustomerSelectList(ApplicationDbContext dbContext)
+                private List<SelectListItem> BuildCustomerSelectList(
+            ApplicationDbContext dbContext,
+            Guid? petId = null)
         {
-            return dbContext.Customers
+            List<CustomerModel> customers = dbContext.Customers
                 .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName)
-                .ToList()
+                .ToList();
+
+            if (petId.HasValue)
+            {
+                List<Guid> customerIds = dbContext.CustomerPets
+                    .Where(x => x.PetId == petId.Value)
+                    .Select(x => x.CustomerId)
+                    .ToList();
+
+                // Preserve historical invoice relationships in Search.
+                customerIds.AddRange(
+                    dbContext.Invoices
+                        .Where(x => x.PetId == petId.Value)
+                        .Select(x => x.CustomerId)
+                        .ToList());
+
+                customers = customers
+                    .Where(x => customerIds.Contains(x.CustomerId))
+                    .ToList();
+            }
+
+            return customers
                 .Select(x => new SelectListItem
                 {
                     Value = x.CustomerId.ToString(),
-                    Text = $"{x.LastName}, {x.FirstName}",
+                    Text = $"{x.LastName}, {x.FirstName}"
                 })
                 .ToList();
         }
 
-        private List<SelectListItem> BuildPetSelectList(ApplicationDbContext dbContext)
+                private List<SelectListItem> BuildPetSelectList(
+            ApplicationDbContext dbContext,
+            Guid? customerId = null)
         {
-            return dbContext.Pets
+            List<PetModel> pets = dbContext.Pets
                 .OrderBy(x => x.PetName)
-                .ToList()
+                .ToList();
+
+            if (customerId.HasValue)
+            {
+                List<Guid> petIds = dbContext.CustomerPets
+                    .Where(x => x.CustomerId == customerId.Value)
+                    .Select(x => x.PetId)
+                    .ToList();
+
+                // Preserve historical invoice relationships in Search.
+                petIds.AddRange(
+                    dbContext.Invoices
+                        .Where(x => x.CustomerId == customerId.Value)
+                        .Select(x => x.PetId)
+                        .ToList());
+
+                pets = pets
+                    .Where(x => petIds.Contains(x.PetId))
+                    .ToList();
+            }
+
+            return pets
                 .Select(x => new SelectListItem
                 {
                     Value = x.PetId.ToString(),
-                    Text = $"{x.PetName} - {x.Species} - {x.Breed}",
+                    Text = $"{x.PetName} - {x.Species} - {x.Breed}"
                 })
                 .ToList();
         }

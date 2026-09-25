@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.ServiceFormVM
+@model JamesPetBoarding.ViewModels.ServiceFormVM
 @{
     ViewBag.Title = "Create Service";
 }
@@ -97,7 +97,7 @@
 
     <div class="w-100"></div>
 
-    <div class="col-auto" style="width: 864px;">
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
 
         @Html.TextAreaFor(
@@ -117,10 +117,11 @@
     </div>
 
     <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
         <button type="submit"
                 id="CreateServiceButton"
-                class="btn btn-secondary me-2"
-                disabled>
+                class="btn btn-secondary"
+                disabled style="width: 300px;">
             Create Service Profile
         </button>
 
@@ -129,7 +130,9 @@
             "Search",
             "Services",
             null,
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
+
+        </div>
     </div>
     }
 

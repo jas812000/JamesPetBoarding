@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PaymentSearchVM
+@model JamesPetBoarding.ViewModels.PaymentSearchVM
 @using JamesPetBoarding.Enums
 @{
     ViewBag.Title = "Search Payments";
@@ -294,4 +294,179 @@
     <div class="alert alert-info mt-4">
         No payments matched the search criteria.
     </div>
+}
+
+@section Scripts
+{
+    <script>
+        (function () {
+            var invoice = document.getElementById("InvoiceId");
+            var customer = document.getElementById("CustomerId");
+            var pet = document.getElementById("PetId");
+            var searchButton =
+                document.querySelector('button[type="submit"]');
+
+            var selectionsUrl =
+                '@Url.Action("GetPaymentSearchSelections", "Payments")';
+
+            var requestNumber = 0;
+
+            function selectedValue(element) {
+                var value = element.value;
+
+                return value &&
+                    value !== "00000000-0000-0000-0000-000000000000"
+                    ? value
+                    : "";
+            }
+
+            function contains(items, value) {
+                return items.some(function (item) {
+                    return item.Value.toLowerCase() === value.toLowerCase();
+                });
+            }
+
+            function render(element, placeholder, items, value) {
+                element.innerHTML = "";
+
+                var first = document.createElement("option");
+                first.value = "";
+                first.textContent = placeholder;
+                element.appendChild(first);
+
+                items.forEach(function (item) {
+                    var option = document.createElement("option");
+                    option.value = item.Value;
+                    option.textContent = item.Text;
+                    element.appendChild(option);
+                });
+
+                element.value =
+                    value && contains(items, value) ? value : "";
+            }
+
+            function setInvoiceLock() {
+                var locked = !!selectedValue(invoice);
+                customer.disabled = locked;
+                pet.disabled = locked;
+            }
+
+            function loadSelections(changedField) {
+                var invoiceId = selectedValue(invoice);
+                var customerId = selectedValue(customer);
+                var petId = selectedValue(pet);
+
+                if (changedField === "customer" ||
+                    changedField === "pet") {
+                    invoiceId = "";
+                    invoice.value = "";
+                }
+
+                var currentRequest = ++requestNumber;
+                searchButton.disabled = true;
+
+                var parameters = new URLSearchParams();
+
+                if (invoiceId) {
+                    parameters.append("invoiceId", invoiceId);
+                }
+
+                if (customerId) {
+                    parameters.append("customerId", customerId);
+                }
+
+                if (petId) {
+                    parameters.append("petId", petId);
+                }
+
+                fetch(selectionsUrl + "?" + parameters.toString())
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error("Unable to load selections.");
+                        }
+
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
+
+                        if (result.Error) {
+                            throw new Error(result.Error);
+                        }
+
+                        if (changedField === "customer" &&
+                            petId &&
+                            !contains(result.Pets, petId)) {
+                            pet.value = "";
+                            loadSelections("customer");
+                            return;
+                        }
+
+                        if (changedField === "pet" &&
+                            customerId &&
+                            !contains(result.Customers, customerId)) {
+                            customer.value = "";
+                            loadSelections("pet");
+                            return;
+                        }
+
+                        if (invoiceId) {
+                            customerId = result.CustomerId;
+                            petId = result.PetId;
+                        }
+
+                        render(
+                            invoice,
+                            "Select Invoice...",
+                            result.Invoices,
+                            invoiceId
+                        );
+
+                        render(
+                            customer,
+                            "Select Customer...",
+                            result.Customers,
+                            customerId
+                        );
+
+                        render(
+                            pet,
+                            "Select Pet...",
+                            result.Pets,
+                            petId
+                        );
+
+                        setInvoiceLock();
+                        searchButton.disabled = false;
+                    })
+                    .catch(function () {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
+
+                        searchButton.disabled = false;
+                        alert(
+                            "Unable to load payment search selections. " +
+                            "Please try again."
+                        );
+                    });
+            }
+
+            invoice.addEventListener("change", function () {
+                loadSelections("invoice");
+            });
+
+            customer.addEventListener("change", function () {
+                loadSelections("customer");
+            });
+
+            pet.addEventListener("change", function () {
+                loadSelections("pet");
+            });
+
+            setInvoiceLock();
+        })();
+    </script>
 }

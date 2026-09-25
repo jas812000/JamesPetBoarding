@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.EmployeeSearchVM
+@model JamesPetBoarding.ViewModels.EmployeeSearchVM
 @{
     ViewBag.Title = "Search Employees";
 }
@@ -18,32 +18,34 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Email Address</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Phone Number</label>
-        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.Phone, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Role</label>
-        @Html.EnumDropDownListFor(x => x.Role, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.Role, "Select...", new { @class = "form-select", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Active Status</label>
         @Html.DropDownListFor(
              x => x.IsActive,
@@ -53,37 +55,57 @@
                 new SelectListItem { Text = "Active", Value = "true" },
                 new SelectListItem { Text = "Inactive", Value = "false" }
              },
-             new { @class = "form-select" })
+             new { @class = "form-select", style = "max-width: none;" })
 
         <small class="text-muted">Select All Employees, Active or Inactive.</small>
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search Employees</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Search Employees
+            </button>
 
-        @if (ViewBag.CanManageEmployees)
-        {
+            @if (ViewBag.CanManageEmployees)
+            {
+                @Html.ActionLink(
+                    "Create Employee",
+                    "Create",
+                    "Employees",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+            }
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
             @Html.ActionLink(
-                "Create Employee",
-                "Create",
+                "Clear Search",
+                "Search",
                 "Employees",
                 null,
-                new { @class = "btn btn-success ms-2" })
-        }
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "Employees",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-
-        @Html.ActionLink(
-            "Back to Dashboard",
-            "Index",
-            "Dashboard",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            @Html.ActionLink(
+                "Back to Dashboard",
+                "Index",
+                "Dashboard",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 }
 
@@ -162,8 +184,8 @@
     </div>
 }
 
-@if (Request.HttpMethod == "POST" && 
-    Model.EmployeeSearchResults != null && 
+@if (Request.HttpMethod == "POST" &&
+    Model.EmployeeSearchResults != null &&
     !Model.EmployeeSearchResults.Any())
 {
     <div class="alert alert-info mt-4">

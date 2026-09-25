@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.EmployeeProfileVM
+@model JamesPetBoarding.ViewModels.EmployeeProfileVM
 @{
     ViewBag.Title = "View My Profile";
 
@@ -24,45 +24,53 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Employee ID</label>
-        @Html.TextBoxFor(x => x.EmployeeId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.EmployeeId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Employee Name</label>
-        @Html.TextBoxFor(x => x.EmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.EmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Role</label>
-        @Html.TextBoxFor(x => x.RoleDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.RoleDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Email Address</label>
-        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Phone Number</label>
-        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
-
-        @Html.ActionLink(
-            "Back to Account Settings",
-            "Index",
-            "Manage",
-            null,
-            new { @class = "btn btn-secondary" })
-
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            @Html.ActionLink(
+                "Back to Account Settings",
+                "Index",
+                "Manage",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 
 </div>

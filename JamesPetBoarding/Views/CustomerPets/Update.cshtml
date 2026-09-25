@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.CustomerPetFormVM
+@model JamesPetBoarding.ViewModels.CustomerPetFormVM
 @{
     ViewBag.Title = "Update Customer-Pet Relationship";
 }
@@ -24,11 +24,10 @@
     @Html.HiddenFor(x => x.CustomerPetId)
     @Html.HiddenFor(x => x.PetId)
 
-    <div class="col-auto" style="width: 650px;">
-        <div class="row g-3">
 
-            <div class="col-5">
-                <label class="form-label">Customer</label>
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Customer</label>
 
                 @Html.TextBoxFor(
                     x => x.CustomerNameDisplay,
@@ -40,8 +39,8 @@
                     })
             </div>
 
-            <div class="col-4">
-                <label class="form-label">Pet</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Pet</label>
 
                 @Html.TextBoxFor(
                     x => x.PetNameDisplay,
@@ -53,8 +52,8 @@
                     })
             </div>
 
-            <div class="col-3">
-                <label class="form-label">Relationship</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Relationship</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.RelationshipType,
@@ -71,15 +70,14 @@
                     new { @class = "text-danger" })
             </div>
 
-        </div>
-    </div>
+
 
     <div class="col-12 text-center mt-4">
         <div class="d-flex justify-content-center gap-3 flex-wrap">
 
             <button type="submit"
                     class="btn btn-primary"
-                    style="width: 260px;">
+                    style="width: 300px;">
                 Update Relationship
             </button>
 
@@ -91,7 +89,7 @@
                 new
                 {
                     @class = "btn btn-secondary",
-                    style = "width: 260px;"
+                    style = "width: 300px;"
                 })
 
         </div>

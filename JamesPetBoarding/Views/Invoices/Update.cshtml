@@ -135,138 +135,192 @@
 {
     <script>
         (function () {
+            var customer = document.getElementById("CustomerId");
+            var pet = document.getElementById("PetId");
+            var boarding = document.getElementById("BoardingId");
+            var submitButton = document.querySelector(
+                'form[action*="/Invoices/"] button[type="submit"]'
+            );
 
-            var customer =
-                document.getElementById("CustomerId");
+            var selectionsUrl =
+                '@Url.Action("GetInvoiceSelections", "Invoices")';
 
-            var pet =
-                document.getElementById("PetId");
+            var requestNumber = 0;
+            var loading = false;
 
-            var boarding =
-                document.getElementById("BoardingId");
+            function selectedValue(element) {
+                var value = element.value;
 
-            var petsUrl =
-                '@Url.Action("GetPetsByCustomer", "Invoices")';
-
-            var boardingsUrl =
-                '@Url.Action("GetBoardingsByCustomerAndPet", "Invoices")';
-
-            function hasSelection(element) {
-                return element.value &&
-                    element.value !==
-                    "00000000-0000-0000-0000-000000000000";
+                return value &&
+                    value !== "00000000-0000-0000-0000-000000000000"
+                    ? value
+                    : "";
             }
 
-            function resetSelect(
-                element,
-                placeholder) {
+            function contains(items, value) {
+                return items.some(function (item) {
+                    return item.Value.toLowerCase() === value.toLowerCase();
+                });
+            }
 
+            function render(element, placeholder, items, value) {
                 element.innerHTML = "";
 
-                var option =
-                    document.createElement("option");
-
-                option.value = "";
-                option.textContent = placeholder;
-
-                element.appendChild(option);
-            }
-
-            function addOptions(
-                element,
-                items) {
+                var firstOption = document.createElement("option");
+                firstOption.value = "";
+                firstOption.textContent = placeholder;
+                element.appendChild(firstOption);
 
                 items.forEach(function (item) {
-
-                    var option =
-                        document.createElement("option");
-
+                    var option = document.createElement("option");
                     option.value = item.Value;
                     option.textContent = item.Text;
-
                     element.appendChild(option);
                 });
+
+                element.value = contains(items, value) ? value : "";
             }
 
-            customer.addEventListener(
-                "change",
-                function () {
+            function updateSubmitButton() {
+                if (!submitButton) {
+                    return;
+                }
 
-                    resetSelect(
-                        pet,
-                        "Select Pet...");
+                var complete =
+                    !loading &&
+                    selectedValue(customer) &&
+                    selectedValue(pet);
 
-                    resetSelect(
-                        boarding,
-                        "Select Boarding Reservation (Optional)...");
+                submitButton.disabled = !complete;
 
-                    if (!hasSelection(customer)) {
-                        return;
-                    }
+                if (submitButton.id === "GenerateInvoiceButton") {
+                    submitButton.classList.toggle("btn-primary", !!complete);
+                    submitButton.classList.toggle("btn-secondary", !complete);
+                }
+            }
 
-                    fetch(
-                        petsUrl +
-                        "?customerId=" +
-                        encodeURIComponent(customer.value))
-                        .then(function (response) {
+            function loadSelections(changedField) {
+                var customerId = selectedValue(customer);
+                var petId = selectedValue(pet);
+                var boardingId = selectedValue(boarding);
 
-                            if (!response.ok) {
-                                throw new Error(
-                                    "Unable to load pets.");
-                            }
+                // A changed customer or pet may invalidate the old reservation.
+                if (changedField === "customer" ||
+                    changedField === "pet") {
+                    boardingId = "";
+                    boarding.value = "";
+                }
 
-                            return response.json();
-                        })
-                        .then(function (items) {
-                            addOptions(pet, items);
-                        })
-                        .catch(function () {
-                            resetSelect(
-                                pet,
-                                "Unable to load pets");
-                        });
-                });
+                var currentRequest = ++requestNumber;
+                loading = true;
+                updateSubmitButton();
 
-            pet.addEventListener(
-                "change",
-                function () {
+                var parameters = new URLSearchParams();
 
-                    resetSelect(
-                        boarding,
-                        "Select Boarding Reservation (Optional)...");
+                if (customerId) {
+                    parameters.append("customerId", customerId);
+                }
 
-                    if (!hasSelection(customer) ||
-                        !hasSelection(pet)) {
-                        return;
-                    }
+                if (petId) {
+                    parameters.append("petId", petId);
+                }
 
-                    fetch(
-                        boardingsUrl +
-                        "?customerId=" +
-                        encodeURIComponent(customer.value) +
-                        "&petId=" +
-                        encodeURIComponent(pet.value))
-                        .then(function (response) {
+                if (boardingId) {
+                    parameters.append("boardingId", boardingId);
+                }
 
-                            if (!response.ok) {
-                                throw new Error(
-                                    "Unable to load boardings.");
-                            }
+                fetch(selectionsUrl + "?" + parameters.toString())
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error("Unable to load selections.");
+                        }
 
-                            return response.json();
-                        })
-                        .then(function (items) {
-                            addOptions(
-                                boarding,
-                                items);
-                        })
-                        .catch(function () {
-                            resetSelect(
-                                boarding,
-                                "Unable to load boardings");
-                        });
-                });
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
 
+                        if (result.Error) {
+                            throw new Error(result.Error);
+                        }
+
+                        // Keep the field the user just changed. If its
+                        // existing counterpart conflicts, clear that
+                        // counterpart and reload the available choices.
+                        if (changedField === "customer" &&
+                            petId &&
+                            !contains(result.Pets, petId)) {
+                            pet.value = "";
+                            loadSelections("customer");
+                            return;
+                        }
+
+                        if (changedField === "pet" &&
+                            customerId &&
+                            !contains(result.Customers, customerId)) {
+                            customer.value = "";
+                            loadSelections("pet");
+                            return;
+                        }
+
+                        if (boardingId) {
+                            customerId = result.CustomerId;
+                            petId = result.PetId;
+                        }
+
+                        render(
+                            customer,
+                            "Select Customer...",
+                            result.Customers,
+                            customerId
+                        );
+
+                        render(
+                            pet,
+                            "Select Pet...",
+                            result.Pets,
+                            petId
+                        );
+
+                        render(
+                            boarding,
+                            "Select Boarding Reservation (Optional)...",
+                            result.Boardings,
+                            boardingId
+                        );
+
+                        loading = false;
+                        updateSubmitButton();
+                    })
+                    .catch(function () {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
+
+                        loading = false;
+                        submitButton.disabled = true;
+                        alert(
+                            "Unable to load invoice selections. " +
+                            "Please try changing a selection again."
+                        );
+                    });
+            }
+
+            customer.addEventListener("change", function () {
+                loadSelections("customer");
+            });
+
+            pet.addEventListener("change", function () {
+                loadSelections("pet");
+            });
+
+            boarding.addEventListener("change", function () {
+                loadSelections("boarding");
+            });
+
+            updateSubmitButton();
         })();
     </script>
 }

@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.CustomerPetSummaryVM
+@model JamesPetBoarding.ViewModels.CustomerPetSummaryVM
 @{
     ViewBag.Title = "View Customer-Pet Relationship";
 }
@@ -13,11 +13,10 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-auto" style="width: 650px;">
-        <div class="row g-3">
 
-            <div class="col-5">
-                <label class="form-label">
+
+            <div class="col-auto" style="width: 400px;">
+        <label class="form-label">
                     Relationship ID
                 </label>
 
@@ -31,8 +30,8 @@
                     })
             </div>
 
-            <div class="col-4">
-                <label class="form-label">
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">
                     Customer
                 </label>
 
@@ -46,8 +45,8 @@
                     })
             </div>
 
-            <div class="col-3">
-                <label class="form-label">
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">
                     Relationship
                 </label>
 
@@ -61,16 +60,16 @@
                     })
             </div>
 
-        </div>
-    </div>
+
 
     <div class="w-100"></div>
 
-    <div class="col-auto" style="width: 650px;">
-        <div class="row g-3">
 
-            <div class="col-4">
-                <label class="form-label">Pet Name</label>
+
+            <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Pet Name</label>
 
                 @Html.TextBoxFor(
                     x => x.PetNameDisplay,
@@ -82,8 +81,8 @@
                     })
             </div>
 
-            <div class="col-3">
-                <label class="form-label">Species</label>
+            <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Species</label>
 
                 @Html.TextBoxFor(
                     x => x.SpeciesDisplay,
@@ -95,8 +94,8 @@
                     })
             </div>
 
-            <div class="col-5">
-                <label class="form-label">Breed</label>
+            <div class="col-auto" style="width: 400px;">
+        <label class="form-label">Breed</label>
 
                 @Html.TextBoxFor(
                     x => x.BreedDisplay,
@@ -108,8 +107,7 @@
                     })
             </div>
 
-        </div>
-    </div>
+
 
     <div class="col-12 text-center mt-4">
         <div class="d-flex justify-content-center gap-3 flex-wrap">
@@ -122,7 +120,7 @@
                 new
                 {
                     @class = "btn btn-primary",
-                    style = "width: 260px;"
+                    style = "width: 300px;"
                 })
 
             @Html.ActionLink(
@@ -133,7 +131,7 @@
                 new
                 {
                     @class = "btn btn-danger",
-                    style = "width: 260px;"
+                    style = "width: 300px;"
                 })
 
             @Html.ActionLink(
@@ -144,7 +142,7 @@
                 new
                 {
                     @class = "btn btn-secondary",
-                    style = "width: 260px;"
+                    style = "width: 300px;"
                 })
 
         </div>

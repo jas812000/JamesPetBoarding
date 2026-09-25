@@ -1,10 +1,10 @@
-﻿@model JamesPetBoarding.ViewModels.VaccineDetailsVM
+@model JamesPetBoarding.ViewModels.VaccineDetailsVM
 @{
     ViewBag.Title = "Read Vaccine";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>View Vaccine Profile</h2>
     <p class="lead">
         View vaccine profile information.
@@ -13,53 +13,70 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Vaccine ID</label>
-        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Vaccine Name</label>
-        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Required Status</label>
-        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1060px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
-        @Html.ActionLink(
-            "Update Vaccine",
-            "Update",
-            "Vaccines",
-            new { vaccineId = Model.VaccineId },
-            new { @class = "btn btn-primary me-2" })
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            @Html.ActionLink(
+                "Update Vaccine",
+                "Update",
+                "Vaccines",
+                new { vaccineId = Model.VaccineId },
+                new
+                {
+                    @class = "btn btn-primary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Delete Vaccine",
-            "Delete",
-            "Vaccines",
-            new { vaccineId = Model.VaccineId },
-            new { @class = "btn btn-danger me-2" })
+            @Html.ActionLink(
+                "Delete Vaccine",
+                "Delete",
+                "Vaccines",
+                new { vaccineId = Model.VaccineId },
+                new
+                {
+                    @class = "btn btn-danger",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Back to Search", 
-            "Search", 
-            "Vaccines",
-            null,
-            new { @class = "btn btn-secondary" })
+            @Html.ActionLink(
+                "Back to Search",
+                "Search",
+                "Vaccines",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 
 </div>
-

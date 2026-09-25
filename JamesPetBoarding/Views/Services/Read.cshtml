@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.ServiceDetailsVM
+@model JamesPetBoarding.ViewModels.ServiceDetailsVM
 @{
     ViewBag.Title = "Read Service";
 }
@@ -13,57 +13,64 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Service ID</label>
-        @Html.TextBoxFor(x => x.ServiceId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ServiceId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Service Name</label>
-        @Html.TextBoxFor(x => x.ServiceNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ServiceNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Base Price</label>
-        @Html.TextBoxFor(x => x.BasePriceDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.BasePriceDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Pricing Type</label>
-        @Html.TextBoxFor(x => x.PricingTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PricingTypeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
         @Html.ActionLink(
             "Update Service Profile",
             "Update",
             "Services",
             new { serviceId = Model.ServiceId },
-            new { @class = "btn btn-primary me-2" })
+            new { @class = "btn btn-primary me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
             "Delete Service Profile",
             "Delete",
             "Services",
             new { serviceId = Model.ServiceId },
-            new { @class = "btn btn-danger me-2" })
-            
+            new { @class = "btn btn-danger me-2", style = "width: 300px;" })
+
         @Html.ActionLink(
             "Back to Search",
             "Search",
             "Services",
             null,
-            new { @class = "btn btn-secondary" })
+            new { @class = "btn btn-secondary", style = "width: 300px;" })
 
+
+        </div>
     </div>
 </div>

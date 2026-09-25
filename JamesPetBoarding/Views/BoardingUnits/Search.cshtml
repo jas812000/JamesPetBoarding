@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.BoardingUnitSearchVM
+@model JamesPetBoarding.ViewModels.BoardingUnitSearchVM
 @{
     ViewBag.Title = "Search Boarding Units";
 }
@@ -18,11 +18,10 @@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     @* Unit Type / Unit Name / Unit Number *@
-    <div class="col-md-10">
-        <div class="row g-3">
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Type</label>
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Type</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.UnitType,
@@ -34,8 +33,8 @@
                     })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Name</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Name</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.UnitName,
@@ -47,8 +46,8 @@
                     })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Number</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Number</label>
 
                 @Html.TextBoxFor(
                     x => x.UnitNumber,
@@ -64,15 +63,16 @@
                     new { @class = "text-danger" })
             </div>
 
-        </div>
-    </div>
+
+
 
     @* Species Allowed / Size Category / Active Status *@
-    <div class="col-md-10">
-        <div class="row g-3">
 
-            <div class="col-md-4">
-                <label class="form-label">Species Allowed</label>
+
+            <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Species Allowed</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.SpeciesAllowed,
@@ -84,8 +84,8 @@
                     })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Size Category</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Size Category</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.SizeCategory,
@@ -97,8 +97,8 @@
                     })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Active Status</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Active Status</label>
 
                 @Html.DropDownListFor(
                     x => x.IsActive,
@@ -131,34 +131,55 @@
                 </small>
             </div>
 
-        </div>
-    </div>
+
+
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search Boarding Units</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Search Boarding Units
+            </button>
 
-        @if (ViewBag.CanManageBoardingUnits)
-        {
+            @if (ViewBag.CanManageBoardingUnits)
+            {
+                @Html.ActionLink(
+                    "Create Boarding Unit",
+                    "Create",
+                    "BoardingUnits",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+            }
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
             @Html.ActionLink(
-                "Create Boarding Unit",
-                "Create",
+                "Clear Search",
+                "Search",
                 "BoardingUnits",
                 null,
-                new { @class = "btn btn-success ms-2" })
-        }
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "BoardingUnits",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Back to Dashboard",
-            "Index",
-            "Dashboard",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            @Html.ActionLink(
+                "Back to Dashboard",
+                "Index",
+                "Dashboard",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 }
 

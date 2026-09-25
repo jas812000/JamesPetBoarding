@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.ServiceFormVM
+@model JamesPetBoarding.ViewModels.ServiceFormVM
 @{
     ViewBag.Title = "Update Service";
 }
@@ -21,44 +21,51 @@
 
     @Html.HiddenFor(x => x.ServiceId)
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Service Name</label>
-        @Html.EnumDropDownListFor(x => x.ServiceName, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.ServiceName, "Select...", new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.ServiceName, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Species</label>
-        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Base Price</label>
-        @Html.TextBoxFor(x => x.BasePrice, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.BasePrice, new { @class = "form-control", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.BasePrice, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Pricing Type</label>
-        @Html.EnumDropDownListFor(x => x.PricingType, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.PricingType, "Select...", new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.PricingType, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update Service Profile</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-success" style="width: 300px;">Update Service Profile</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Services",
             new { serviceId = Model.ServiceId },
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
+
+        </div>
     </div>
 }

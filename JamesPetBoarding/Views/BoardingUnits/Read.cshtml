@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.BoardingUnitDetailsVM
+@model JamesPetBoarding.ViewModels.BoardingUnitDetailsVM
 @{
     ViewBag.Title = "Read Boarding Unit";
 }
@@ -13,62 +13,69 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Boarding Unit ID</label>
-        @Html.TextBoxFor(x => x.BoardingUnitId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.BoardingUnitId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Full Unit Name</label>
-        @Html.TextBoxFor(x => x.FullUnitNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.FullUnitNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Unit Type</label>
-        @Html.TextBoxFor(x => x.UnitTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.UnitTypeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Species Allowed</label>
-        @Html.TextBoxFor(x => x.SpeciesAllowedDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SpeciesAllowedDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Size Category</label>
-        @Html.TextBoxFor(x => x.SizeCategoryDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SizeCategoryDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
         @Html.ActionLink(
             "Update Boarding Unit",
             "Update",
             "BoardingUnits",
             new { boardingUnitId = Model.BoardingUnitId },
-            new { @class = "btn btn-primary me-2" })
+            new { @class = "btn btn-primary me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
             "Delete Boarding Unit",
             "Delete",
             "BoardingUnits",
             new { boardingUnitId = Model.BoardingUnitId },
-            new { @class = "btn btn-danger me-2" })
+            new { @class = "btn btn-danger me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
-            "Back to Search", 
-            "Search", 
+            "Back to Search",
+            "Search",
             "BoardingUnits",
             null,
-            new { @class = "btn btn-secondary" })
+            new { @class = "btn btn-secondary", style = "width: 300px;" })
+
+        </div>
     </div>
 
 </div>
