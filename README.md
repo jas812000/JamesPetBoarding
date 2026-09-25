@@ -10,7 +10,7 @@ Paws & Reservations was designed around the day-to-day operations of a pet board
 
 Staff can maintain customer and pet information, manage boarding-unit reservations, record pet care requirements, process boarding status changes, create invoices, accept payments, and generate reports from the same application.
 
-The system also incorporates employee-based account registration, email confirmation, password recovery, account lockout, authorization controls, financial validation, and auditable transaction workflows.
+The system also incorporates employee-based account registration, email confirmation, email-based two-factor authentication, password recovery, account lockout, authorization controls, financial validation, and auditable transaction workflows.
 
 ## Key Features
 
@@ -46,16 +46,20 @@ The system also incorporates employee-based account registration, email confirma
 - Record the employee responsible for processing a payment
 - Void invoices and payments while retaining audit information
 - Reverse the financial effect of voided payments without deleting transaction history
+- Link customer, pet, and optional boarding selections in invoice forms and search; choosing an invoice in payment search fills its customer and pet selections
 
 ### Employee and Account Management
 
 - Maintain employee records and operational roles
+- Show employee profile photos, with upload and removal in both self-service and administrator update workflows
 - Restrict self-registration to existing active employees
 - Require unique account email addresses
 - Require email confirmation before normal account access
 - Support password recovery through emailed reset tokens
 - Apply account lockout after repeated failed login attempts
+- Offer email security-code verification and a trusted-browser option for accounts with two-factor authentication enabled
 - Route authenticated employees to role-appropriate dashboards
+- Manage the public Our Team page through administrator-only add, update, remove, and reorder actions
 
 ### Reporting
 
@@ -63,7 +67,7 @@ The application provides operational and financial reporting across the boarding
 
 Selected financial reports are restricted to authorized management roles.
 
-Reports can also be exported as formatted PDF documents using QuestPDF.
+Reports can also be exported as formatted PDF documents using QuestPDF. The Pet Report supports numerical weight filtering in pounds or kilograms.
 
 ---
 
@@ -119,7 +123,7 @@ SQL Server / LocalDB
 
 ### Models
 
-Domain models represent the primary business entities, including customers, emergency contacts, pets, customer/pet relationships, veterinarians, diets, medications, vaccines, pet vaccinations, boarding units, boardings, services, invoices, invoice items, payments, employees, and contact submissions.
+Domain models represent the primary business entities, including customers, emergency contacts, pets, customer/pet relationships, veterinarians, diets, medications, vaccines, pet vaccinations, boarding units, boardings, services, invoices, invoice items, payments, employees, Our Team members, and contact submissions.
 
 ASP.NET Identity data and application data share the application's Entity Framework database context.
 
@@ -265,6 +269,10 @@ Passwords require:
 - A numeric character
 - A non-alphanumeric character
 
+### Email Two-Factor Authentication
+
+Employees can enable email-based two-factor authentication in Account Settings. During sign-in, an enabled account must provide a security code delivered by email. The sign-in flow supports remembering a trusted browser, and employees can disable two-factor authentication in Account Settings.
+
 ### Account Lockout
 
 After five failed access attempts, an account is locked for five minutes.
@@ -288,6 +296,12 @@ JamesPetBoarding_SMTP_Password
 The application uses authenticated employee records and employee roles to control access to workflows. Examples include role-aware dashboard routing, protected boarding-management workflows, management access to financial reporting, and employee validation before authenticated workflows are performed.
 
 Authorization is enforced server-side rather than relying solely on navigation visibility.
+
+---
+
+## Public Our Team Page
+
+The public Our Team page displays selected active employees in a configured order, using their profile photos or a default image. Administrators can add, update, remove, and reorder the employee tiles through a protected management workflow.
 
 ---
 
@@ -408,21 +422,17 @@ Update-Database
 
 This creates or updates the development database using the migrations stored in `Migrations`.
 
-## Initial Administrator Bootstrap
+## Development Seed Data and Initial Administrator
 
-The registration workflow requires an existing active employee record before an Identity account can be registered. A fresh database therefore requires an initial administrative employee record to bootstrap normal registration.
+The EF6 migration `Seed` method creates a repeatable development baseline spanning employees and Our Team members, customer and pet records, boarding activity, invoice items, payments, voided transactions, and reports. See the [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) for reset and verification instructions.
 
-Before using the application in another environment:
+Registration requires an existing active employee record. The development seed includes an initial System Administrator employee with an email address intended for the development environment. Before registering the first administrator in another environment, change that seeded email to an address you control and can use for email confirmation, or create an equivalent active Admin employee record. Do not publish an environment with a reachable bootstrap account you have not reviewed.
 
-1. Configure the bootstrap employee with a valid development email address that can receive confirmation email.
-2. Apply the database migrations.
-3. Start the application.
-4. Register using the same email address as the active bootstrap employee.
-5. Confirm the account through email.
-6. Verify administrative access.
-7. Remove or disable temporary bootstrap behavior once permanent administrator access has been established.
-
-A temporary bootstrap administrator should not remain as an automatically recreated permanent account.
+1. Configure the administrator employee email and SMTP settings for the environment.
+2. Apply the database migrations with `Update-Database`.
+3. Start the application and register with the active administrator employee's email.
+4. Confirm the registration email and verify administrator access.
+5. Remove or disable any temporary bootstrap behavior after permanent access is established.
 
 ## Email Configuration
 
@@ -458,21 +468,35 @@ With `JamesPetBoarding` configured as the startup project, run the application f
 
 For a fresh environment:
 
-1. Apply the Entity Framework migrations.
-2. Configure the bootstrap administrator.
-3. Configure SMTP and the SMTP password environment variable.
-4. Start the application.
-5. Register the bootstrap employee.
-6. Confirm the registration email.
-7. Sign in.
+1. Configure the development administrator email and SMTP password environment variable.
+2. Apply the Entity Framework migrations and development seed data.
+3. Start the application.
+4. Register the active administrator employee and confirm the email.
+5. Sign in. See the [seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) before resetting application data.
+
+---
+
+## Troubleshooting
+
+### IIS Express Cannot Load a Razor View Assembly
+
+On some Windows systems, ASP.NET MVC 5 dynamically compiles Razor views under `%LOCALAPPDATA%\Temp\Temporary ASP.NET Files`. Windows Application Control may block a generated DLL, causing the application to fail while loading a view with error `0x800711C7`.
+
+To retry after the blocked assembly has been removed:
+
+1. Stop IIS Express and close Visual Studio.
+2. Clear the contents of `%LOCALAPPDATA%\Temp\Temporary ASP.NET Files`.
+3. Reopen Visual Studio, clean and rebuild the solution, and start the application again.
+
+If the error persists, the Windows Application Control policy may need an appropriate exception for the development environment.
 
 ---
 
 ## Testing
 
-The repository currently contains an NUnit test project and test infrastructure, but meaningful automated application test coverage has not yet been implemented.
+The repository contains an NUnit test project and test infrastructure, but meaningful automated application test coverage has not yet been implemented. The existing test project should not be interpreted as evidence of production test coverage.
 
-The existing test project should not be interpreted as evidence of production test coverage.
+The development seed provides repeatable data for manually exercising CRUD, boarding, billing, payments, voids, and reports. `VerifySeedData.sql` checks expected entity counts and relational integrity after seeding; it does not replace application-level tests.
 
 ---
 
@@ -491,15 +515,7 @@ Sensitive credentials should not be committed to source control. Review environm
 
 ## Documentation
 
-Supporting documentation will be maintained under the repository's `docs` directory.
-
-Planned supporting documentation includes:
-
-- Application screenshots
-- Wireframes
-- Architecture diagrams
-- Database and domain diagrams
-- Workflow documentation
+The [`docs` directory](docs/README.md) organizes supporting design material. Application screenshots, wireframes, and technical diagrams are still pending; the documentation indexes describe their planned locations. The [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents repeatable sample data, reset, and verification.
 
 ---
 
@@ -509,7 +525,9 @@ Planned supporting documentation includes:
 
 The primary application workflows are implemented, including customer and pet management, boarding operations, pet care records, employee workflows, authentication and account recovery, invoicing, payment processing, operational and financial reporting, and PDF export.
 
-Current work is focused on repository documentation and portfolio presentation rather than adding core application functionality.
+Recent completed work added email two-factor authentication, employee profile images, administrator-managed Our Team tiles, repeatable development seeding, linked invoice and payment selections, and consistent management-view formatting.
+
+Current work is focused on completing repository documentation and portfolio presentation. Screenshots, wireframes, and technical diagrams have not yet been added.
 
 ---
 

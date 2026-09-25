@@ -10,7 +10,7 @@ The root [`README.md`](../README.md) provides the primary project overview, tech
 
 The [`wireframes`](wireframes/) directory is reserved for interface wireframes documenting important application pages and workflows.
 
-The wireframes are currently pending and will be added as part of the project's documentation and portfolio presentation work. See the [`wireframes/README.md`](wireframes/README.md) file for the current wireframe plan and status.
+The wireframes are pending and will be added as part of the project's documentation and portfolio presentation work. See the [`wireframes/README.md`](wireframes/README.md) file for the current wireframe plan and status.
 
 ### Screenshots
 
@@ -26,6 +26,8 @@ Planned screenshot coverage includes representative areas such as:
 - Boarding workflows
 - Invoicing and payment processing
 - Reporting and PDF export
+- Employee profile photos and the public Our Team page
+- Email security-code verification and account settings
 
 ### Diagrams
 
@@ -36,7 +38,11 @@ Planned diagrams may include:
 - Application architecture
 - Domain/entity relationships
 - Database relationships
-- Major business workflows
+- Major business workflows, including linked invoice and payment selections
+
+### Development Database Seeding
+
+The [database seeding guide](../JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents the repeatable EF6 development baseline, the safe application-data reset, and seed verification. It lives alongside its SQL scripts in the application project.
 
 ## Repository Documentation Structure
 
@@ -65,4 +71,4 @@ Together, the root README and this documentation provide two levels of project i
 
 The core Paws & Reservations application is complete. The current documentation pass is focused on organizing and presenting the existing project for portfolio and technical review.
 
-Additional documentation will be added as screenshots, wireframes, and diagrams are reviewed and prepared for publication.
+Screenshots, wireframes, and diagrams are planned but are not yet present. Add each artifact to its directory, update the relevant index here or in `wireframes/README.md`, and link a small representative selection from the root README.
