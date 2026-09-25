@@ -17,11 +17,12 @@ The application is complete, but the wireframes have not yet been prepared for i
 Wireframes may be added for representative areas of the application, including:
 
 - Public-facing pages
-- Authentication and registration
+- Authentication, registration, and email security-code verification
 - Staff and management dashboards
+- Administrator management of the public Our Team page
 - Customer and pet management
 - Boarding workflows
-- Invoicing and payment processing
+- Invoicing and payment processing, including linked customer, pet, boarding, and invoice selections
 - Reports
 
 As wireframes are added, this README will be updated with an index describing each artifact and the workflow or interface it represents.
