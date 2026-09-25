@@ -31,8 +31,8 @@ namespace JamesPetBoarding.ViewModels
 
         public string StatusDisplay { get; set; }
 
-        [Required]
-        public InactivationReasonEnum InactivationReason { get; set; }
+        [Required(ErrorMessage = "Select an inactivation reason.")]
+        public InactivationReasonEnum? InactivationReason { get; set; }
 
         [MaxLength(500)]
         public string InactivationNotes { get; set; }

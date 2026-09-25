@@ -1,10 +1,10 @@
-﻿@model JamesPetBoarding.ViewModels.VeterinarianSearchVM
+@model JamesPetBoarding.ViewModels.VeterinarianSearchVM
 @{
     ViewBag.Title = "Search Veterinarians";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Search Veterinarians</h2>
     <p class="lead">
         Search by one or more fields to find an existing veterinarian.
@@ -18,71 +18,88 @@
 
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Clinic Name</label>
-        @Html.TextBoxFor(x => x.ClinicName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.ClinicName, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">City</label>
-        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.City, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">State</label>
-        @Html.EnumDropDownListFor(x => x.State, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.State, "Select...", new { @class = "form-select", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Zip Code</label>
-        @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Phone Number</label>
         @Html.TextBoxFor(
             x => x.Phone,
-            new
-            {
+            new {
                 @class = "form-control",
                 maxlength = "12",
                 inputmode = "numeric",
-                id = "Phone"
-            })
+                id = "Phone", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Email Address</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", style = "max-width: none;" })
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search Veterinarians</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Search Veterinarians
+            </button>
 
-        @Html.ActionLink(
-            "Create Veterinarian",
-            "Create",
-            "Veterinarians",
-            null,
-            new { @class = "btn btn-success ms-2" })
+            @Html.ActionLink(
+                "Create Veterinarian",
+                "Create",
+                "Veterinarians",
+                null,
+                new
+                {
+                    @class = "btn btn-success",
+                    style = "width: 300px;"
+                })
+        </div>
 
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "Veterinarians",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
+            @Html.ActionLink(
+                "Clear Search",
+                "Search",
+                "Veterinarians",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 
 }

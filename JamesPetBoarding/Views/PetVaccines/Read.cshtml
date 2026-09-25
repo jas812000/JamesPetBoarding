@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PetVaccineDetailsVM
+@model JamesPetBoarding.ViewModels.PetVaccineDetailsVM
 @{
     ViewBag.Title = "Read Pet-Vaccine";
 }
@@ -13,58 +13,67 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Vaccine Name</label>
-        @Html.TextBoxFor(x => x.VaccineNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.VaccineNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Date Given</label>
-        @Html.TextBoxFor(x => x.DateGivenDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.DateGivenDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Expiration Date</label>
-        @Html.TextBoxFor(x => x.ExpirationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ExpirationDateDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Document File Path</label>
-        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
         @Html.ActionLink(
             "Update Vaccination Record",
             "Update",
             "PetVaccines",
             new { petVaccineId = Model.PetVaccineId },
-            new { @class = "btn btn-primary me-2" })
+            new { @class = "btn btn-primary me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
             "Delete Vaccination Record",
             "Delete",
             "PetVaccines",
             new { petVaccineId = Model.PetVaccineId },
-            new { @class = "btn btn-danger me-2" })
+            new { @class = "btn btn-danger me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
-            "Back to Pet Profile", 
-            "Read", 
+            "Back to Pet Profile",
+            "Read",
             "Pets",
             new { petId = Model.PetId },
-            new { @class = "btn btn-secondary" })
+            new { @class = "btn btn-secondary", style = "width: 300px;" })
+
+        </div>
     </div>
 
 </div>

@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.MedicationDeleteVM
+@model JamesPetBoarding.ViewModels.MedicationDeleteVM
 @{
     ViewBag.Title = "Delete Medication";
 }
@@ -20,71 +20,84 @@
 
     @Html.HiddenFor(x => x.PetId)
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Medication ID</label>
-        @Html.TextBoxFor(x => x.MedicationId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.MedicationId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Pet ID</label>
-        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Medication Name</label>
-        @Html.TextBoxFor(x => x.MedicationName, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.MedicationName, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Dosage</label>
-        @Html.TextBoxFor(x => x.Dosage, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.Dosage, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Route</label>
-        @Html.TextBoxFor(x => x.RouteDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.RouteDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Frequency</label>
-        @Html.TextBoxFor(x => x.FrequencyDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.FrequencyDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Start Date</label>
-        @Html.TextBoxFor(x => x.StartDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.StartDateDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">End Date</label>
-        @Html.TextBoxFor(x => x.EndDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.EndDateDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <div class="alert alert-warning">
             This action will permanently delete this medication profile and cannot be undone.
         </div>
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Delete Medication Profile</button>
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-danger" style="width: 300px;">Delete Medication Profile</button>
 
         @Html.ActionLink(
-            "Cancel", 
-            "Read", 
+            "Cancel",
+            "Read",
             "Pets",
             new { petId = Model.PetId },
-            new { @class = "btn btn-secondary ms-2" }
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" }
          )
+
+        </div>
     </div>
 }

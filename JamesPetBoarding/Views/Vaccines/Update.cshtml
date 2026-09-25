@@ -1,10 +1,10 @@
-﻿@model JamesPetBoarding.ViewModels.VaccineFormVM
+@model JamesPetBoarding.ViewModels.VaccineFormVM
 @{
     ViewBag.Title = "Update Vaccine";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Update Vaccine Profile</h2>
     <p class="lead">
         Update vaccine profile information and profile details.
@@ -21,19 +21,21 @@
 
     @Html.HiddenFor(x => x.VaccineId)
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Vaccine Name</label>
-        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.VaccineName, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Species</label>
-        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(x => x.Species, "Select...", new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Species, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Required Status</label>
         @Html.DropDownListFor(x => x.RequiredFlag,
             new List<SelectListItem>
@@ -42,24 +44,36 @@
                 new SelectListItem { Text = "Required", Value = "true" },
                 new SelectListItem { Text = "Not Required", Value = "false" },
             },
-            new { @class = "form-select" })
+            new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.RequiredFlag, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1060px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update Vaccine Profile</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Update Vaccine Profile
+            </button>
 
-        @Html.ActionLink(
-            "Cancel",
-            "Read",
-            "Vaccines",
-            new { vaccineId = Model.VaccineId },
-            new { @class = "btn btn-secondary ms-2" })
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "Vaccines",
+                new { vaccineId = Model.VaccineId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 }

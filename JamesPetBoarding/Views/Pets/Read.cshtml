@@ -1,10 +1,11 @@
 ﻿@model JamesPetBoarding.ViewModels.PetDetailsVM
+@using System.Linq
 @{
     ViewBag.Title = "Read Pet";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>View Pet Profile</h2>
     <p class="lead">
         View pet information and status.
@@ -13,352 +14,598 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-4">
+    @* Pet ID *@
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Pet ID</label>
-        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.PetId,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    @* Pet Name / Active Status *@
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.PetNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 225px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.ActiveStatusDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    @* Veterinarian *@
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Veterinarian ID</label>
-        @Html.TextBoxFor(x => x.VetId, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.VetId,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Veterinarian Name</label>
-        @Html.TextBoxFor(x => x.VeterinarianDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.VeterinarianDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-2">
+    <div class="w-100"></div>
+
+    @* Species / Breed / Sex / Birth Date *@
+    <div class="col-auto" style="width: 200px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.SpeciesDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Breed</label>
-        @Html.TextBoxFor(x => x.BreedDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.BreedDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-2">
+    <div class="col-auto" style="width: 200px;">
         <label class="form-label">Sex</label>
-        @Html.TextBoxFor(x => x.SexDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.SexDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Birth Date</label>
-        @Html.TextBoxFor(x => x.BirthDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.BirthDateDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-2">
+    <div class="w-100"></div>
+
+    @* Age / Weight *@
+    <div class="col-auto" style="width: 200px;">
         <label class="form-label">Age</label>
-        @Html.TextBoxFor(x => x.AgeDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.AgeDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 250px;">
         <label class="form-label">Weight</label>
-        @Html.TextBoxFor(x => x.WeightDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.WeightDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    @if (!Model.IsActive)
+    @* Deactivation Information *@
+    @if (Model.InactivationDateDisplay != "Not Applicable")
     {
-        <div class="col-12">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 900px;">
             <h4 class="mt-4">Deactivation Information</h4>
         </div>
 
-        <div class="col-md-4">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 350px;">
             <label class="form-label">Inactivation Reason</label>
-            @Html.TextBoxFor(x => x.InactivationReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+            @Html.TextBoxFor(
+                x => x.InactivationReasonDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
 
-        <div class="col-md-4">
+        <div class="col-auto" style="width: 300px;">
             <label class="form-label">Inactivation Date</label>
-            @Html.TextBoxFor(x => x.InactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+            @Html.TextBoxFor(
+                x => x.InactivationDateDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
 
-        <div class="col-md-8">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 900px;">
             <label class="form-label">Inactivation Notes</label>
-            @Html.TextAreaFor(x => x.InactiveNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+            @Html.TextAreaFor(
+                x => x.InactiveNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "3",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
     }
 
+    @* Reactivation Information *@
     @if (Model.ReactivationDateDisplay != "Not Applicable")
     {
-        <div class="col-12">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 900px;">
             <h4 class="mt-4">Reactivation Information</h4>
         </div>
 
-        <div class="col-md-4">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 300px;">
             <label class="form-label">Reactivation Date</label>
-            @Html.TextBoxFor(x => x.ReactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+            @Html.TextBoxFor(
+                x => x.ReactivationDateDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
 
-        <div class="col-md-8">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 900px;">
             <label class="form-label">Reactivation Notes</label>
-            @Html.TextAreaFor(x => x.ReactivationNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+            @Html.TextAreaFor(
+                x => x.ReactivationNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "3",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
     }
 
-    <div class="col-md-10 mt-4">
+    <div class="w-100"></div>
+
+    @* Diets *@
+    <div class="col-auto mt-4" style="width: 1100px;">
         <h4>Diets</h4>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Food Name</th>
-                    <th scope="col">Amount</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Diets.Any())
-                {
-                    foreach (var diet in Model.Diets)
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Food Name</th>
+                        <th>Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Diets.Any())
+                    {
+                        foreach (var diet in Model.Diets)
+                        {
+                            <tr>
+                                <td>@diet.FoodName</td>
+                                <td>@diet.Amount</td>
+                                <td>
+                                    @Html.ActionLink(
+                                        "Read",
+                                        "Read",
+                                        "Diets",
+                                        new { dietId = diet.DietId },
+                                        new { @class = "btn btn-primary btn-sm me-2" })
+
+                                    @if (Model.IsActive)
+                                    {
+                                        @Html.ActionLink(
+                                            "Update",
+                                            "Update",
+                                            "Diets",
+                                            new { dietId = diet.DietId },
+                                            new { @class = "btn btn-primary btn-sm me-2" })
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "Diets",
+                                            new { dietId = diet.DietId },
+                                            new { @class = "btn btn-danger btn-sm" })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-
-                            <td>@diet.FoodName</td>
-                            <td>@diet.Amount</td>
-                            <td>
-                                @Html.ActionLink(
-                                     "Read",
-                                     "Read",
-                                     "Diets",
-                                     new { dietId = diet.DietId },
-                                     new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Update",
-                                    "Update",
-                                    "Diets",
-                                    new { dietId = diet.DietId },
-                                    new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Delete",
-                                    "Delete",
-                                    "Diets",
-                                    new { dietId = diet.DietId },
-                                    new { @class = "btn btn-danger btn-sm me-2" })
-
+                            <td colspan="3" class="text-center">
+                                No diets found.
                             </td>
                         </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                }
-                else
+    @if (Model.IsActive)
+    {
+        <div class="w-100"></div>
+
+        <div class="col-12 text-center mt-3">
+            @Html.ActionLink(
+                "Create Diet",
+                "Create",
+                "Diets",
+                new { petId = Model.PetId },
+                new
                 {
-                    <tr>
-                        <td colspan="3" class="text-center">
-                            No diets found.
-                        </td>
-                    </tr>
-                }
+                    @class = "btn btn-success",
+                    style = "width: 300px;"
+                })
+        </div>
+    }
 
-            </tbody>
-        </table>
+    <div class="w-100"></div>
 
-    </div>
-
-    <div class="col-md-10 text-center mt-3">
-        @Html.ActionLink(
-            "Create Diet",
-            "Create",
-            "Diets",
-            new { petId = Model.PetId },
-            new { @class = "btn btn-success" })
-    </div>
-
-    <div class="col-md-10 mt-4">
+    @* Medications *@
+    <div class="col-auto mt-4" style="width: 1100px;">
         <h4>Medications</h4>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Medication Name</th>
-                    <th scope="col">Dosage</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.Medications.Any())
-                {
-                    foreach (var medication in Model.Medications)
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Medication Name</th>
+                        <th>Dosage</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Medications.Any())
+                    {
+                        foreach (var medication in Model.Medications)
+                        {
+                            <tr>
+                                <td>@medication.MedicationName</td>
+                                <td>@medication.Dosage</td>
+                                <td>
+                                    @Html.ActionLink(
+                                        "Read",
+                                        "Read",
+                                        "Medications",
+                                        new { medicationId = medication.MedicationId },
+                                        new { @class = "btn btn-primary btn-sm me-2" })
+
+                                    @if (Model.IsActive)
+                                    {
+                                        @Html.ActionLink(
+                                            "Update",
+                                            "Update",
+                                            "Medications",
+                                            new { medicationId = medication.MedicationId },
+                                            new { @class = "btn btn-primary btn-sm me-2" })
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "Medications",
+                                            new { medicationId = medication.MedicationId },
+                                            new { @class = "btn btn-danger btn-sm" })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-
-                            <td>@medication.MedicationName</td>
-                            <td>@medication.Dosage</td>
-                            <td>
-                                @Html.ActionLink(
-                                    "Read",
-                                    "Read",
-                                    "Medications",
-                                    new { medicationId = medication.MedicationId },
-                                     new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Update",
-                                    "Update",
-                                    "Medications",
-                                    new { medicationId = medication.MedicationId },
-                                    new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Delete",
-                                    "Delete",
-                                    "Medications",
-                                    new { medicationId = medication.MedicationId },
-                                    new { @class = "btn btn-danger btn-sm me-2" })
-
+                            <td colspan="3" class="text-center">
+                                No medications found.
                             </td>
                         </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                }
-                else
+    @if (Model.IsActive)
+    {
+        <div class="w-100"></div>
+
+        <div class="col-12 text-center mt-3">
+            @Html.ActionLink(
+                "Create Medication",
+                "Create",
+                "Medications",
+                new { petId = Model.PetId },
+                new
                 {
-                    <tr>
-                        <td colspan="3" class="text-center">
-                            No medications found.
-                        </td>
-                    </tr>
-                }
+                    @class = "btn btn-success",
+                    style = "width: 300px;"
+                })
+        </div>
+    }
 
-            </tbody>
-        </table>
+    <div class="w-100"></div>
 
-    </div>
-
-    <div class="col-md-10 text-center mt-3">
-        @Html.ActionLink(
-            "Create Medication",
-            "Create",
-            "Medications",
-            new { petId = Model.PetId },
-            new { @class = "btn btn-success" })
-    </div>
-
-    <div class="col-md-10 mt-4">
+    @* Vaccines *@
+    <div class="col-auto mt-4" style="width: 1100px;">
         <h4>Vaccines</h4>
 
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th scope="col">Vaccine Name</th>
-                    <th scope="col">Date Given</th>
-                    <th scope="col">Expiration Date</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (Model.PetVaccines.Any())
-                {
-                    foreach (var petVaccine in Model.PetVaccines)
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th>Vaccine Name</th>
+                        <th>Date Given</th>
+                        <th>Expiration Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.PetVaccines.Any())
+                    {
+                        foreach (var petVaccine in Model.PetVaccines)
+                        {
+                            <tr>
+                                <td>@petVaccine.VaccineNameDisplay</td>
+                                <td>@petVaccine.DateGivenDisplay</td>
+                                <td>@petVaccine.ExpirationDateDisplay</td>
+                                <td>
+                                    @Html.ActionLink(
+                                        "Read",
+                                        "Read",
+                                        "PetVaccines",
+                                        new { petVaccineId = petVaccine.PetVaccineId },
+                                        new { @class = "btn btn-primary btn-sm me-2" })
+
+                                    @if (Model.IsActive)
+                                    {
+                                        @Html.ActionLink(
+                                            "Update",
+                                            "Update",
+                                            "PetVaccines",
+                                            new { petVaccineId = petVaccine.PetVaccineId },
+                                            new { @class = "btn btn-primary btn-sm me-2" })
+
+                                        @Html.ActionLink(
+                                            "Delete",
+                                            "Delete",
+                                            "PetVaccines",
+                                            new { petVaccineId = petVaccine.PetVaccineId },
+                                            new { @class = "btn btn-danger btn-sm" })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-
-                            <td>@petVaccine.VaccineNameDisplay</td>
-                            <td>@petVaccine.DateGivenDisplay</td>
-                            <td>@petVaccine.ExpirationDateDisplay</td>
-                            <td>
-                                @Html.ActionLink(
-                                     "Read",
-                                     "Read",
-                                     "PetVaccines",
-                                     new { petVaccineId = petVaccine.PetVaccineId },
-                                     new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Update",
-                                    "Update",
-                                    "PetVaccines",
-                                    new { petVaccineId = petVaccine.PetVaccineId },
-                                    new { @class = "btn btn-primary btn-sm me-2" })
-
-                                @Html.ActionLink(
-                                    "Delete",
-                                    "Delete",
-                                    "PetVaccines",
-                                    new { petVaccineId = petVaccine.PetVaccineId },
-                                    new { @class = "btn btn-danger btn-sm me-2" })
-
+                            <td colspan="4" class="text-center">
+                                No vaccine records found.
                             </td>
                         </tr>
                     }
+                </tbody>
+            </table>
+        </div>
+    </div>
 
-                }
-                else
+    @if (Model.IsActive)
+    {
+        <div class="w-100"></div>
+
+        <div class="col-12 text-center mt-3">
+            @Html.ActionLink(
+                "Create Pet Vaccine",
+                "Create",
+                "PetVaccines",
+                new { petId = Model.PetId },
+                new
                 {
-                    <tr>
-                        <td colspan="4" class="text-center">
-                            No vaccine records found.
-                        </td>
-                    </tr>
-                }
+                    @class = "btn btn-success",
+                    style = "width: 300px;"
+                })
+        </div>
+    }
 
-            </tbody>
-        </table>
+    <div class="w-100"></div>
 
-    </div>
-
-    <div class="col-md-10 text-center mt-3">
-        @Html.ActionLink(
-            "Create Pet Vaccine",
-            "Create",
-            "PetVaccines",
-            new { petId = Model.PetId },
-            new { @class = "btn btn-success" })
-    </div>
-
-    <div class="col-md-10 text-center mt-4">
-        @Html.ActionLink(
-            "Update Pet",
-            "Update",
-            "Pets",
-            new { petId = Model.PetId },
-            new { @class = "btn btn-primary me-2" })
+    @* Pet Actions *@
+    <div class="col-12 text-center mt-4">
 
         @if (Model.IsActive)
         {
-            @Html.ActionLink(
-                "Deactivate Pet",
-                "Delete",
-                "Pets",
-                new { petId = Model.PetId },
-                new { @class = "btn btn-danger me-2" })
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+                @Html.ActionLink(
+                    "Update Pet",
+                    "Update",
+                    "Pets",
+                    new { petId = Model.PetId },
+                    new
+                    {
+                        @class = "btn btn-primary",
+                        style = "width: 280px;"
+                    })
+
+                @Html.ActionLink(
+                    "Deactivate Pet",
+                    "Delete",
+                    "Pets",
+                    new { petId = Model.PetId },
+                    new
+                    {
+                        @class = "btn btn-danger",
+                        style = "width: 280px;"
+                    })
+
+                @Html.ActionLink(
+                    "Back to Pet Search",
+                    "Search",
+                    "Pets",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 280px;"
+                    })
+
+            </div>
         }
         else
         {
-            @Html.ActionLink(
-                "Reactivate Pet",
-                "Reactivate",
-                "Pets",
-                new { petId = Model.PetId },
-                new { @class = "btn btn-success me-2" })
-        }
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @Html.ActionLink(
-            "Back to Pet Search",
-            "Search",
-            "Pets",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+                @Html.ActionLink(
+                    "Reactivate Pet",
+                    "Reactivate",
+                    "Pets",
+                    new { petId = Model.PetId },
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+
+                @Html.ActionLink(
+                    "Back to Pet Search",
+                    "Search",
+                    "Pets",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 300px;"
+                    })
+
+            </div>
+        }
 
     </div>
 
 </div>
-

@@ -1,87 +1,90 @@
-﻿@model JamesPetBoarding.ViewModels.InvoiceFormVM
+@model JamesPetBoarding.ViewModels.InvoiceFormVM
 @{
     ViewBag.Title = "Create Invoice";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Create Invoice</h2>
     <p class="lead">
-        Select the customer, pet and optional boarding reservation to create a new invoice.
+        Select the customer, pet and optional boarding reservation
+        to create a new invoice.
     </p>
 </div>
 
-@using (Html.BeginForm("Create", "Invoices", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "Invoices",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
-    <div class="col-md-10">
-        <div class="row g-3">
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Customer</label>
 
-            <div class="col-md-4">
-                <label class="form-label">Customer</label>
+        @Html.DropDownListFor(
+            x => x.CustomerId,
+            Model.CustomerSelectList,
+            "Select Customer...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-                @Html.DropDownListFor(
-                    x => x.CustomerId,
-                    Model.CustomerSelectList,
-                    "Select Customer...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.CustomerId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Pet</label>
-
-                @Html.DropDownListFor(
-                    x => x.PetId,
-                    Model.PetSelectList,
-                    "Select Pet...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.PetId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Boarding</label>
-
-                @Html.DropDownListFor(
-                    x => x.BoardingId,
-                    Model.BoardingSelectList,
-                    "Select Boarding Reservation (Optional)...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.BoardingId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-        </div>
+        @Html.ValidationMessageFor(
+            x => x.CustomerId,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-10">
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Pet</label>
+
+        @Html.DropDownListFor(
+            x => x.PetId,
+            Model.PetSelectList,
+            "Select Pet...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.PetId,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-auto" style="width: 450px;">
+        <label class="form-label">Boarding</label>
+
+        @Html.DropDownListFor(
+            x => x.BoardingId,
+            Model.BoardingSelectList,
+            "Select Boarding Reservation (Optional)...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.BoardingId,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
 
         @Html.TextAreaFor(
@@ -100,67 +103,224 @@
             new { @class = "text-danger" })
     </div>
 
+    <div class="w-100"></div>
+
     <div class="col-12 text-center mt-4">
-        <button type="submit"
-                id="GenerateInvoiceButton"
-                class="btn btn-secondary me-2"
-                disabled>
-            Generate Invoice
-        </button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @Html.ActionLink(
-            "Back to Billing",
-            "Billing",
-            "Staff",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            <button type="submit"
+                    id="GenerateInvoiceButton"
+                    class="btn btn-secondary"
+                    style="width: 300px;"
+                    disabled>
+                Generate Invoice
+            </button>
+
+            @Html.ActionLink(
+                "Back to Billing",
+                "Billing",
+                "Staff",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
-
 }
 
 @section Scripts
 {
     <script>
         (function () {
-
             var customer = document.getElementById("CustomerId");
             var pet = document.getElementById("PetId");
-            var generateButton =
-                document.getElementById("GenerateInvoiceButton");
+            var boarding = document.getElementById("BoardingId");
+            var submitButton = document.querySelector(
+                'form[action*="/Invoices/"] button[type="submit"]'
+            );
 
-            function hasSelection(element) {
-                return element.value &&
-                    element.value !==
-                    "00000000-0000-0000-0000-000000000000";
+            var selectionsUrl =
+                '@Url.Action("GetInvoiceSelections", "Invoices")';
+
+            var requestNumber = 0;
+            var loading = false;
+
+            function selectedValue(element) {
+                var value = element.value;
+
+                return value &&
+                    value !== "00000000-0000-0000-0000-000000000000"
+                    ? value
+                    : "";
             }
 
-            function updateGenerateButton() {
-
-                var formIsComplete =
-                    hasSelection(customer) &&
-                    hasSelection(pet);
-
-                generateButton.disabled = !formIsComplete;
-
-                generateButton.classList.toggle(
-                    "btn-primary",
-                    formIsComplete);
-
-                generateButton.classList.toggle(
-                    "btn-secondary",
-                    !formIsComplete);
+            function contains(items, value) {
+                return items.some(function (item) {
+                    return item.Value.toLowerCase() === value.toLowerCase();
+                });
             }
 
-            customer.addEventListener(
-                "change",
-                updateGenerateButton);
+            function render(element, placeholder, items, value) {
+                element.innerHTML = "";
 
-            pet.addEventListener(
-                "change",
-                updateGenerateButton);
+                var firstOption = document.createElement("option");
+                firstOption.value = "";
+                firstOption.textContent = placeholder;
+                element.appendChild(firstOption);
 
-            updateGenerateButton();
+                items.forEach(function (item) {
+                    var option = document.createElement("option");
+                    option.value = item.Value;
+                    option.textContent = item.Text;
+                    element.appendChild(option);
+                });
 
+                element.value = contains(items, value) ? value : "";
+            }
+
+            function updateSubmitButton() {
+                if (!submitButton) {
+                    return;
+                }
+
+                var complete =
+                    !loading &&
+                    selectedValue(customer) &&
+                    selectedValue(pet);
+
+                submitButton.disabled = !complete;
+
+                if (submitButton.id === "GenerateInvoiceButton") {
+                    submitButton.classList.toggle("btn-primary", !!complete);
+                    submitButton.classList.toggle("btn-secondary", !complete);
+                }
+            }
+
+            function loadSelections(changedField) {
+                var customerId = selectedValue(customer);
+                var petId = selectedValue(pet);
+                var boardingId = selectedValue(boarding);
+
+                // A changed customer or pet may invalidate the old reservation.
+                if (changedField === "customer" ||
+                    changedField === "pet") {
+                    boardingId = "";
+                    boarding.value = "";
+                }
+
+                var currentRequest = ++requestNumber;
+                loading = true;
+                updateSubmitButton();
+
+                var parameters = new URLSearchParams();
+
+                if (customerId) {
+                    parameters.append("customerId", customerId);
+                }
+
+                if (petId) {
+                    parameters.append("petId", petId);
+                }
+
+                if (boardingId) {
+                    parameters.append("boardingId", boardingId);
+                }
+
+                fetch(selectionsUrl + "?" + parameters.toString())
+                    .then(function (response) {
+                        if (!response.ok) {
+                            throw new Error("Unable to load selections.");
+                        }
+
+                        return response.json();
+                    })
+                    .then(function (result) {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
+
+                        if (result.Error) {
+                            throw new Error(result.Error);
+                        }
+
+                        // Keep the field the user just changed. If its
+                        // existing counterpart conflicts, clear that
+                        // counterpart and reload the available choices.
+                        if (changedField === "customer" &&
+                            petId &&
+                            !contains(result.Pets, petId)) {
+                            pet.value = "";
+                            loadSelections("customer");
+                            return;
+                        }
+
+                        if (changedField === "pet" &&
+                            customerId &&
+                            !contains(result.Customers, customerId)) {
+                            customer.value = "";
+                            loadSelections("pet");
+                            return;
+                        }
+
+                        if (boardingId) {
+                            customerId = result.CustomerId;
+                            petId = result.PetId;
+                        }
+
+                        render(
+                            customer,
+                            "Select Customer...",
+                            result.Customers,
+                            customerId
+                        );
+
+                        render(
+                            pet,
+                            "Select Pet...",
+                            result.Pets,
+                            petId
+                        );
+
+                        render(
+                            boarding,
+                            "Select Boarding Reservation (Optional)...",
+                            result.Boardings,
+                            boardingId
+                        );
+
+                        loading = false;
+                        updateSubmitButton();
+                    })
+                    .catch(function () {
+                        if (currentRequest !== requestNumber) {
+                            return;
+                        }
+
+                        loading = false;
+                        submitButton.disabled = true;
+                        alert(
+                            "Unable to load invoice selections. " +
+                            "Please try changing a selection again."
+                        );
+                    });
+            }
+
+            customer.addEventListener("change", function () {
+                loadSelections("customer");
+            });
+
+            pet.addEventListener("change", function () {
+                loadSelections("pet");
+            });
+
+            boarding.addEventListener("change", function () {
+                loadSelections("boarding");
+            });
+
+            updateSubmitButton();
         })();
     </script>
 }

@@ -4,7 +4,7 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Deactivate Pet Profile</h2>
     <p class="lead">
         Review pet information and provide a reason for deactivation.
@@ -13,85 +13,142 @@
 
 @using (Html.BeginForm("Deactivate", "Pets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
-
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
     @Html.HiddenFor(x => x.PetId)
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Pet ID</label>
-        @Html.TextBoxFor(x => x.PetId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.PetId,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.PetNameDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-2">
+    <div class="col-auto" style="width: 250px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.SpeciesDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-2">
+    <div class="col-auto" style="width: 250px;">
         <label class="form-label">Sex</label>
-        @Html.TextBoxFor(x => x.SexDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.SexDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Breed</label>
-        @Html.TextBoxFor(x => x.BreedDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.BreedDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Birth Date</label>
-        @Html.TextBoxFor(x => x.BirthDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.BirthDateDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 200px;">
         <label class="form-label">Age</label>
-        @Html.TextBoxFor(x => x.AgeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.AgeDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 225px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(
+            x => x.ActiveStatusDisplay,
+            new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "4", @readonly = "readonly" })
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
-        <div class="alert alert-warning">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
+        <div class="alert alert-warning mb-0">
             This action will deactivate the pet's profile. Historical records will remain available.
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Inactivation Reason</label>
-        @Html.EnumDropDownListFor(x => x.InactivationReason, "Select...", new { @class = "form-select" })
+        @Html.EnumDropDownListFor(
+            x => x.InactivationReason,
+            "Select...",
+            new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.InactivationReason, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Inactivation Notes</label>
-        @Html.TextAreaFor(x => x.InactivationNotes, new { @class = "form-control", rows = "3", placeholder = "Enter Inactivation notes" })
+        @Html.TextAreaFor(
+            x => x.InactivationNotes,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                placeholder = "Enter inactivation notes",
+                style = "max-width: none;"
+            })
         @Html.ValidationMessageFor(x => x.InactivationNotes, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Deactivate Pet Profile</button>
+    <div class="w-100"></div>
 
-        @Html.ActionLink(
-            "Cancel", 
-            "Read", 
-            "Pets",
-            new { petId = Model.PetId },
-            new { @class = "btn btn-secondary ms-2" }
-        )
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="width: 300px;">
+                Deactivate Pet Profile
+            </button>
+
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "Pets",
+                new { petId = Model.PetId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
 }

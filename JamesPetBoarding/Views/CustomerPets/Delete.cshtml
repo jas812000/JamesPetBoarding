@@ -1,53 +1,102 @@
-﻿@model JamesPetBoarding.ViewModels.CustomerPetFormVM
+@model JamesPetBoarding.ViewModels.CustomerPetFormVM
 @{
-    ViewBag.Title = "Disassociate Customer-Pet Association";
+    ViewBag.Title = "Remove Customer-Pet Relationship";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
-    <h2>Disassociate Customer-Pet Association</h2>
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Remove Customer-Pet Relationship</h2>
     <p class="lead">
-        Confirm removal of this customer-pet association. The customer and pet records will remain active.
+        Confirm removal of this relationship. The customer and pet records
+        will remain active.
     </p>
 </div>
 
-@using (Html.BeginForm("Delete", "CustomerPets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Delete",
+    "CustomerPets",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
-
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.CustomerId)
-
     @Html.HiddenFor(x => x.CustomerPetId)
-
     @Html.HiddenFor(x => x.PetId)
 
-    <div class="col-md-4">
-        <label class="form-label">Customer Name</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Customer</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Pet</label>
+
+                @Html.TextBoxFor(
+                    x => x.PetNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Relationship</label>
+
+                @Html.TextBoxFor(
+                    x => x.RelationshipType,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+
+
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
+        <div class="alert alert-warning mb-0">
+            This action removes only the customer-pet relationship.
+            The customer and pet profiles will remain available.
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="width: 300px;">
+                Remove Relationship
+            </button>
+
+            @Html.ActionLink(
+                "Back to Customer Profile",
+                "Read",
+                "Customers",
+                new { customerId = Model.CustomerId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
-
-    <div class="col-md-8">
-        <label class="form-label">Relationship Type</label>
-        @Html.TextBoxFor(x => x.RelationshipType, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Disassociate Pet</button>
-
-        @Html.ActionLink(
-            "Back to Customer Profile",
-            "Read",
-            "Customers",
-            new { customerId = Model.CustomerId },
-            new { @class = "btn btn-secondary ms-2" })
-    </div>
-
 }

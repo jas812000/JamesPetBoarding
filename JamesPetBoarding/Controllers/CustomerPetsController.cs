@@ -190,6 +190,8 @@ namespace JamesPetBoarding.Controllers
             
             customerPetForm.CustomerNameDisplay = customerPet.Customer.FirstName + " " + customerPet.Customer.LastName;
 
+            customerPetForm.PetNameDisplay = customerPet.Pet.PetName;
+
             customerPetForm.PetSelectList = BuildPetSelectList();
 
             return View(customerPetForm);
@@ -218,11 +220,20 @@ namespace JamesPetBoarding.Controllers
                 return Content("Customer ID #" + customerPetForm.CustomerId + " does not exist");
             }
 
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == customerPetForm.PetId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + customerPetForm.PetId + " does not exist");
+            }
+
             if (!ModelState.IsValid)
             {
                 customerPetForm.PetSelectList = BuildPetSelectList();
 
                 customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                customerPetForm.PetNameDisplay = pet.PetName;
 
                 return View(customerPetForm);
             }
@@ -234,12 +245,6 @@ namespace JamesPetBoarding.Controllers
                 return Content("CustomerPet ID #" + customerPetForm.CustomerPetId + " does not exist");
             }
 
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == customerPetForm.PetId);
-            if (pet == null)
-            {
-                return Content("Pet ID #" + customerPetForm.PetId + " does not exist");
-            }
-
             CustomerPetModel existingRelationship = dbContext.CustomerPets.FirstOrDefault(x => x.CustomerPetId != customerPetForm.CustomerPetId && x.CustomerId == customerPetForm.CustomerId && x.PetId == customerPetForm.PetId);
 
             if (existingRelationship != null)
@@ -249,6 +254,8 @@ namespace JamesPetBoarding.Controllers
                 customerPetForm.PetSelectList = BuildPetSelectList();
 
                 customerPetForm.CustomerNameDisplay = customer.FirstName + " " + customer.LastName;
+
+                customerPetForm.PetNameDisplay = pet.PetName;
 
                 return View(customerPetForm);
 

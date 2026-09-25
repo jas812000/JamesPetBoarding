@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PetVaccineFormVM
+@model JamesPetBoarding.ViewModels.PetVaccineFormVM
 @{
     ViewBag.Title = "Update Pet-Vaccine";
 }
@@ -23,49 +23,58 @@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Pet Name</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Vaccine</label>
-        @Html.DropDownListFor(x => x.VaccineId, Model.VaccineOptions, "Select a vaccine...", new { @class = "form-select" })
+        @Html.DropDownListFor(x => x.VaccineId, Model.VaccineOptions, "Select a vaccine...", new { @class = "form-select", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.VaccineId, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Date Given</label>
-        @Html.TextBoxFor(x => x.DateGiven, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.TextBoxFor(x => x.DateGiven, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.DateGiven, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-6">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Expiration Date</label>
-        @Html.TextBoxFor(x => x.ExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+        @Html.TextBoxFor(x => x.ExpirationDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.ExpirationDate, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Document File Path</label>
-        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control" })
+        @Html.TextBoxFor(x => x.DocumentFilePath, new { @class = "form-control", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.DocumentFilePath, "", new { @class = "text-danger" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Update Vaccination Record</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-success" style="width: 300px;">Update Vaccination Record</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Pets",
             new { petId = Model.PetId },
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
+
+        </div>
     </div>
 }

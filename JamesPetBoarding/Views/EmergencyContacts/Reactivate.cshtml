@@ -1,114 +1,303 @@
-﻿@model JamesPetBoarding.ViewModels.EmergencyContactReactivationVM
+﻿@model JamesPetBoarding.ViewModels.EmergencyContactReactivateVM
 @{
     ViewBag.Title = "Reactivate Emergency Contact";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Reactivate Emergency Contact Profile</h2>
     <p class="lead">
         Review emergency contact information and reactivate the emergency contact's profile.
     </p>
 </div>
 
-
-@using (Html.BeginForm("Reactivate", "EmergencyContacts", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Reactivate",
+    "EmergencyContacts",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.EmergencyContactId)
-
     @Html.HiddenFor(x => x.CustomerId)
 
-    <div class="col-md-4">
-        <label class="form-label">Emergency Contact ID</label>
-        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+    @* Emergency Contact ID / Customer ID *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">
+                    Emergency Contact ID
+                </label>
+
+                <input type="text"
+                       value="@Model.EmergencyContactId"
+                       class="form-control"
+                       style="max-width: none;"
+                       readonly />
+            </div>
+
+            <div class="col-6">
+                <label class="form-label">Customer ID</label>
+
+                <input type="text"
+                       value="@Model.CustomerId"
+                       class="form-control"
+                       style="max-width: none;"
+                       readonly />
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Customer ID</label>
-        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    <div class="w-100"></div>
+
+    @* Emergency Contact Name / Relationship *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-8">
+                <label class="form-label">
+                    Emergency Contact Name
+                </label>
+
+                @Html.TextBoxFor(
+                    x => x.FullNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Relationship</label>
+
+                @Html.TextBoxFor(
+                    x => x.RelationshipDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Emergency Contact Name</label>
-        @Html.TextBoxFor(x => x.FullNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-4">
-        <label class="form-label">Relationship</label>
-        @Html.TextBoxFor(x => x.RelationshipDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
+    @* Address *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.AddressDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* City, State, Zip Code *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">City, State, Zip Code</label>
-        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CityStateZipDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="w-100"></div>
+
+    @* Phone / Email *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-4">
+                <label class="form-label">Phone</label>
+
+                @Html.TextBoxFor(
+                    x => x.PhoneDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-8">
+                <label class="form-label">Email</label>
+
+                @Html.TextBoxFor(
+                    x => x.EmailDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-8">
+    @* Notes *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
-        <h4>Inactivation History</h4>
+    <div class="w-100"></div>
+
+    @* Inactivation History *@
+    <div class="col-auto" style="width: 650px;">
+        <h4 class="mb-0">Inactivation History</h4>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Inactivation Reason</label>
-        @Html.TextBoxFor(x => x.InactivationReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="w-100"></div>
+
+    @* Inactivation Reason / Date *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">
+                    Inactivation Reason
+                </label>
+
+                @Html.TextBoxFor(
+                    x => x.InactivationReasonDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-6">
+                <label class="form-label">
+                    Inactivation Date
+                </label>
+
+                @Html.TextBoxFor(
+                    x => x.InactivationDateDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-8">
-        <label class="form-label">Inactivation Date</label>
-        @Html.TextAreaFor(x => x.InactivationDateDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-8">
+    @* Inactivation Notes *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Inactivation Notes</label>
-        @Html.TextAreaFor(x => x.InactivationNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+        @Html.TextAreaFor(
+            x => x.InactivationNotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
-        <div class="alert alert-warning">
+    <div class="w-100"></div>
+
+    @* Reactivation Notice *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="alert alert-success mb-0">
             This action will reactivate the emergency contact's profile and restore access.
         </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* Reactivation Notes *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Reactivation Notes</label>
-        @Html.TextAreaFor(x => x.ReactivationNotes, new { @class = "form-control", rows = "3", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.ReactivationNotes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.ReactivationNotes,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.ReactivationNotes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Reactivate Emergency Contact Profile</button>
+    <div class="w-100"></div>
 
-        @Html.ActionLink(
-            "Cancel", 
-            "Read", 
-            "EmergencyContacts",
-            new { emergencyContactId = Model.EmergencyContactId },
-            new { @class = "btn btn-secondary ms-2" }
-        )
+    @* Actions *@
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-success"
+                    style="width: 320px;">
+                Reactivate Emergency Contact Profile
+            </button>
+
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "EmergencyContacts",
+                new
+                {
+                    emergencyContactId =
+                        Model.EmergencyContactId
+                },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 320px;"
+                })
+
+        </div>
     </div>
-
 }

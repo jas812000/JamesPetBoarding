@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PaymentUpdateVM
+@model JamesPetBoarding.ViewModels.PaymentUpdateVM
 @{
     ViewBag.Title = "Update Payment";
 }
@@ -19,51 +19,59 @@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.PaymentId)
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Payment ID</label>
         <input type="text"
-               class="form-control"
+               class="form-control" style="max-width: none;"
                value="@Model.PaymentId"
                readonly="readonly" />
     </div>
 
     @Html.HiddenFor(x => x.InvoiceId)
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Invoice</label>
         <input type="text"
-               class="form-control"
+               class="form-control" style="max-width: none;"
                value="@Model.InvoiceDisplay"
                readonly="readonly" />
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Payment</label>
-        @Html.TextBoxFor(x => x.PaymentDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PaymentDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Update Payment</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-primary" style="width: 300px;">Update Payment</button>
 
         @Html.ActionLink(
             "Back to Payment",
             "Read",
             "Payments",
             new { paymentId = Model.PaymentId },
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
 
         @Html.ActionLink(
             "Back to Invoice",
             "Read",
             "Invoices",
             new { invoiceId = Model.InvoiceId },
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
 
+
+        </div>
     </div>
 }
-

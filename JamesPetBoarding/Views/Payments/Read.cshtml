@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.PaymentDetailsVM
+@model JamesPetBoarding.ViewModels.PaymentDetailsVM
 @{
     ViewBag.Title = "Read Payment";
 }
@@ -14,82 +14,95 @@
 <div class="row g-3 justify-content-center">
 
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Payment ID</label>
-        @Html.TextBoxFor(x => x.PaymentId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PaymentId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Invoice</label>
-        @Html.TextBoxFor(x => x.InvoiceDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.InvoiceDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Customer</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Pet</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Amount</label>
-        @Html.TextBoxFor(x => x.AmountDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.AmountDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Payment Method</label>
-        @Html.TextBoxFor(x => x.PaymentMethodDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PaymentMethodDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Payment Date/Time</label>
-        @Html.TextBoxFor(x => x.PaymentDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PaymentDateTimeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Transaction Reference</label>
-        @Html.TextBoxFor(x => x.TransactionReference, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.TransactionReference, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Processed By</label>
-        @Html.TextBoxFor(x => x.ProcessedByEmployeeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ProcessedByEmployeeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
     @if (Model.IsVoided)
     {
 
-        <div class="col-md-12">
-            <label class="form-label">Void Reason</label>
-            @Html.TextBoxFor(x => x.VoidedReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Void Reason</label>
+            @Html.TextBoxFor(x => x.VoidedReasonDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
         </div>
 
-        <div class="col-md-12">
-            <label class="form-label">Voided Date/Time</label>
-            @Html.TextBoxFor(x => x.VoidedDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Voided Date/Time</label>
+            @Html.TextBoxFor(x => x.VoidedDateTimeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
         </div>
 
-        <div class="col-md-12">
-            <label class="form-label">Voided By</label>
-            @Html.TextBoxFor(x => x.VoidedByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Voided By</label>
+            @Html.TextBoxFor(x => x.VoidedByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
         </div>
 
     }
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
     <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
         @if (!Model.IsVoided)
         {
@@ -98,7 +111,7 @@
                 "Update",
                 "Payments",
                 new { paymentId = Model.PaymentId },
-                new { @class = "btn btn-warning me-2" })
+                new { @class = "btn btn-warning me-2", style = "width: 300px;" })
 
 
             @Html.ActionLink(
@@ -106,22 +119,23 @@
                 "Void",
                 "Payments",
                 new { paymentId = Model.PaymentId },
-                new { @class = "btn btn-danger me-2" })
+                new { @class = "btn btn-danger me-2", style = "width: 300px;" })
         }
         @Html.ActionLink(
             "Back to Invoice",
             "Read",
             "Invoices",
             new { invoiceId = Model.InvoiceId },
-            new { @class = "btn btn-secondary me-2" })
+            new { @class = "btn btn-secondary me-2", style = "width: 300px;" })
 
         @Html.ActionLink(
             "Back to Search",
             "Search",
             "Payments",
             null,
-            new { @class = "btn btn-secondary" })
+            new { @class = "btn btn-secondary", style = "width: 300px;" })
 
+
+        </div>
     </div>
 </div>
-

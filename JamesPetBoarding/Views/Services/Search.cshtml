@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.ServiceSearchVM
+@model JamesPetBoarding.ViewModels.ServiceSearchVM
 @{
     ViewBag.Title = "Search Services";
 }
@@ -25,11 +25,10 @@
         "",
         new { @class = "text-danger" })
 
-<div class="col-12">
-    <div class="d-flex gap-3 justify-content-center flex-nowrap">
 
-        <div style="width: 360px;">
-            <label class="form-label">Service Name</label>
+
+        <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Service Name</label>
 
             @Html.EnumDropDownListFor(
                 x => x.ServiceName,
@@ -41,8 +40,8 @@
                 })
         </div>
 
-        <div style="width: 360px;">
-            <label class="form-label">Species</label>
+        <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Species</label>
 
             @Html.EnumDropDownListFor(
                 x => x.Species,
@@ -54,8 +53,8 @@
                 })
         </div>
 
-        <div style="width: 360px;">
-            <label class="form-label">Pricing Type</label>
+        <div class="col-auto" style="width: 420px;">
+        <label class="form-label">Pricing Type</label>
 
             @Html.EnumDropDownListFor(
                 x => x.PricingType,
@@ -68,37 +67,54 @@
         </div>
 
     </div>
-</div>
+
 
     <div class="col-12 text-center mt-4">
-        <button type="submit"
-                class="btn btn-primary me-2">
-            Search Services
-        </button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Search Services
+            </button>
 
-        @if (ViewBag.CanManageServices)
-        {
+            @if (ViewBag.CanManageServices)
+            {
+                @Html.ActionLink(
+                    "Create Service",
+                    "Create",
+                    "Services",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+            }
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-3">
             @Html.ActionLink(
-                "Create Service",
-                "Create",
+                "Clear Search",
+                "Search",
                 "Services",
                 null,
-                new { @class = "btn btn-success ms-2" })
-        }
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "Services",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-
-        @Html.ActionLink(
-            "Back to Dashboard",
-            "Index",
-            "Dashboard",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            @Html.ActionLink(
+                "Back to Dashboard",
+                "Index",
+                "Dashboard",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 }
 

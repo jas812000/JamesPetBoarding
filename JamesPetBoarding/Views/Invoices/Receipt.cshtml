@@ -4,200 +4,331 @@
     ViewBag.Title = "Invoice Receipt";
 }
 
-<div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
-    <h2>Invoice Receipt</h2>
-    <p class="lead">
-        Review and print this invoice receipt.
-    </p>
-</div>
+<div class="receipt-page">
 
-@if (Model.InvoiceStatus == InvoiceStatusEnum.Void)
-{ 
-    <div class="alert alert-danger text-center fw-bold fs-4">
-        VOID
-    </div>
+    <div class="receipt-document">
 
-}
-
-<div class="row g-3 justify-content-center">
-
-    <div class="col-md-12">
-        <label class="form-label">Invoice ID</label>
-        @Html.TextBoxFor(x => x.InvoiceId, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-12">
-        <label class="form-label">Invoice Date/Time</label>
-        @Html.TextBoxFor(x => x.InvoiceDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Customer</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Pet</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Boarding</label>
-        @Html.TextBoxFor(x => x.BoardingDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Subtotal</label>
-        @Html.TextBoxFor(x => x.SubtotalDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Tax</label>
-        @Html.TextBoxFor(x => x.TaxAmountDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Discount</label>
-        @Html.TextBoxFor(x => x.DiscountAmountDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-6">
-        <label class="form-label">Total</label>
-        @Html.TextBoxFor(x => x.TotalAmountDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Amount Paid</label>
-        @Html.TextBoxFor(x => x.AmountPaidDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Balance</label>
-        @Html.TextBoxFor(x => x.BalanceDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    @if (Model.InvoiceStatus == InvoiceStatusEnum.Void)
-    {
-
-        <div class="col-md-4">
-            <label class="form-label">Void Reason</label>
-            @Html.TextBoxFor(x => x.VoidReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-
-        <div class="col-md-6">
-            <label class="form-label">Void Notes</label>
-            @Html.TextBoxFor(x => x.VoidNotes, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label">Void Date/Time</label>
-            @Html.TextBoxFor(x => x.VoidDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-
-        <div class="col-md-4">
-            <label class="form-label">Voided By</label>
-            @Html.TextBoxFor(x => x.VoidedByEmployeeDisplay, new { @class = "form-control", @readonly = "readonly" })
-        </div>
-
-    }
-
-    <div class="col-12">
-        <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
-    </div>
-
-    <div class="col-12 mt-4">
-        <h3 class="mb-3">Invoice Items</h3>
-        @if (Model.InvoiceItems != null && Model.InvoiceItems.Any())
+        @if (Model.InvoiceStatus == InvoiceStatusEnum.Void)
         {
+            <div class="void-banner">
+                VOID INVOICE
+            </div>
+        }
 
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Description</th>
-                            <th>Quantity</th>
-                            <th>Unit Price</th>
-                            <th>Line Total</th>
-                        </tr>
-                    </thead>
+        <header class="receipt-header">
 
-                    <tbody>
-                        @foreach (var invoiceItem in Model.InvoiceItems)
-                        {
+            <div>
+                <h1>Paws &amp; Reservations, LLC</h1>
+                <p class="receipt-tagline">
+                    Professional care for every pet.
+                </p>
+            </div>
+
+            <div class="receipt-title">
+                <h2>Invoice Receipt</h2>
+
+                <div class="receipt-number">
+                    Invoice #@Model.InvoiceId
+                </div>
+            </div>
+
+        </header>
+
+        <div class="receipt-divider"></div>
+
+        <section class="receipt-summary">
+
+            <div class="receipt-summary-item">
+                <span class="receipt-label">Invoice Date</span>
+                <span class="receipt-value">
+                    @Model.InvoiceDateTimeDisplay
+                </span>
+            </div>
+
+            <div class="receipt-summary-item">
+                <span class="receipt-label">Invoice Status</span>
+
+                @if (Model.InvoiceStatus == InvoiceStatusEnum.Void)
+                {
+                    <span class="status-badge status-void">
+                        @Model.StatusDisplay
+                    </span>
+                }
+                else
+                {
+                    <span class="status-badge status-active">
+                        @Model.StatusDisplay
+                    </span>
+                }
+            </div>
+
+        </section>
+
+        <section class="receipt-section">
+
+            <h3>Customer and Pet Information</h3>
+
+            <div class="information-grid">
+
+                <div class="information-item">
+                    <span class="receipt-label">Customer</span>
+                    <span class="receipt-value">
+                        @Model.CustomerNameDisplay
+                    </span>
+                </div>
+
+                <div class="information-item">
+                    <span class="receipt-label">Pet</span>
+                    <span class="receipt-value">
+                        @Model.PetNameDisplay
+                    </span>
+                </div>
+
+                <div class="information-item information-wide">
+                    <span class="receipt-label">Boarding Reservation</span>
+                    <span class="receipt-value">
+                        @Model.BoardingDisplay
+                    </span>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="receipt-section">
+
+            <h3>Charges</h3>
+
+            @if (Model.InvoiceItems != null &&
+                 Model.InvoiceItems.Any())
+            {
+                <div class="table-responsive">
+
+                    <table class="receipt-table">
+                        <thead>
                             <tr>
-                                <td>@invoiceItem.Description</td>
-                                <td>@invoiceItem.QuantityDisplay</td>
-                                <td>@invoiceItem.UnitPriceDisplay</td>
-                                <td>@invoiceItem.LineTotalDisplay</td>
+                                <th>Description</th>
+                                <th class="text-center">Quantity</th>
+                                <th class="text-end">Unit Price</th>
+                                <th class="text-end">Line Total</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var invoiceItem in Model.InvoiceItems)
+                            {
+                                <tr>
+                                    <td>@invoiceItem.Description</td>
+
+                                    <td class="text-center">
+                                        @invoiceItem.QuantityDisplay
+                                    </td>
+
+                                    <td class="text-end">
+                                        @invoiceItem.UnitPriceDisplay
+                                    </td>
+
+                                    <td class="text-end fw-semibold">
+                                        @invoiceItem.LineTotalDisplay
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="receipt-message">
+                    No charges have been added to this invoice.
+                </div>
+            }
+
+        </section>
+
+        <section class="receipt-totals-section">
+
+            <div class="receipt-totals">
+
+                <div class="total-row">
+                    <span>Subtotal</span>
+                    <span>@Model.SubtotalDisplay</span>
+                </div>
+
+                <div class="total-row">
+                    <span>Tax</span>
+                    <span>@Model.TaxAmountDisplay</span>
+                </div>
+
+                <div class="total-row">
+                    <span>Discount</span>
+                    <span>@Model.DiscountAmountDisplay</span>
+                </div>
+
+                <div class="total-row total-primary">
+                    <span>Total</span>
+                    <span>@Model.TotalAmountDisplay</span>
+                </div>
+
+                <div class="total-row">
+                    <span>Amount Paid</span>
+                    <span>@Model.AmountPaidDisplay</span>
+                </div>
+
+                <div class="total-row balance-row">
+                    <span>Balance Due</span>
+                    <span>@Model.BalanceDisplay</span>
+                </div>
+
             </div>
-        }
-        else
-        {
-            <div class="alert alert-info mb-0">
-                No invoice items have been added to this invoice.
-            </div>
-        }
 
-    </div>
+        </section>
 
-    <div class="col-12 mt-4">
-        <h3 class="mb-3">Payments</h3>
+        <section class="receipt-section">
 
-        @if (Model.Payments != null && Model.Payments.Any())
-        {
+            <h3>Payment History</h3>
 
-            <div class="table-responsive">
-                <table class="table table-striped table-bordered align-middle">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Payment Date</th>
-                            <th>Payment Method</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                            <th>Processed By</th>
-                        </tr>
-                    </thead>
+            @if (Model.Payments != null &&
+                 Model.Payments.Any())
+            {
+                <div class="table-responsive">
 
-                    <tbody>
-                        @foreach (var payment in Model.Payments)
-                        {
+                    <table class="receipt-table">
+                        <thead>
                             <tr>
-                                <td>@payment.PaymentDateTimeDisplay</td>
-                                <td>@payment.PaymentMethodDisplay</td>
-                                <td>@payment.AmountDisplay</td>
-                                <td>@payment.StatusDisplay</td>
-                                <td>@payment.ProcessedByEmployeeDisplay</td>
+                                <th>Payment Date</th>
+                                <th>Payment Method</th>
+                                <th class="text-end">Amount</th>
+                                <th>Status</th>
+                                <th>Processed By</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-        else
+                        </thead>
+
+                        <tbody>
+
+                            @foreach (var payment in Model.Payments)
+                            {
+                                <tr>
+                                    <td>
+                                        @payment.PaymentDateTimeDisplay
+                                    </td>
+
+                                    <td>
+                                        @payment.PaymentMethodDisplay
+                                    </td>
+
+                                    <td class="text-end fw-semibold">
+                                        @payment.AmountDisplay
+                                    </td>
+
+                                    <td>
+                                        @payment.StatusDisplay
+                                    </td>
+
+                                    <td>
+                                        @payment.ProcessedByEmployeeDisplay
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+
+                </div>
+            }
+            else
+            {
+                <div class="receipt-message">
+                    No payments have been recorded for this invoice.
+                </div>
+            }
+
+        </section>
+
+        @if (Model.InvoiceStatus == InvoiceStatusEnum.Void)
         {
-            <div class="alert alert-info mb-0">
-                No payments have been added for this invoice.
-            </div>
+            <section class="receipt-section void-information">
+
+                <h3>Void Information</h3>
+
+                <div class="information-grid">
+
+                    <div class="information-item">
+                        <span class="receipt-label">Void Date/Time</span>
+                        <span class="receipt-value">
+                            @Model.VoidDateTimeDisplay
+                        </span>
+                    </div>
+
+                    <div class="information-item">
+                        <span class="receipt-label">Voided By</span>
+                        <span class="receipt-value">
+                            @Model.VoidedByEmployeeDisplay
+                        </span>
+                    </div>
+
+                    <div class="information-item information-wide">
+                        <span class="receipt-label">Void Reason</span>
+                        <span class="receipt-value">
+                            @Model.VoidReasonDisplay
+                        </span>
+                    </div>
+
+                    <div class="information-item information-wide">
+                        <span class="receipt-label">Void Notes</span>
+                        <span class="receipt-value receipt-preformatted">
+                            @Model.VoidNotes
+                        </span>
+                    </div>
+
+                </div>
+
+            </section>
         }
+
+        @if (!string.IsNullOrWhiteSpace(Model.NotesDisplay) &&
+             Model.NotesDisplay != "No notes")
+        {
+            <section class="receipt-section">
+
+                <h3>Invoice Notes</h3>
+
+                <div class="receipt-notes">
+                    @Model.NotesDisplay
+                </div>
+
+            </section>
+        }
+
+        <footer class="receipt-footer">
+
+            <p class="thank-you">
+                Thank you for trusting Paws &amp; Reservations, LLC
+                with your pet's care.
+            </p>
+
+            <p>
+                Please retain this receipt for your records.
+            </p>
+
+            <p class="receipt-footer-id">
+                Invoice #@Model.InvoiceId
+            </p>
+
+        </footer>
 
     </div>
 
-    <div class="col-12 text-center mt-4 no-print">
-        <button type="button" 
-                class="btn btn-primary btn-sm me-1" 
+    <div class="receipt-actions no-print">
+
+        <button type="button"
+                class="btn btn-primary"
+                style="width: 240px;"
                 onclick="window.print()">
-            Print
+            Print Receipt
         </button>
 
         @Html.ActionLink(
@@ -205,24 +336,384 @@
             "Read",
             "Invoices",
             new { invoiceId = Model.InvoiceId },
-            new { @class = "btn btn-secondary btn-sm ms-1" })
+            new
+            {
+                @class = "btn btn-secondary",
+                style = "width: 240px;"
+            })
 
     </div>
+
 </div>
 
 <style>
+    .receipt-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 12px 0 40px;
+    }
+
+    .receipt-document {
+        position: relative;
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #d9dee3;
+        border-radius: 10px;
+        padding: 42px 48px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        color: #212529;
+    }
+
+    .receipt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 32px;
+    }
+
+        .receipt-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+    .receipt-tagline {
+        margin: 8px 0 0;
+        color: #6c757d;
+        font-size: 1rem;
+    }
+
+    .receipt-title {
+        text-align: right;
+    }
+
+        .receipt-title h2 {
+            margin: 0 0 8px;
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+
+    .receipt-number {
+        color: #6c757d;
+        font-size: 0.9rem;
+        overflow-wrap: anywhere;
+    }
+
+    .receipt-divider {
+        border-top: 3px solid #212529;
+        margin: 28px 0;
+    }
+
+    .receipt-summary {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+        padding: 20px 24px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .receipt-summary-item,
+    .information-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .receipt-label {
+        color: #6c757d;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+    }
+
+    .receipt-value {
+        color: #212529;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+
+    .status-badge {
+        display: inline-block;
+        width: fit-content;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 700;
+    }
+
+    .status-active {
+        background: #d1e7dd;
+        color: #0f5132;
+    }
+
+    .status-void {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .receipt-section {
+        margin-top: 32px;
+    }
+
+        .receipt-section h3 {
+            margin: 0 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #d9dee3;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+    .information-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px 32px;
+    }
+
+    .information-wide {
+        grid-column: 1 / -1;
+    }
+
+    .receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+        .receipt-table th {
+            padding: 11px 12px;
+            background: #212529;
+            border: 1px solid #212529;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .receipt-table td {
+            padding: 11px 12px;
+            border: 1px solid #d9dee3;
+            vertical-align: middle;
+        }
+
+        .receipt-table tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+    .receipt-message {
+        padding: 16px;
+        background: #f8f9fa;
+        border: 1px solid #d9dee3;
+        border-radius: 6px;
+        color: #6c757d;
+        text-align: center;
+    }
+
+    .receipt-totals-section {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 24px;
+    }
+
+    .receipt-totals {
+        width: 420px;
+        border: 1px solid #d9dee3;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 10px 16px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+        .total-row:last-child {
+            border-bottom: none;
+        }
+
+    .total-primary {
+        background: #212529;
+        color: #ffffff;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .balance-row {
+        background: #f8f9fa;
+        font-size: 1.15rem;
+        font-weight: 700;
+    }
+
+    .void-banner {
+        margin: -42px -48px 32px;
+        padding: 12px;
+        background: #dc3545;
+        color: #ffffff;
+        text-align: center;
+        font-size: 1.4rem;
+        font-weight: 800;
+        letter-spacing: 0.18em;
+    }
+
+    .void-information {
+        padding: 20px;
+        background: #fff5f5;
+        border: 1px solid #f1aeb5;
+        border-radius: 8px;
+    }
+
+    .receipt-notes {
+        padding: 16px;
+        background: #f8f9fa;
+        border-left: 4px solid #6c757d;
+        white-space: pre-wrap;
+    }
+
+    .receipt-preformatted {
+        white-space: pre-wrap;
+    }
+
+    .receipt-footer {
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 2px solid #212529;
+        color: #6c757d;
+        text-align: center;
+    }
+
+        .receipt-footer p {
+            margin: 4px 0;
+        }
+
+    .thank-you {
+        color: #212529;
+        font-size: 1.05rem;
+        font-weight: 700;
+    }
+
+    .receipt-footer-id {
+        margin-top: 14px !important;
+        font-size: 0.8rem;
+        overflow-wrap: anywhere;
+    }
+
+    .receipt-actions {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    @@media (max-width: 767px) {
+        .receipt-document {
+            padding: 28px 20px;
+        }
+
+        .receipt-header {
+            flex-direction: column;
+        }
+
+        .receipt-title {
+            text-align: left;
+        }
+
+        .receipt-summary,
+        .information-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .information-wide {
+            grid-column: auto;
+        }
+
+        .receipt-totals {
+            width: 100%;
+        }
+
+        .void-banner {
+            margin: -28px -20px 28px;
+        }
+    }
+
     @@media print {
-        .no-print {
+        @@page {
+            size: auto;
+            margin: 0.45in;
+        }
+
+        .navbar,
+        .no-print,
+        body > footer {
             display: none !important;
         }
 
-        .border-bottom {
-            border-bottom: none !important;
+        body {
+            background: #ffffff !important;
         }
 
-        body {
-            background-color: white;
+        .container,
+        .container-fluid {
+            width: 100% !important;
+            max-width: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .receipt-page {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .receipt-document {
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .void-banner {
+            margin: 0 0 24px;
+        }
+
+        .receipt-section,
+        .receipt-summary,
+        .receipt-totals-section,
+        .receipt-footer {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        .receipt-table {
+            font-size: 0.85rem;
+        }
+
+            .receipt-table thead {
+                display: table-header-group;
+            }
+
+            .receipt-table tr {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .receipt-table th {
+                background: #e9ecef !important;
+                color: #212529 !important;
+                print-color-adjust: exact;
+                -webkit-print-color-adjust: exact;
+            }
+
+        .total-primary,
+        .void-banner,
+        .status-badge {
+            print-color-adjust: exact;
+            -webkit-print-color-adjust: exact;
         }
     }
 </style>
-

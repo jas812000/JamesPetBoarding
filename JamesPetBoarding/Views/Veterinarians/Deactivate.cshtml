@@ -1,10 +1,10 @@
-﻿@model JamesPetBoarding.ViewModels.VeterinarianStatusVM
+@model JamesPetBoarding.ViewModels.VeterinarianStatusVM
 @{
     ViewBag.Title = "Deactivate Veterinarian";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Deactivate Veterinarian Profile</h2>
     <p class="lead">
         Review veterinarian information before deactivation.
@@ -20,48 +20,61 @@
 
     @Html.HiddenFor(x => x.VetId)
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Veterinarian ID</label>
-        <input type="text" class="form-control" value="@Model.VetId" readonly="readonly" />
+        <input type="text"
+               class="form-control"
+               style="max-width: none;"
+               value="@Model.VetId"
+               readonly="readonly" />
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 450px;">
         <label class="form-label">Veterinarian Name</label>
-        @Html.TextBoxFor(x => x.FullNameCredentialsDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.FullNameCredentialsDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-2">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Clinic Name</label>
-        @Html.TextBoxFor(x => x.ClinicNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ClinicNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 300px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "4", placeholder = "Enter notes", style = "max-width: none;" })
         @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
     </div>
 
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <div class="alert alert-warning">
             This action will deactivate the veterinarian's profile. Historical records will remain available.
         </div>
     </div>
 
-    <div class="col-md-12 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Deactivate Veterinarian Profile</button>
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-danger" style="width: 300px;">Deactivate Veterinarian Profile</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Veterinarians",
             new { vetId = Model.VetId },
-            new { @class = "btn btn-secondary ms-2" }
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" }
         )
+
+        </div>
     </div>
 }

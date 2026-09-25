@@ -1,14 +1,16 @@
-﻿using JamesPetBoarding.Models;
 using JamesPetBoarding.Enums;
+using JamesPetBoarding.Migrations;
+using JamesPetBoarding.Models;
+using JamesPetBoarding.ViewModels;
 using Microsoft.Ajax.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
-using JamesPetBoarding.ViewModels;
-using JamesPetBoarding.Migrations;
 
 namespace JamesPetBoarding.Controllers
 {
@@ -126,7 +128,7 @@ namespace JamesPetBoarding.Controllers
                         x.BoardingUnit.UnitType,
 
                     BoardingStatus = x.Status,
-                    StatusDisplay = x.Status.ToString(),
+                    StatusDisplay = GetEnumDisplayName(x.Status),
 
                     StartDateTimeDisplay = x.StartDateTime.ToString("MM/dd/yyyy h:mm tt"),
 
@@ -141,6 +143,137 @@ namespace JamesPetBoarding.Controllers
 
             return View(boardingSearch);
 
+        }
+
+
+
+        // GET: Boardings/CheckInSearch
+        public ActionResult CheckInSearch()
+        {
+            return ShowBoardingActionSearch(
+                new BoardingSearchVM(),
+                "Check In Boardings",
+                "Find confirmed boardings that are ready to be checked in.",
+                "CheckInSearch",
+                "CheckIn",
+                "Check In",
+                "btn-success",
+                BoardingStatusEnum.Confirmed);
+        }
+
+
+        // POST: Boardings/CheckInSearch
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckInSearch(BoardingSearchVM boardingSearch)
+        {
+            return ShowBoardingActionSearch(
+                boardingSearch,
+                "Check In Boardings",
+                "Find confirmed boardings that are ready to be checked in.",
+                "CheckInSearch",
+                "CheckIn",
+                "Check In",
+                "btn-success",
+                BoardingStatusEnum.Confirmed);
+        }
+
+
+        // GET: Boardings/CheckOutSearch
+        public ActionResult CheckOutSearch()
+        {
+            return ShowBoardingActionSearch(
+                new BoardingSearchVM(),
+                "Check Out Boardings",
+                "Find checked-in boardings that are ready to be checked out.",
+                "CheckOutSearch",
+                "CheckOut",
+                "Check Out",
+                "btn-success",
+                BoardingStatusEnum.CheckedIn);
+        }
+
+
+        // POST: Boardings/CheckOutSearch
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOutSearch(BoardingSearchVM boardingSearch)
+        {
+            return ShowBoardingActionSearch(
+                boardingSearch,
+                "Check Out Boardings",
+                "Find checked-in boardings that are ready to be checked out.",
+                "CheckOutSearch",
+                "CheckOut",
+                "Check Out",
+                "btn-success",
+                BoardingStatusEnum.CheckedIn);
+        }
+
+
+        // GET: Boardings/CancelSearch
+        public ActionResult CancelSearch()
+        {
+            return ShowBoardingActionSearch(
+                new BoardingSearchVM(),
+                "Cancel Boardings",
+                "Find scheduled or confirmed boardings that can be cancelled.",
+                "CancelSearch",
+                "Cancel",
+                "Cancel",
+                "btn-danger",
+                BoardingStatusEnum.Scheduled,
+                BoardingStatusEnum.Confirmed);
+        }
+
+
+        // POST: Boardings/CancelSearch
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CancelSearch(BoardingSearchVM boardingSearch)
+        {
+            return ShowBoardingActionSearch(
+                boardingSearch,
+                "Cancel Boardings",
+                "Find scheduled or confirmed boardings that can be cancelled.",
+                "CancelSearch",
+                "Cancel",
+                "Cancel",
+                "btn-danger",
+                BoardingStatusEnum.Scheduled,
+                BoardingStatusEnum.Confirmed);
+        }
+
+
+        // GET: Boardings/NoShowSearch
+        public ActionResult NoShowSearch()
+        {
+            return ShowBoardingActionSearch(
+                new BoardingSearchVM(),
+                "Mark Boardings as No Show",
+                "Find confirmed boardings that can be marked as a no show.",
+                "NoShowSearch",
+                "NoShow",
+                "No Show",
+                "btn-warning",
+                BoardingStatusEnum.Confirmed);
+        }
+
+
+        // POST: Boardings/NoShowSearch
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult NoShowSearch(BoardingSearchVM boardingSearch)
+        {
+            return ShowBoardingActionSearch(
+                boardingSearch,
+                "Mark Boardings as No Show",
+                "Find confirmed boardings that can be marked as a no show.",
+                "NoShowSearch",
+                "NoShow",
+                "No Show",
+                "btn-warning",
+                BoardingStatusEnum.Confirmed);
         }
 
 
@@ -324,7 +457,7 @@ namespace JamesPetBoarding.Controllers
 
             boardingDetails.EndDateTimeDisplay = boarding.EndDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
-            boardingDetails.StatusDisplay = boarding.Status.ToString();
+            boardingDetails.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
             boardingDetails.ActualCheckInDateTimeDisplay = 
                 boarding.ActualCheckInDateTime.HasValue
@@ -569,11 +702,13 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID# " + boardingId + " does not exist.");
             }
 
-            if (boarding.Status == BoardingStatusEnum.Cancelled || 
-                boarding.Status == BoardingStatusEnum.CheckedOut || 
-                boarding.Status == BoardingStatusEnum.NoShow)
-            { 
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be cancelled."); 
+            if (boarding.Status != BoardingStatusEnum.Scheduled &&
+                boarding.Status != BoardingStatusEnum.Confirmed)
+            {
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be cancelled.");
             }
 
             BoardingCancelVM boardingCancel = new BoardingCancelVM();
@@ -593,7 +728,7 @@ namespace JamesPetBoarding.Controllers
 
             boardingCancel.BoardingStatus = boarding.Status;
 
-            boardingCancel.StatusDisplay = boarding.Status.ToString();
+            boardingCancel.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
             boardingCancel.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -629,11 +764,13 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID #" + boardingCancel.BoardingId + " does not exist.");
             }
 
-            if (boarding.Status == BoardingStatusEnum.Cancelled ||
-                boarding.Status == BoardingStatusEnum.CheckedOut ||
-                boarding.Status == BoardingStatusEnum.NoShow)
+            if (boarding.Status != BoardingStatusEnum.Scheduled &&
+                boarding.Status != BoardingStatusEnum.Confirmed)
             {
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be cancelled.");
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be cancelled.");
             }
 
             if (!ModelState.IsValid)
@@ -651,7 +788,7 @@ namespace JamesPetBoarding.Controllers
 
                 boardingCancel.BoardingStatus = boarding.Status;
 
-                boardingCancel.StatusDisplay = boarding.Status.ToString();
+                boardingCancel.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
                 boardingCancel.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -695,10 +832,12 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID #" + boardingId + " does not exist.");
             }
 
-            if (boarding.Status != BoardingStatusEnum.Scheduled &&
-                boarding.Status != BoardingStatusEnum.Confirmed)
+            if (boarding.Status != BoardingStatusEnum.Confirmed)
             {
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked in.");
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be checked in because it is not confirmed.");
             }
 
             BoardingCheckInVM boardingCheckIn = new BoardingCheckInVM();
@@ -724,7 +863,7 @@ namespace JamesPetBoarding.Controllers
 
             boardingCheckIn.BoardingStatus = boarding.Status;
 
-            boardingCheckIn.StatusDisplay = boarding.Status.ToString();
+            boardingCheckIn.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
             boardingCheckIn.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -761,12 +900,14 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID #" + boardingCheckIn.BoardingId + " does not exist.");
             }
 
-            if (boarding.Status != BoardingStatusEnum.Scheduled &&
-                boarding.Status != BoardingStatusEnum.Confirmed)
+            if (boarding.Status != BoardingStatusEnum.Confirmed)
             {
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be checked in.");
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be checked in because it is not confirmed.");
             }
- 
+
             if (!ModelState.IsValid)
             {
                 boardingCheckIn.BoardingId = boarding.BoardingId;
@@ -786,7 +927,7 @@ namespace JamesPetBoarding.Controllers
                     boarding.BoardingUnit.UnitType;
 
                 boardingCheckIn.BoardingStatus = boarding.Status;
-                boardingCheckIn.StatusDisplay = boarding.Status.ToString();
+                boardingCheckIn.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
                 boardingCheckIn.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -862,7 +1003,7 @@ namespace JamesPetBoarding.Controllers
 
             boardingCheckOut.BoardingStatus = boarding.Status;
 
-            boardingCheckOut.StatusDisplay = boarding.Status.ToString();
+            boardingCheckOut.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
             boardingCheckOut.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -938,7 +1079,7 @@ namespace JamesPetBoarding.Controllers
                     boarding.BoardingUnit.UnitType;
 
                 boardingCheckOut.BoardingStatus = boarding.Status;
-                boardingCheckOut.StatusDisplay = boarding.Status.ToString();
+                boardingCheckOut.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
                 boardingCheckOut.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -990,10 +1131,12 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID #" + boardingId + " does not exist.");
             }
 
-            if (boarding.Status != BoardingStatusEnum.Scheduled && 
-                boarding.Status != BoardingStatusEnum.Confirmed)
+            if (boarding.Status != BoardingStatusEnum.Confirmed)
             {
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be marked as a no-show.");
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be marked as a no-show because it is not confirmed.");
             }
 
             BoardingNoShowVM boardingNoShow = new BoardingNoShowVM();
@@ -1013,7 +1156,7 @@ namespace JamesPetBoarding.Controllers
 
             boardingNoShow.BoardingStatus = boarding.Status;
 
-            boardingNoShow.StatusDisplay = boarding.Status.ToString();
+            boardingNoShow.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
             boardingNoShow.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -1051,10 +1194,12 @@ namespace JamesPetBoarding.Controllers
                 return Content("Boarding ID #" + boardingNoShow.BoardingId + " does not exist.");
             }
 
-            if (boarding.Status != BoardingStatusEnum.Scheduled &&
-                boarding.Status != BoardingStatusEnum.Confirmed)
+            if (boarding.Status != BoardingStatusEnum.Confirmed)
             {
-                return Content("Boarding ID #" + boarding.BoardingId + " cannot be marked as a no-show.");
+                return Content(
+                    "Boarding ID #" +
+                    boarding.BoardingId +
+                    " cannot be marked as a no-show because it is not confirmed.");
             }
 
             if (!ModelState.IsValid)
@@ -1073,7 +1218,7 @@ namespace JamesPetBoarding.Controllers
                     boarding.BoardingUnit.UnitType;
 
                 boardingNoShow.BoardingStatus = boarding.Status;
-                boardingNoShow.StatusDisplay = boarding.Status.ToString();
+                boardingNoShow.StatusDisplay = GetEnumDisplayName(boarding.Status);
 
                 boardingNoShow.StartDateTimeDisplay = boarding.StartDateTime.ToString("MM/dd/yyyy hh:mm tt");
 
@@ -1093,6 +1238,112 @@ namespace JamesPetBoarding.Controllers
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { boardingId = boarding.BoardingId });
+        }
+
+
+
+        private ActionResult ShowBoardingActionSearch(
+            BoardingSearchVM boardingSearch,
+            string pageTitle,
+            string pageDescription,
+            string searchAction,
+            string resultAction,
+            string resultButtonText,
+            string resultButtonClass,
+            params BoardingStatusEnum[] allowedStatuses)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (!CanManageBoardings(currentEmployee))
+            {
+                return RedirectToAction("Index", "Staff");
+            }
+
+            List<BoardingModel> boardingQuery = dbContext.Boardings
+                .Include(x => x.Customer)
+                .Include(x => x.Pet)
+                .Include(x => x.BoardingUnit)
+                .ToList();
+
+            boardingQuery = boardingQuery
+                .Where(x => allowedStatuses.Contains(x.Status))
+                .ToList();
+
+            if (boardingSearch.BoardingDate.HasValue)
+            {
+                DateTime boardingDate = boardingSearch.BoardingDate.Value.Date;
+
+                boardingQuery = boardingQuery
+                    .Where(x => x.StartDateTime.Date == boardingDate)
+                    .ToList();
+            }
+
+            if (!string.IsNullOrWhiteSpace(boardingSearch.PetName))
+            {
+                string petName = boardingSearch.PetName.Trim();
+
+                boardingQuery = boardingQuery
+                    .Where(x =>
+                        x.Pet.PetName.IndexOf(
+                            petName,
+                            StringComparison.OrdinalIgnoreCase) >= 0)
+                    .ToList();
+            }
+
+            if (boardingSearch.Species.HasValue)
+            {
+                boardingQuery = boardingQuery
+                    .Where(x => x.Pet.Species == boardingSearch.Species.Value)
+                    .ToList();
+            }
+
+            boardingSearch.BoardingSummaryResults = boardingQuery
+                .OrderBy(x => x.StartDateTime)
+                .Select(x => new BoardingSummaryVM
+                {
+                    BoardingId = x.BoardingId,
+
+                    CustomerId = x.CustomerId,
+
+                    CustomerNameDisplay =
+                        x.Customer.LastName + ", " +
+                        x.Customer.FirstName,
+
+                    PetId = x.PetId,
+
+                    PetNameDisplay = x.Pet.PetName,
+
+                    SpeciesDisplay = GetEnumDisplayName(x.Pet.Species),
+
+                    BoardingUnitId = x.BoardingUnitId,
+
+                    BoardingUnitDisplay =
+                        x.BoardingUnit.UnitName + " - " +
+                        x.BoardingUnit.UnitNumber + " - " +
+                        x.BoardingUnit.UnitType,
+
+                    BoardingStatus = x.Status,
+
+                    StatusDisplay = GetEnumDisplayName(x.Status),
+
+                    StartDateTimeDisplay =
+                        x.StartDateTime.ToString("MM/dd/yyyy h:mm tt"),
+
+                    EndDateTimeDisplay =
+                        x.EndDateTime.ToString("MM/dd/yyyy h:mm tt")
+                })
+                .ToList();
+
+            ViewBag.PageTitle = pageTitle;
+            ViewBag.PageDescription = pageDescription;
+            ViewBag.SearchAction = searchAction;
+            ViewBag.ResultAction = resultAction;
+            ViewBag.ResultButtonText = resultButtonText;
+            ViewBag.ResultButtonClass = resultButtonClass;
+
+            return View("ActionSearch", boardingSearch);
         }
 
 
@@ -1150,6 +1401,19 @@ namespace JamesPetBoarding.Controllers
                     x.Email == loggedInEmail &&
                     x.IsActive);
 
+        }
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute =
+                enumValue
+                    .GetType()
+                    .GetField(enumValue.ToString())
+                    .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.Name
+                : enumValue.ToString();
         }
 
 

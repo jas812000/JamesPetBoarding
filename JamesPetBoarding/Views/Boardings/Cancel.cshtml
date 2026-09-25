@@ -4,67 +4,149 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Cancel Boarding</h2>
     <p class="lead">
-        View boarding information before cancelling the boarding.
+        Review the boarding information before cancelling the boarding.
     </p>
 </div>
 
-@using (Html.BeginForm("Cancel", "Boardings", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Cancel",
+    "Boardings",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
-
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-
     @Html.HiddenFor(x => x.BoardingId)
 
-
-    <div class="col-md-4">
+    @* Customer / Pet / Boarding Unit *@
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Customer</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CustomerNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 250px;">
         <label class="form-label">Pet</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.PetNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Boarding Unit</label>
-        @Html.TextBoxFor(x => x.BoardingUnitDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.BoardingUnitDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Start Date/Time</label>
-        @Html.TextBoxFor(x => x.StartDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-4">
-        <label class="form-label">End Date/Time</label>
-        @Html.TextBoxFor(x => x.EndDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
+    @* Status / Start / End *@
+    <div class="col-auto" style="width: 225px;">
         <label class="form-label">Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.StatusDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-12">
-        <label class="form-label">Cancelled Reason</label>
-        @Html.TextAreaFor(x => x.CancelledReason, new { @class = "form-control", rows = "4", placeholder = "Enter cancellation reason" })
-        @Html.ValidationMessageFor(x => x.CancelledReason, "", new { @class = "text-danger" })
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Start Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.StartDateTimeDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
+
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">End Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.EndDateTimeDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Cancellation Reason *@
+    <div class="col-auto" style="width: 900px;">
+        <label class="form-label">Cancellation Reason</label>
+
+        @Html.TextAreaFor(
+            x => x.CancelledReason,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter cancellation reason",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.CancelledReason,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="w-100"></div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Cancel Boarding</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @Html.ActionLink(
-        "Back to Read",
-        "Read",
-        "Boardings",
-        new { boardingId = Model.BoardingId },
-        new { @class = "btn btn-secondary ms-2" })
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="width: 300px;">
+                Cancel Boarding
+            </button>
+
+            @Html.ActionLink(
+                "Back to Boarding",
+                "Read",
+                "Boardings",
+                new { boardingId = Model.BoardingId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
 }

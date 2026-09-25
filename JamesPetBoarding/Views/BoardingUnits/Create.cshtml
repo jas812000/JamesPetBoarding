@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.BoardingUnitFormVM
+@model JamesPetBoarding.ViewModels.BoardingUnitFormVM
 @{
     ViewBag.Title = "Create Boarding Unit";
 }
@@ -20,11 +20,10 @@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     @* Unit Type / Unit Name / Unit Number *@
-    <div class="col-md-10">
-        <div class="row g-3">
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Type</label>
+
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Type</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.UnitType,
@@ -41,8 +40,8 @@
                     new { @class = "text-danger" })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Name</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Name</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.UnitName,
@@ -59,8 +58,8 @@
                     new { @class = "text-danger" })
             </div>
 
-            <div class="col-md-4">
-                <label class="form-label">Unit Number</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Unit Number</label>
 
                 @Html.TextBoxFor(
                     x => x.UnitNumber,
@@ -76,15 +75,16 @@
                     new { @class = "text-danger" })
             </div>
 
-        </div>
-    </div>
+
+
 
     @* Species Allowed / Size Category *@
-    <div class="col-12">
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-            <div style="width: 304px;">
-                <label class="form-label">Species Allowed</label>
+
+            <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Species Allowed</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.SpeciesAllowed,
@@ -101,8 +101,8 @@
                     new { @class = "text-danger" })
             </div>
 
-            <div style="width: 304px;">
-                <label class="form-label">Size Category</label>
+            <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Size Category</label>
 
                 @Html.EnumDropDownListFor(
                     x => x.SizeCategory,
@@ -119,11 +119,13 @@
                     new { @class = "text-danger" })
             </div>
 
-        </div>
-    </div>
+
+
 
     @* Notes *@
-    <div class="col-md-10">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
 
         @Html.TextAreaFor(
@@ -144,10 +146,11 @@
 
     @* Actions *@
     <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
         <button type="submit"
                 id="CreateBoardingUnitButton"
-                class="btn btn-secondary me-2"
-                disabled>
+                class="btn btn-secondary"
+                disabled style="width: 300px;">
             Create Boarding Unit
         </button>
 
@@ -156,7 +159,9 @@
             "Search",
             "BoardingUnits",
             null,
-            new { @class = "btn btn-secondary ms-2" })
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" })
+
+        </div>
     </div>
 
 }

@@ -1,11 +1,13 @@
-﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Enums;
 using JamesPetBoarding.Migrations;
 using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -30,9 +32,14 @@ namespace JamesPetBoarding.Controllers
 
             InvoiceSearchVM invoiceSearch = new InvoiceSearchVM();
 
-            invoiceSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
-            invoiceSearch.PetSelectList = BuildPetSelectList(dbContext);
-            invoiceSearch.BoardingSelectList = BuildBoardingSelectList(dbContext);
+            invoiceSearch.CustomerSelectList =
+                BuildCustomerSelectList(dbContext, includeInactive: true);
+
+            invoiceSearch.PetSelectList =
+                BuildPetSelectList(dbContext, includeInactive: true);
+
+            invoiceSearch.BoardingSelectList =
+                BuildBoardingSelectList(dbContext, includeInactive: true);
 
             return View(invoiceSearch);
         }
@@ -103,7 +110,7 @@ namespace JamesPetBoarding.Controllers
 
                     InvoiceStatus = x.InvoiceStatus,
 
-                    StatusDisplay = x.InvoiceStatus.ToString(),
+                    StatusDisplay = GetEnumDisplayName(x.InvoiceStatus),
 
                     BoardingId = x.BoardingId,
 
@@ -121,12 +128,119 @@ namespace JamesPetBoarding.Controllers
                 })
                 .ToList();
 
-            invoiceSearch.CustomerSelectList = BuildCustomerSelectList(dbContext);
-            invoiceSearch.PetSelectList = BuildPetSelectList(dbContext);
-            invoiceSearch.BoardingSelectList = BuildBoardingSelectList(dbContext);
+            invoiceSearch.CustomerSelectList =
+                BuildCustomerSelectList(
+                    dbContext,
+                    invoiceSearch.PetId,
+                    includeInactive: true);
+
+            invoiceSearch.PetSelectList =
+                BuildPetSelectList(
+                    dbContext,
+                    invoiceSearch.CustomerId,
+                    includeInactive: true);
+
+            invoiceSearch.BoardingSelectList =
+                BuildBoardingSelectList(
+                    dbContext,
+                    invoiceSearch.CustomerId,
+                    invoiceSearch.PetId,
+                    includeInactive: true);
+
+            if (invoiceSearch.BoardingId.HasValue)
+            {
+                invoiceSearch.BoardingSelectList =
+                    invoiceSearch.BoardingSelectList
+                        .Where(x =>
+                            x.Value == invoiceSearch.BoardingId.Value.ToString())
+                        .ToList();
+            }
 
             return View(invoiceSearch);
 
+        }
+
+
+        // GET: Invoices/GetInvoiceSelections
+        public JsonResult GetInvoiceSelections(
+            Guid? customerId,
+            Guid? petId,
+            Guid? boardingId,
+            bool includeInactive = false)
+        {
+            ApplicationDbContext dbContext = new ApplicationDbContext();
+
+            EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
+
+            if (currentEmployee == null)
+            {
+                return Json(
+                    new { Error = "Unable to load invoice selections." },
+                    JsonRequestBehavior.AllowGet);
+            }
+
+            if (boardingId.HasValue)
+            {
+                BoardingModel selectedBoarding = dbContext.Boardings
+                    .Include(x => x.Customer)
+                    .Include(x => x.Pet)
+                    .FirstOrDefault(x => x.BoardingId == boardingId.Value);
+
+                if (selectedBoarding == null)
+                {
+                    return Json(
+                        new { Error = "The selected boarding no longer exists." },
+                        JsonRequestBehavior.AllowGet);
+                }
+
+                if (!includeInactive &&
+                    (!selectedBoarding.Customer.IsActive ||
+                     !selectedBoarding.Pet.IsActive))
+                {
+                    return Json(
+                        new
+                        {
+                            Error = "This boarding cannot be used because " +
+                                    "its customer or pet is inactive."
+                        },
+                        JsonRequestBehavior.AllowGet);
+                }
+
+                customerId = selectedBoarding.CustomerId;
+                petId = selectedBoarding.PetId;
+            }
+
+            List<SelectListItem> boardings =
+                BuildBoardingSelectList(
+                    dbContext,
+                    customerId,
+                    petId,
+                    includeInactive);
+
+            if (boardingId.HasValue)
+            {
+                boardings = boardings
+                    .Where(x => x.Value == boardingId.Value.ToString())
+                    .ToList();
+            }
+
+            return Json(
+                new
+                {
+                    CustomerId = customerId,
+                    PetId = petId,
+                    BoardingId = boardingId,
+                    Customers = BuildCustomerSelectList(
+                        dbContext,
+                        petId,
+                        includeInactive),
+                    Pets = BuildPetSelectList(
+                        dbContext,
+                        customerId,
+                        includeInactive),
+                    Boardings = boardings
+                },
+                JsonRequestBehavior.AllowGet);
         }
 
 
@@ -159,7 +273,6 @@ namespace JamesPetBoarding.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(InvoiceFormVM invoiceForm)
         {
-
             ApplicationDbContext dbContext = new ApplicationDbContext();
 
             EmployeeModel currentEmployee = GetCurrentEmployee(dbContext);
@@ -171,12 +284,9 @@ namespace JamesPetBoarding.Controllers
 
             if (!ModelState.IsValid)
             {
-                invoiceForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
-                invoiceForm.PetSelectList = BuildPetSelectList(dbContext);
-                invoiceForm.BoardingSelectList = BuildBoardingSelectList(dbContext);
+                PopulateInvoiceFormSelectLists(dbContext, invoiceForm);
 
                 return View(invoiceForm);
-
             }
 
             CustomerModel customer = dbContext.Customers
@@ -184,12 +294,15 @@ namespace JamesPetBoarding.Controllers
 
             if (customer == null)
             {
-                return Content("Customer ID #" + invoiceForm.CustomerId + " does not exist.");
+                ModelState.AddModelError(
+                    "CustomerId",
+                    "The selected customer does not exist.");
             }
-
-            if (!customer.IsActive)
+            else if (!customer.IsActive)
             {
-                return Content("Customer ID #" + invoiceForm.CustomerId + " is inactive.");
+                ModelState.AddModelError(
+                    "CustomerId",
+                    "The selected customer is inactive.");
             }
 
             PetModel pet = dbContext.Pets
@@ -197,67 +310,87 @@ namespace JamesPetBoarding.Controllers
 
             if (pet == null)
             {
-                return Content("Pet ID #" + invoiceForm.PetId + " does not exist.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet does not exist.");
             }
-
-            if (!pet.IsActive)
+            else if (!pet.IsActive)
             {
-                return Content("Pet ID #" + invoiceForm.PetId + " is inactive.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet is inactive.");
             }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
-                .FirstOrDefault(x =>
-                    x.CustomerId == invoiceForm.CustomerId &&
-                    x.PetId == invoiceForm.PetId);
+                    .FirstOrDefault(x =>
+                        x.CustomerId == invoiceForm.CustomerId &&
+                        x.PetId == invoiceForm.PetId);
 
             if (customerPet == null)
             {
-                return Content("This customer is not associated with this pet.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet is not associated " +
+                    "with the selected customer.");
             }
-
-            BoardingModel boarding = null;
 
             if (invoiceForm.BoardingId.HasValue)
             {
-                boarding = dbContext.Boardings
-                    .FirstOrDefault(x => x.BoardingId == invoiceForm.BoardingId.Value);
+                BoardingModel boarding = dbContext.Boardings
+                        .FirstOrDefault(x => x.BoardingId == invoiceForm.BoardingId.Value);
 
                 if (boarding == null)
                 {
-                    return Content("Boarding ID #" + invoiceForm.BoardingId.Value + " does not exist.");
+                    ModelState.AddModelError("BoardingId", "The selected boarding does not exist.");
                 }
-
-                if (boarding.CustomerId != invoiceForm.CustomerId)
+                else if (
+                    boarding.CustomerId != invoiceForm.CustomerId || boarding.PetId != invoiceForm.PetId)
                 {
-                    return Content("The selected boarding does not belong to this customer.");
+                    ModelState.AddModelError(
+                        "BoardingId",
+                        "The selected boarding does not match " +
+                        "the selected customer and pet.");
                 }
+            }
 
-                if (boarding.PetId != invoiceForm.PetId)
-                {
-                    return Content("The selected boarding does not belong to this pet.");
-                }
+            if (!ModelState.IsValid)
+            {
+                PopulateInvoiceFormSelectLists(dbContext, invoiceForm);
+
+                return View(invoiceForm);
             }
 
             InvoiceModel invoice = new InvoiceModel();
 
             invoice.CustomerId = invoiceForm.CustomerId;
+
             invoice.PetId = invoiceForm.PetId;
+
             invoice.BoardingId = invoiceForm.BoardingId;
+
             invoice.InvoiceDateTime = DateTime.Now;
+
             invoice.InvoiceStatus = InvoiceStatusEnum.Draft;
+
             invoice.Subtotal = 0m;
             invoice.TaxAmount = 0m;
             invoice.DiscountAmount = 0m;
             invoice.TotalAmount = 0m;
             invoice.AmountPaid = 0m;
             invoice.Balance = 0m;
+
             invoice.Notes = invoiceForm.Notes;
 
             dbContext.Invoices.Add(invoice);
+
             dbContext.SaveChanges();
 
-            return RedirectToAction("Read", new { invoiceId = invoice.InvoiceId });
-
+            return RedirectToAction(
+                "Read",
+                new
+                {
+                    invoiceId = invoice.InvoiceId
+                });
         }
 
 
@@ -314,13 +447,18 @@ namespace JamesPetBoarding.Controllers
             InvoiceFormVM invoiceForm = new InvoiceFormVM();
 
             invoiceForm.InvoiceId = invoice.InvoiceId;
+
             invoiceForm.CustomerId = invoice.CustomerId;
+
             invoiceForm.PetId = invoice.PetId;
+
             invoiceForm.BoardingId = invoice.BoardingId;
+
             invoiceForm.Notes = invoice.Notes;
+
             invoiceForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
-            invoiceForm.PetSelectList = BuildPetSelectList(dbContext);
-            invoiceForm.BoardingSelectList = BuildBoardingSelectList(dbContext);
+            invoiceForm.PetSelectList = BuildPetSelectList(dbContext, invoice.CustomerId);
+            invoiceForm.BoardingSelectList = BuildBoardingSelectList(dbContext, invoice.CustomerId, invoice.PetId);
 
             return View(invoiceForm);
 
@@ -342,20 +480,12 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
-            if (!ModelState.IsValid)
-            {
-                invoiceForm.CustomerSelectList = BuildCustomerSelectList(dbContext);
-                invoiceForm.PetSelectList = BuildPetSelectList(dbContext);
-                invoiceForm.BoardingSelectList = BuildBoardingSelectList(dbContext);
-
-                return View(invoiceForm);
-            }
-
-            InvoiceModel invoice = dbContext.Invoices.FirstOrDefault(x => x.InvoiceId == invoiceForm.InvoiceId);
+            InvoiceModel invoice = dbContext.Invoices
+                .FirstOrDefault(x => x.InvoiceId == invoiceForm.InvoiceId);
 
             if (invoice == null)
             {
-                return Content("Invoice ID#" + invoiceForm.InvoiceId + " does not exist.");
+                return Content("Invoice ID #" + invoiceForm.InvoiceId + " does not exist.");
             }
 
             if (invoice.InvoiceStatus == InvoiceStatusEnum.Void)
@@ -363,17 +493,27 @@ namespace JamesPetBoarding.Controllers
                 return Content("This invoice is void and cannot be updated.");
             }
 
+            if (!ModelState.IsValid)
+            {
+                PopulateInvoiceFormSelectLists(dbContext, invoiceForm);
+
+                return View(invoiceForm);
+            }
+
             CustomerModel customer = dbContext.Customers
                 .FirstOrDefault(x => x.CustomerId == invoiceForm.CustomerId);
 
             if (customer == null)
             {
-                return Content("Customer ID #" + invoiceForm.CustomerId + " does not exist.");
+                ModelState.AddModelError(
+                    "CustomerId",
+                    "The selected customer does not exist.");
             }
-
-            if (!customer.IsActive)
+            else if (!customer.IsActive)
             {
-                return Content("Customer ID #" + invoiceForm.CustomerId + " is inactive.");
+                ModelState.AddModelError(
+                    "CustomerId",
+                    "The selected customer is inactive.");
             }
 
             PetModel pet = dbContext.Pets
@@ -381,12 +521,15 @@ namespace JamesPetBoarding.Controllers
 
             if (pet == null)
             {
-                return Content("Pet ID #" + invoiceForm.PetId + " does not exist.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet does not exist.");
             }
-
-            if (!pet.IsActive)
+            else if (!pet.IsActive)
             {
-                return Content("Pet ID #" + invoiceForm.PetId + " is inactive.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet is inactive.");
             }
 
             CustomerPetModel customerPet = dbContext.CustomerPets
@@ -396,30 +539,36 @@ namespace JamesPetBoarding.Controllers
 
             if (customerPet == null)
             {
-                return Content("This customer is not associated with this pet.");
+                ModelState.AddModelError(
+                    "PetId",
+                    "The selected pet is not associated with the selected customer.");
             }
-
-            BoardingModel boarding = null;
 
             if (invoiceForm.BoardingId.HasValue)
             {
-                boarding = dbContext.Boardings
+                BoardingModel boarding = dbContext.Boardings
                     .FirstOrDefault(x => x.BoardingId == invoiceForm.BoardingId.Value);
 
                 if (boarding == null)
                 {
-                    return Content("Boarding ID #" + invoiceForm.BoardingId.Value + " does not exist.");
+                    ModelState.AddModelError(
+                        "BoardingId",
+                        "The selected boarding does not exist.");
                 }
-
-                if (boarding.CustomerId != invoiceForm.CustomerId)
+                else if (boarding.CustomerId != invoiceForm.CustomerId ||
+                         boarding.PetId != invoiceForm.PetId)
                 {
-                    return Content("The selected boarding does not belong to this customer.");
+                    ModelState.AddModelError(
+                        "BoardingId",
+                        "The selected boarding does not match the selected customer and pet.");
                 }
+            }
 
-                if (boarding.PetId != invoiceForm.PetId)
-                {
-                    return Content("The selected boarding does not belong to this pet.");
-                }
+            if (!ModelState.IsValid)
+            {
+                PopulateInvoiceFormSelectLists(dbContext, invoiceForm);
+
+                return View(invoiceForm);
             }
 
             invoice.CustomerId = invoiceForm.CustomerId;
@@ -476,7 +625,7 @@ namespace JamesPetBoarding.Controllers
                   $"{invoice.Boarding.EndDateTime:MM/dd/yyyy}";
 
             invoiceVoid.InvoiceDateTimeDisplay = $"{invoice.InvoiceDateTime:MM/dd/yyyy hh:mm tt}";
-            invoiceVoid.StatusDisplay = invoice.InvoiceStatus.ToString();
+            invoiceVoid.StatusDisplay = GetEnumDisplayName(invoice.InvoiceStatus);
             invoiceVoid.TotalAmountDisplay = invoice.TotalAmount.ToString("C");
             invoiceVoid.AmountPaidDisplay = invoice.AmountPaid.ToString("C");
             invoiceVoid.BalanceDisplay = invoice.Balance.ToString("C");
@@ -534,7 +683,7 @@ namespace JamesPetBoarding.Controllers
 
                 invoiceVoid.InvoiceDateTimeDisplay = $"{invoice.InvoiceDateTime:MM/dd/yyyy hh:mm tt}";
 
-                invoiceVoid.StatusDisplay = invoice.InvoiceStatus.ToString();
+                invoiceVoid.StatusDisplay = GetEnumDisplayName(invoice.InvoiceStatus);
 
                 invoiceVoid.TotalAmountDisplay = invoice.TotalAmount.ToString("C");
 
@@ -583,51 +732,135 @@ namespace JamesPetBoarding.Controllers
 
         }
 
-        private List<SelectListItem> BuildCustomerSelectList(ApplicationDbContext dbContext)
+        private List<SelectListItem> BuildCustomerSelectList(
+            ApplicationDbContext dbContext,
+            Guid? petId = null,
+            bool includeInactive = false)
         {
-            return dbContext.Customers
-                .Where(x => x.IsActive)
+            List<CustomerModel> customers = dbContext.Customers
                 .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName)
-                .ToList()
+                .ToList();
+
+            if (!includeInactive)
+            {
+                customers = customers
+                    .Where(x => x.IsActive)
+                    .ToList();
+            }
+
+            if (petId.HasValue)
+            {
+                List<Guid> customerIds = dbContext.CustomerPets
+                    .Where(x => x.PetId == petId.Value)
+                    .Select(x => x.CustomerId)
+                    .Distinct()
+                    .ToList();
+
+                customers = customers
+                    .Where(x => customerIds.Contains(x.CustomerId))
+                    .ToList();
+            }
+
+            return customers
                 .Select(x => new SelectListItem
                 {
                     Value = x.CustomerId.ToString(),
-                    Text = $"{x.LastName}, {x.FirstName}",
+                    Text = $"{x.LastName}, {x.FirstName}"
                 })
                 .ToList();
         }
 
-        private List<SelectListItem> BuildPetSelectList(ApplicationDbContext dbContext)
+
+        private List<SelectListItem> BuildPetSelectList(
+            ApplicationDbContext dbContext,
+            Guid? customerId = null,
+            bool includeInactive = false)
         {
-            return dbContext.Pets
-                .Where(x => x.IsActive)
+            List<PetModel> pets = dbContext.Pets
                 .OrderBy(x => x.PetName)
-                .ToList()
+                .ToList();
+
+            if (!includeInactive)
+            {
+                pets = pets
+                    .Where(x => x.IsActive)
+                    .ToList();
+            }
+
+            if (customerId.HasValue)
+            {
+                List<Guid> petIds = dbContext.CustomerPets
+                    .Where(x => x.CustomerId == customerId.Value)
+                    .Select(x => x.PetId)
+                    .Distinct()
+                    .ToList();
+
+                pets = pets
+                    .Where(x => petIds.Contains(x.PetId))
+                    .ToList();
+            }
+
+            return pets
                 .Select(x => new SelectListItem
                 {
                     Value = x.PetId.ToString(),
-                    Text = $"{x.PetName} - {x.Species} - {x.Breed}",
+                    Text =
+                        x.PetName + " - " +
+                        GetEnumDisplayName(x.Species) + " - " +
+                        x.Breed
                 })
                 .ToList();
         }
 
-        private List<SelectListItem> BuildBoardingSelectList(ApplicationDbContext dbContext)
+        private List<SelectListItem> BuildBoardingSelectList(
+            ApplicationDbContext dbContext,
+            Guid? customerId = null,
+            Guid? petId = null,
+            bool includeInactive = false)
         {
-            return dbContext.Boardings
+            List<BoardingModel> boardings = dbContext.Boardings
+                .Include(x => x.Customer)
                 .Include(x => x.Pet)
                 .Include(x => x.BoardingUnit)
                 .OrderBy(x => x.Pet.PetName)
                 .ThenBy(x => x.StartDateTime)
                 .ThenBy(x => x.BoardingUnit.UnitName)
                 .ThenBy(x => x.BoardingUnit.UnitNumber)
-                .ToList()
+                .ToList();
+
+            if (!includeInactive)
+            {
+                boardings = boardings
+                    .Where(x => x.Customer.IsActive && x.Pet.IsActive)
+                    .ToList();
+            }
+
+            if (customerId.HasValue)
+            {
+                boardings = boardings
+                    .Where(x => x.CustomerId == customerId.Value)
+                    .ToList();
+            }
+
+            if (petId.HasValue)
+            {
+                boardings = boardings
+                    .Where(x => x.PetId == petId.Value)
+                    .ToList();
+            }
+
+            return boardings
                 .Select(x => new SelectListItem
                 {
                     Value = x.BoardingId.ToString(),
-                    Text = $"{x.Pet.PetName} - " +
-                    $"{x.BoardingUnit.UnitName} {x.BoardingUnit.UnitNumber} - " +
-                    $"{x.StartDateTime:MM/dd/yyyy} to {x.EndDateTime:MM/dd/yyyy}"
+                    Text =
+                        x.Pet.PetName + " - " +
+                        x.BoardingUnit.UnitName + " " +
+                        x.BoardingUnit.UnitNumber + " - " +
+                        x.StartDateTime.ToString("MM/dd/yyyy") +
+                        " to " +
+                        x.EndDateTime.ToString("MM/dd/yyyy")
                 })
                 .ToList();
         }
@@ -675,7 +908,7 @@ namespace JamesPetBoarding.Controllers
 
             invoiceDetails.InvoiceStatus = invoice.InvoiceStatus;
 
-            invoiceDetails.StatusDisplay = invoice.InvoiceStatus.ToString();
+            invoiceDetails.StatusDisplay = GetEnumDisplayName(invoice.InvoiceStatus);
 
             invoiceDetails.SubtotalDisplay = invoice.Subtotal.ToString("C");
 
@@ -760,6 +993,37 @@ namespace JamesPetBoarding.Controllers
 
             return invoiceDetails;
 
+        }
+
+        private void PopulateInvoiceFormSelectLists(ApplicationDbContext dbContext, InvoiceFormVM invoiceForm)
+        {
+            Guid? customerId = invoiceForm.CustomerId == Guid.Empty
+                ? (Guid?)null
+                : invoiceForm.CustomerId;
+
+            Guid? petId = invoiceForm.PetId == Guid.Empty
+                ? (Guid?)null
+                : invoiceForm.PetId;
+
+            invoiceForm.CustomerSelectList = BuildCustomerSelectList(dbContext, petId);
+
+            invoiceForm.PetSelectList = BuildPetSelectList(dbContext, customerId);
+
+            invoiceForm.BoardingSelectList = BuildBoardingSelectList(dbContext, customerId, petId);
+        }
+
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute =
+                enumValue
+                    .GetType()
+                    .GetField(enumValue.ToString())
+                    .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.Name
+                : enumValue.ToString();
         }
 
 

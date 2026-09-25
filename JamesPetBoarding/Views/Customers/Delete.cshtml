@@ -1,91 +1,237 @@
-﻿@model JamesPetBoarding.ViewModels.CustomerDeleteVM
+﻿@model JamesPetBoarding.ViewModels.CustomerDeactivateVM
 @{
     ViewBag.Title = "Deactivate Customer";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Deactivate Customer Profile</h2>
     <p class="lead">
         Review customer information and provide a reason for deactivation.
     </p>
 </div>
 
-
-@using (Html.BeginForm("Delete", "Customers", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Delete",
+    "Customers",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.CustomerId)
 
-    <div class="col-md-6">
+    @* Customer ID *@
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Customer ID</label>
-        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+
+        <input type="text"
+               class="form-control"
+               value="@Model.CustomerId"
+               style="max-width: none;"
+               readonly />
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Customer Name</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    @* Customer Name / Active Status *@
+    <div class="col-auto" style="width: 600px;">
+        <div class="row g-3">
 
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+            <div class="col-md-8">
+                <label class="form-label">Customer Name</label>
 
-    <div class="col-md-8">
-        <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+                @Html.TextBoxFor(
+                    x => x.CustomerNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    <div class="col-md-6">
-        <label class="form-label">City, State, Zip Code</label>
-        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+            <div class="col-md-4">
+                <label class="form-label">Active Status</label>
 
-    <div class="col-md-8">
-        <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
-    </div>
+                @Html.TextBoxFor(
+                    x => x.StatusDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
-        <div class="alert alert-warning">
-            This action will deactivate the customer's profile. Historical records will remain available.
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    @* Phone / Email *@
+    <div class="col-auto" style="width: 600px;">
+        <div class="row g-3">
+
+            <div class="col-md-5">
+                <label class="form-label">Phone</label>
+
+                @Html.TextBoxFor(
+                    x => x.PhoneDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-md-7">
+                <label class="form-label">Email</label>
+
+                @Html.TextBoxFor(
+                    x => x.EmailDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Address *@
+    <div class="col-auto" style="width: 600px;">
+        <label class="form-label">Address</label>
+
+        @Html.TextBoxFor(
+            x => x.AddressDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* City, State, Zip Code *@
+    <div class="col-auto" style="width: 600px;">
+        <label class="form-label">City, State, Zip Code</label>
+
+        @Html.TextBoxFor(
+            x => x.CityStateZipDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Customer Notes *@
+    <div class="col-auto" style="width: 600px;">
+        <label class="form-label">Notes</label>
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Warning *@
+    <div class="col-auto" style="width: 600px;">
+        <div class="alert alert-warning mb-0">
+            This action will deactivate the customer profile.
+            Historical records will remain available.
+        </div>
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Inactivation Reason *@
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Inactivation Reason</label>
-        @Html.EnumDropDownListFor(x => x.InactivationReason, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.InactivationReason, "", new { @class = "text-danger" })
+
+        @Html.EnumDropDownListFor(
+            x => x.InactivationReason,
+            "Select...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.InactivationReason,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* Inactivation Notes *@
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Inactivation Notes</label>
-        @Html.TextAreaFor(x => x.InactiveNotes, new { @class = "form-control", rows = "3", placeholder = "Enter Inactivation notes" })
-        @Html.ValidationMessageFor(x => x.InactiveNotes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.InactivationNotes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter inactivation notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.InactivationNotes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Deactivate Customer Profile</button>
+    <div class="w-100"></div>
 
-        @Html.ActionLink("Cancel", "Read", "Customers",
-            new { customerId = Model.CustomerId },
-            new { @class = "btn btn-secondary ms-2" }
-        )
+    @* Actions *@
+    <div class="col-12 mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="width: 260px;">
+                Deactivate Customer Profile
+            </button>
+
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "Customers",
+                new { customerId = Model.CustomerId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 260px;"
+                })
+
+        </div>
     </div>
-
 }

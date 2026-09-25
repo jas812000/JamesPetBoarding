@@ -1,10 +1,10 @@
-﻿@model JamesPetBoarding.ViewModels.VaccineDeleteVM
+@model JamesPetBoarding.ViewModels.VaccineDeleteVM
 @{
     ViewBag.Title = "Delete Vaccine";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Delete Vaccine Profile</h2>
     <p class="lead">
         View vaccine profile information before deletion.
@@ -22,48 +22,63 @@
     @Html.HiddenFor(x => x.VaccineId)
 
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Vaccine ID</label>
-        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.VaccineId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Vaccine Name</label>
-        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.VaccineName, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 304px;">
         <label class="form-label">Required Status</label>
-        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.RequiredDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1060px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1060px;">
         <div class="alert alert-warning">
             This action will permanently delete this vaccine profile and cannot be undone.
             Deletion will be blocked if the vaccine is associated with any Pet Vaccine records.
         </div>
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Delete Vaccine Profile</button>
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <button type="submit"
+                    class="btn btn-danger"
+                    style="width: 300px;">
+                Delete Vaccine Profile
+            </button>
 
-        @Html.ActionLink(
-            "Cancel", 
-            "Read", 
-            "Vaccines",
-            new { vaccineId = Model.VaccineId },
-            new { @class = "btn btn-secondary ms-2" }
-         )
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "Vaccines",
+                new { vaccineId = Model.VaccineId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+        </div>
     </div>
 
 }

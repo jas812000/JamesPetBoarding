@@ -1,4 +1,4 @@
-﻿@model JamesPetBoarding.ViewModels.ServiceDeleteVM
+@model JamesPetBoarding.ViewModels.ServiceDeleteVM
 @{
     ViewBag.Title = "Delete Service";
 }
@@ -22,51 +22,60 @@
     @Html.HiddenFor(x => x.ServiceId)
 
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 400px;">
         <label class="form-label">Service ID</label>
-        @Html.TextBoxFor(x => x.ServiceId, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ServiceId, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Service Name</label>
-        @Html.TextBoxFor(x => x.ServiceNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.ServiceNameDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-6">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Species</label>
-        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.SpeciesDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Base Price</label>
-        @Html.TextBoxFor(x => x.BasePriceDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.BasePriceDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-3">
+    <div class="col-auto" style="width: 420px;">
         <label class="form-label">Pricing Type</label>
-        @Html.TextBoxFor(x => x.PricingTypeDisplay, new { @class = "form-control", @readonly = "readonly" })
+        @Html.TextBoxFor(x => x.PricingTypeDisplay, new { @class = "form-control", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-12">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly", style = "max-width: none;" })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 900px;">
         <div class="alert alert-warning">
             This action will permanently delete this service profile and cannot be undone.
         </div>
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        <button type="submit" class="btn btn-danger me-2">Delete Service Profile</button>
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <button type="submit" class="btn btn-danger" style="width: 300px;">Delete Service Profile</button>
 
         @Html.ActionLink(
             "Cancel",
             "Read",
             "Services",
             new { serviceId = Model.ServiceId },
-            new { @class = "btn btn-secondary ms-2" }
+            new { @class = "btn btn-secondary ms-2", style = "width: 300px;" }
          )
+
+        </div>
     </div>
 }
