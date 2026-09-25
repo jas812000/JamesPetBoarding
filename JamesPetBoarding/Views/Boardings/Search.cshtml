@@ -104,31 +104,57 @@
     </div>
 
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Search Boardings</button>
 
-        @if (ViewBag.CanManageBoardings)
-        {
+        <div class="d-flex justify-content-center gap-3 flex-wrap mb-3">
+
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Search Boardings
+            </button>
+
+            @if (ViewBag.CanManageBoardings)
+            {
+                @Html.ActionLink(
+                    "Create Boarding",
+                    "Create",
+                    "Boardings",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+            }
+
+        </div>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
             @Html.ActionLink(
-                "Create Boarding",
-                "Create",
+                "Clear Search",
+                "Search",
                 "Boardings",
                 null,
-                new { @class = "btn btn-success ms-2" })
-        }
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Clear Search",
-            "Search",
-            "Boardings",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            @Html.ActionLink(
+                "Back to Boarding Management",
+                "BoardingManagement",
+                "Staff",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-        @Html.ActionLink(
-            "Back to Boarding Management",
-            "BoardingManagement",
-            "Staff",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+        </div>
+
     </div>
 
 }

@@ -4,142 +4,340 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Update Emergency Contact Profile</h2>
     <p class="lead">
         Update emergency contact information and status.
     </p>
 </div>
 
-@using (Html.BeginForm("Update", "EmergencyContacts", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Update",
+    "EmergencyContacts",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.EmergencyContactId)
-
     @Html.HiddenFor(x => x.CustomerId)
 
-    <div class="col-md-6">
-        <label class="form-label">Emergency Contact ID</label>
-        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+    @* Emergency Contact ID / Customer ID *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">
+                    Emergency Contact ID
+                </label>
+
+                <input type="text"
+                       value="@Model.EmergencyContactId"
+                       class="form-control"
+                       style="max-width: none;"
+                       readonly />
+            </div>
+
+            <div class="col-6">
+                <label class="form-label">Customer ID</label>
+
+                <input type="text"
+                       value="@Model.CustomerId"
+                       class="form-control"
+                       style="max-width: none;"
+                       readonly />
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Customer ID</label>
-        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+    <div class="w-100"></div>
+
+    @* First Name / Last Name / Relationship *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-4">
+                <label class="form-label">First Name</label>
+
+                @Html.TextBoxFor(
+                    x => x.FirstName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "John",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.FirstName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Last Name</label>
+
+                @Html.TextBoxFor(
+                    x => x.LastName,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "Doe",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.LastName,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Relationship</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.RelationshipType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.RelationshipType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">First Name</label>
-        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control", placeholder = "John" })
-        @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "text-danger" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-6">
-        <label class="form-label">Last Name</label>
-        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control", placeholder = "Doe" })
-        @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-8">
+    @* Address *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.Address, new { @class = "form-control", placeholder = "1234 Main Street" })
-        @Html.ValidationMessageFor(x => x.Address, "", new { @class = "text-danger" })
-    </div>
 
-    <div class="col-md-6">
-        <label class="form-label">City</label>
-        @Html.TextBoxFor(x => x.City, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.City, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">State</label>
-        @Html.EnumDropDownListFor(x => x.State, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.State, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-2">
-        <label class="form-label">Zip Code</label>
-        @Html.TextBoxFor(x => x.ZipCode, new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.ZipCode, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
         @Html.TextBoxFor(
-            x => x.Phone,
+            x => x.Address,
             new
             {
                 @class = "form-control",
-                placeholder = "202-555-1212",
-                maxlength = "12",
-                inputmode = "numeric",
-                id = "Phone"
+                placeholder = "1234 Main Street",
+                style = "max-width: none;"
             })
-        @Html.ValidationMessageFor(x => x.Phone, "", new { @class = "text-danger" })
+
+        @Html.ValidationMessageFor(
+            x => x.Address,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.Email, new { @class = "form-control", placeholder = "johndoe@anymail.com" })
-        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "text-danger" })
+    <div class="w-100"></div>
+
+    @* City / State / Zip Code *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">City</label>
+
+                @Html.TextBoxFor(
+                    x => x.City,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.City,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">State</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.State,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.State,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Zip Code</label>
+
+                @Html.TextBoxFor(
+                    x => x.ZipCode,
+                    new
+                    {
+                        @class = "form-control",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.ZipCode,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Relationship Type</label>
-        @Html.EnumDropDownListFor(x => x.RelationshipType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.RelationshipType, "", new { @class = "text-danger" })
+    <div class="w-100"></div>
+
+    @* Phone / Email *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-4">
+                <label class="form-label">Phone</label>
+
+                @Html.TextBoxFor(
+                    x => x.Phone,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "202-555-1212",
+                        maxlength = "12",
+                        inputmode = "numeric",
+                        id = "Phone",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.Phone,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-8">
+                <label class="form-label">Email</label>
+
+                @Html.TextBoxFor(
+                    x => x.Email,
+                    new
+                    {
+                        @class = "form-control",
+                        placeholder = "johndoe@anymail.com",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.Email,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.Notes, new { @class = "form-control", rows = "3", placeholder = "Enter notes" })
-        @Html.ValidationMessageFor(x => x.Notes, "", new { @class = "text-danger" })
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
     </div>
 
+    <div class="w-100"></div>
+
+    @* Actions *@
     <div class="col-12 text-center mt-4">
-        <button type="submit" class="btn btn-primary me-2">Update Emergency Contact Profile</button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @Html.ActionLink(
-           "Cancel",
-           "Read",
-           "EmergencyContacts",
-           new { emergencyContactId = Model.EmergencyContactId },
-           new { @class = "btn btn-secondary ms-2" }
-        )
+            <button type="submit"
+                    class="btn btn-primary"
+                    style="width: 300px;">
+                Update Emergency Contact Profile
+            </button>
+
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "EmergencyContacts",
+                new
+                {
+                    emergencyContactId =
+                        Model.EmergencyContactId
+                },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
-
 }
 
-@section Scripts {
+@section Scripts
+{
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const phoneInput = document.getElementById("Phone");
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
-            if (phoneInput) {
-                phoneInput.addEventListener("input", function () {
-                    let digits = this.value.replace(/\D/g, "").substring(0, 10);
+                var phoneInput =
+                    document.getElementById("Phone");
 
-                    if (digits.length > 6) {
-                        this.value =
-                            digits.substring(0, 3) + "-" +
-                            digits.substring(3, 6) + "-" +
-                            digits.substring(6);
-                    }
-                    else if (digits.length > 3) {
-                        this.value =
-                            digits.substring(0, 3) + "-" +
-                            digits.substring(3);
-                    }
-                    else {
-                        this.value = digits;
-                    }
-                });
-            }
-        });
+                if (phoneInput) {
+                    phoneInput.addEventListener(
+                        "input",
+                        function () {
+
+                            var digits =
+                                this.value
+                                    .replace(/\D/g, "")
+                                    .substring(0, 10);
+
+                            if (digits.length > 6) {
+                                this.value =
+                                    digits.substring(0, 3) + "-" +
+                                    digits.substring(3, 6) + "-" +
+                                    digits.substring(6);
+                            }
+                            else if (digits.length > 3) {
+                                this.value =
+                                    digits.substring(0, 3) + "-" +
+                                    digits.substring(3);
+                            }
+                            else {
+                                this.value = digits;
+                            }
+                        });
+                }
+            });
     </script>
 }

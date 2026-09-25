@@ -1,4 +1,4 @@
-﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -29,6 +29,12 @@ namespace JamesPetBoarding.ViewModels
         public DateTime? StartDateTime { get; set; }
 
         public DateTime? EndDateTime { get; set; }
+
+        public DateTime? BoardingDate { get; set; }
+
+        public string PetName { get; set; }
+
+        public SpeciesEnum? Species { get; set; }
 
         public List<SelectListItem> CustomerSelectList { get; set; }
 

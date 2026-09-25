@@ -13,6 +13,8 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Services.Description;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace JamesPetBoarding.Controllers
 {
@@ -211,9 +213,11 @@ namespace JamesPetBoarding.Controllers
                 ? "Active"
                 : "Inactive";
 
-            customerDetails.InactivationReasonDisplay = customer.InactivationReason.HasValue
-                ? customer.InactivationReason.ToString()
-                : "Not Applicable";
+            customerDetails.InactivationReasonDisplay =
+                customer.InactivationReason.HasValue
+                    ? GetEnumDisplayName(
+                        customer.InactivationReason.Value)
+                    : "Not Applicable";
 
             customerDetails.InactivationDateDisplay = customer.InactivationDate.HasValue
                 ? customer.InactivationDate.Value.ToShortDateString()
@@ -403,6 +407,9 @@ namespace JamesPetBoarding.Controllers
             customerDelete.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
                 ? "No notes"
                 : customer.Notes;
+            customerDelete.IsActive = customer.IsActive;
+            customerDelete.StatusDisplay =
+                customer.IsActive ? "Active" : "Inactive";
 
             return View(customerDelete);
 
@@ -442,6 +449,9 @@ namespace JamesPetBoarding.Controllers
                 customerDelete.NotesDisplay = string.IsNullOrWhiteSpace(customer.Notes)
                     ? "No notes"
                     : customer.Notes;
+                customerDelete.IsActive = customer.IsActive;
+                customerDelete.StatusDisplay =
+                    customer.IsActive ? "Active" : "Inactive";
 
                 return View(customerDelete);
             }
@@ -494,9 +504,11 @@ namespace JamesPetBoarding.Controllers
                 ? "No notes"
                 : customer.Notes;
 
-            customerReactivate.InactivationReasonDisplay = customer.InactivationReason.HasValue
-                ? customer.InactivationReason.ToString()
-                : "Not Applicable";
+            customerReactivate.InactivationReasonDisplay =
+                customer.InactivationReason.HasValue
+                    ? GetEnumDisplayName(
+                        customer.InactivationReason.Value)
+                    : "Not Applicable";
 
             customerReactivate.InactivationDateDisplay = customer.InactivationDate.HasValue
                 ? customer.InactivationDate.Value.ToShortDateString()
@@ -546,9 +558,11 @@ namespace JamesPetBoarding.Controllers
                     ? "No notes"
                     : customer.Notes;
 
-                customerReactivate.InactivationReasonDisplay = customer.InactivationReason.HasValue
-                    ? customer.InactivationReason.ToString()
-                    : "Not Applicable";
+                customerReactivate.InactivationReasonDisplay =
+                    customer.InactivationReason.HasValue
+                        ? GetEnumDisplayName(
+                            customer.InactivationReason.Value)
+                        : "Not Applicable";
 
                 customerReactivate.InactivationDateDisplay = customer.InactivationDate.HasValue
                     ? customer.InactivationDate.Value.ToShortDateString()
@@ -564,13 +578,24 @@ namespace JamesPetBoarding.Controllers
             customer.IsActive = true;
             customer.ReactivationDate = DateTime.Now;
             customer.ReactivationNotes = customerReactivate.ReactivationNotes;
-            customer.InactivationReason = null;
-            customer.InactivationDate = null;
-            customer.InactivationNotes = null;
             dbContext.SaveChanges();
 
             return RedirectToAction("Read", new { customerId = customer.CustomerId });
 
+        }
+
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute =
+                enumValue
+                    .GetType()
+                    .GetField(enumValue.ToString())
+                    .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.Name
+                : enumValue.ToString();
         }
 
 

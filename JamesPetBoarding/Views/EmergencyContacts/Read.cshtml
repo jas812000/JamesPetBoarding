@@ -4,7 +4,7 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>View Emergency Contact Profile</h2>
     <p class="lead">
         View emergency contact information and status.
@@ -13,86 +13,330 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-4">
+    @* Emergency Contact ID *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Emergency Contact ID</label>
-        @Html.TextBoxFor(x => x.EmergencyContactId, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.EmergencyContactId,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Emergency Contact Name</label>
-        @Html.TextBoxFor(x => x.FullNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="w-100"></div>
+
+    @* Emergency Contact Name / Relationship / Active Status *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">
+                    Emergency Contact Name
+                </label>
+
+                @Html.TextBoxFor(
+                    x => x.FullNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Relationship</label>
+
+                @Html.TextBoxFor(
+                    x => x.RelationshipDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Active Status</label>
+
+                @Html.TextBoxFor(
+                    x => x.StatusDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Relationship</label>
-        @Html.TextBoxFor(x => x.RelationshipDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
+    @* Address *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.AddressDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* City, State, Zip Code *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">City, State, Zip Code</label>
-        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CityStateZipDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-8">
+    <div class="w-100"></div>
+
+    @* Phone / Email *@
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-6">
+                <label class="form-label">Phone</label>
+
+                @Html.TextBoxFor(
+                    x => x.PhoneDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-6">
+                <label class="form-label">Email</label>
+
+                @Html.TextBoxFor(
+                    x => x.EmailDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+        </div>
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 650px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "3",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    @* Latest Inactivation Information *@
+    @if (Model.InactivationDateDisplay != "Not Applicable")
+    {
+        <div class="col-auto mt-4" style="width: 650px;">
+            <h4 class="mb-0">Inactivation Information</h4>
+        </div>
 
-    <div class="col-md-10 text-center mt-3">
-        @if (Model.IsActive)
-        {
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 650px;">
+            <div class="row g-3">
+
+                <div class="col-6">
+                    <label class="form-label">
+                        Inactivation Reason
+                    </label>
+
+                    @Html.TextBoxFor(
+                        x => x.InactivationReasonDisplay,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly",
+                            style = "max-width: none;"
+                        })
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">
+                        Inactivation Date
+                    </label>
+
+                    @Html.TextBoxFor(
+                        x => x.InactivationDateDisplay,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly",
+                            style = "max-width: none;"
+                        })
+                </div>
+
+            </div>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 650px;">
+            <label class="form-label">Inactivation Notes</label>
+
+            @Html.TextAreaFor(
+                x => x.InactivationNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "3",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="w-100"></div>
+    }
+
+    @* Latest Reactivation Information *@
+    @if (Model.ReactivationDateDisplay != "Not Applicable")
+    {
+        <div class="col-auto mt-4" style="width: 650px;">
+            <h4 class="mb-0">Reactivation Information</h4>
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 650px;">
+            <label class="form-label">Reactivation Date</label>
+
+            @Html.TextBoxFor(
+                x => x.ReactivationDateDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 650px;">
+            <label class="form-label">Reactivation Notes</label>
+
+            @Html.TextAreaFor(
+                x => x.ReactivationNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "3",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="w-100"></div>
+    }
+
+    <div class="w-100"></div>
+
+    @* Actions *@
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            @if (Model.IsActive)
+            {
+                @Html.ActionLink(
+                    "Update Emergency Contact",
+                    "Update",
+                    "EmergencyContacts",
+                    new
+                    {
+                        emergencyContactId =
+                            Model.EmergencyContactId
+                    },
+                    new
+                    {
+                        @class = "btn btn-primary",
+                        style = "width: 300px;"
+                    })
+
+                @Html.ActionLink(
+                    "Deactivate Emergency Contact",
+                    "Delete",
+                    "EmergencyContacts",
+                    new
+                    {
+                        emergencyContactId =
+                            Model.EmergencyContactId
+                    },
+                    new
+                    {
+                        @class = "btn btn-danger",
+                        style = "width: 300px;"
+                    })
+            }
+            else
+            {
+                @Html.ActionLink(
+                    "Reactivate Emergency Contact",
+                    "Reactivate",
+                    "EmergencyContacts",
+                    new
+                    {
+                        emergencyContactId =
+                            Model.EmergencyContactId
+                    },
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
+            }
+
             @Html.ActionLink(
-                "Update Emergency Contact",
-                "Update",
-                "EmergencyContacts",
-                new { emergencyContactId = Model.EmergencyContactId },
-                new { @class = "btn btn-primary me-2" })
+                "Back to Customer Profile",
+                "Read",
+                "Customers",
+                new
+                {
+                    customerId = Model.CustomerId
+                },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
-            @Html.ActionLink(
-                "Deactivate Emergency Contact",
-                "Deactivate",
-                "EmergencyContacts",
-                new { emergencyContactId = Model.EmergencyContactId },
-                new { @class = "btn btn-danger me-2" })
-        }
-        else
-        {
-            @Html.ActionLink(
-                "Reactivate Emergency Contact",
-                "Reactivate",
-                "EmergencyContacts",
-                new { emergencyContactId = Model.EmergencyContactId },
-                new { @class = "btn btn-success me-2" })
-        }
-
-        @Html.ActionLink(
-            "Back to Customer Profile",
-            "Read",
-            "Customers",
-            new { customerId = Model.CustomerId },
-            new { @class = "btn btn-secondary ms-2" })
-
+        </div>
     </div>
 
 </div>
-

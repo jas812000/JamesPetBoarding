@@ -5,7 +5,7 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>View Boarding</h2>
     <p class="lead">
         View boarding information.
@@ -14,144 +14,418 @@
 
 <div class="row g-3 justify-content-center">
 
-
-    <div class="col-md-12">
+    @* Boarding ID *@
+    <div class="col-auto" style="width: 600px;">
         <label class="form-label">Boarding ID</label>
-        @Html.TextBoxFor(x => x.BoardingId, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.BoardingId,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="w-100"></div>
+
+    @* Customer / Pet / Boarding Unit *@
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Customer</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CustomerNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 250px;">
         <label class="form-label">Pet</label>
-        @Html.TextBoxFor(x => x.PetNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.PetNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 350px;">
         <label class="form-label">Boarding Unit</label>
-        @Html.TextBoxFor(x => x.BoardingUnitDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.BoardingUnitDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Start Date/Time</label>
-        @Html.TextBoxFor(x => x.StartDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    <div class="w-100"></div>
 
-    <div class="col-md-4">
-        <label class="form-label">End Date/Time</label>
-        @Html.TextBoxFor(x => x.EndDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
+    @* Status / Start / End *@
+    <div class="col-auto" style="width: 225px;">
         <label class="form-label">Status</label>
-        @Html.TextBoxFor(x => x.StatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.StatusDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Actual Check In</label>
-        @Html.TextBoxFor(x => x.ActualCheckInDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Start Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.StartDateTimeDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Checked In By</label>
-        @Html.TextBoxFor(x => x.CheckedInByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">End Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.EndDateTimeDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-6">
-        <label class="form-label">Actual Check Out</label>
-        @Html.TextBoxFor(x => x.ActualCheckOutDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    @* Checked In and Checked Out both display check-in information. *@
+    @if (Model.BoardingStatus == BoardingStatusEnum.CheckedIn ||
+         Model.BoardingStatus == BoardingStatusEnum.CheckedOut)
+    {
+        <div class="w-100"></div>
 
-    <div class="col-md-6">
-        <label class="form-label">Checked Out By</label>
-        @Html.TextBoxFor(x => x.CheckedOutByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Actual Check In</label>
 
-    <div class="col-md-4">
-        <label class="form-label">Cancelled Date/Time</label>
-        @Html.TextBoxFor(x => x.CancelledDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+            @Html.TextBoxFor(
+                x => x.ActualCheckInDateTimeDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Cancelled By</label>
-        @Html.TextBoxFor(x => x.CancelledByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Checked In By</label>
 
-    <div class="col-md-4">
-        <label class="form-label">Cancelled Reason</label>
-        @Html.TextBoxFor(x => x.CancelledReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+            @Html.TextBoxFor(
+                x => x.CheckedInByEmployeeNameDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+    }
 
-    <div class="col-md-6">
-        <label class="form-label">No-Show Date/Time</label>
-        @Html.TextBoxFor(x => x.NoShowDateTimeDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+    @* Checked Out displays check-out information. *@
+    @if (Model.BoardingStatus == BoardingStatusEnum.CheckedOut)
+    {
+        <div class="w-100"></div>
 
-    <div class="col-md-6">
-        <label class="form-label">Marked No-Show By</label>
-        @Html.TextBoxFor(x => x.NoShowByEmployeeNameDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Actual Check Out</label>
 
-    <div class="col-12">
+            @Html.TextBoxFor(
+                x => x.ActualCheckOutDateTimeDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Checked Out By</label>
+
+            @Html.TextBoxFor(
+                x => x.CheckedOutByEmployeeNameDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+    }
+
+    @* Cancelled displays cancellation information. *@
+    @if (Model.BoardingStatus == BoardingStatusEnum.Cancelled)
+    {
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Cancelled Date/Time</label>
+
+            @Html.TextBoxFor(
+                x => x.CancelledDateTimeDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Cancelled By</label>
+
+            @Html.TextBoxFor(
+                x => x.CancelledByEmployeeNameDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Cancellation Reason</label>
+
+            @Html.TextBoxFor(
+                x => x.CancelledReasonDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+    }
+
+    @* No Show displays no-show information. *@
+    @if (Model.BoardingStatus == BoardingStatusEnum.NoShow)
+    {
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">No-Show Date/Time</label>
+
+            @Html.TextBoxFor(
+                x => x.NoShowDateTimeDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+
+        <div class="col-auto" style="width: 300px;">
+            <label class="form-label">Marked No-Show By</label>
+
+            @Html.TextBoxFor(
+                x => x.NoShowByEmployeeNameDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
+        </div>
+    }
+
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 900px;">
         <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-10 text-center mt-3">
-        @if (Model.BoardingStatus == BoardingStatusEnum.Scheduled ||
-            Model.BoardingStatus == BoardingStatusEnum.Confirmed)
+    <div class="w-100"></div>
+
+    @* Actions *@
+    <div class="col-12 text-center mt-4">
+
+        @if (Model.BoardingStatus == BoardingStatusEnum.Scheduled)
         {
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-            @Html.ActionLink(
-                "Update",
-                "Update",
-                "Boardings",
-                new { boardingId = Model.BoardingId },
-                new { @class = "btn btn-warning btn-sm me-1" })
+                @Html.ActionLink(
+                    "Update",
+                    "Update",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-primary",
+                        style = "width: 280px;"
+                    })
 
-            @Html.ActionLink(
-                "Cancel",
-                "Cancel",
-                "Boardings",
-                new { boardingId = Model.BoardingId },
-                new { @class = "btn btn-danger btn-sm" })
+                @Html.ActionLink(
+                    "Cancel",
+                    "Cancel",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-danger",
+                        style = "width: 280px;"
+                    })
 
-            @Html.ActionLink(
-                "Check In",
-                "CheckIn",
-                "Boardings",
-                new { boardingId = Model.BoardingId },
-                new { @class = "btn btn-success btn-sm" })
+                @Html.ActionLink(
+                    "Back to Search",
+                    "Search",
+                    "Boardings",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 280px;"
+                    })
 
-            @Html.ActionLink(
-                "No Show",
-                "NoShow",
-                "Boardings",
-                new { boardingId = Model.BoardingId },
-                new { @class = "btn btn-success btn-sm" })
+            </div>
+        }
+        else if (Model.BoardingStatus == BoardingStatusEnum.Confirmed)
+        {
+            <div class="d-flex justify-content-center gap-3 flex-wrap mb-3">
 
+                @Html.ActionLink(
+                    "Check In",
+                    "CheckIn",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 280px;"
+                    })
+
+                @Html.ActionLink(
+                    "Update",
+                    "Update",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-primary",
+                        style = "width: 280px;"
+                    })
+
+                @Html.ActionLink(
+                    "No Show",
+                    "NoShow",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-warning",
+                        style = "width: 280px;"
+                    })
+
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+                @Html.ActionLink(
+                    "Cancel",
+                    "Cancel",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-danger",
+                        style = "width: 280px;"
+                    })
+
+                @Html.ActionLink(
+                    "Back to Search",
+                    "Search",
+                    "Boardings",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 280px;"
+                    })
+
+            </div>
         }
         else if (Model.BoardingStatus == BoardingStatusEnum.CheckedIn)
         {
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-            @Html.ActionLink(
-                "Check Out",
-                "CheckOut",
-                "Boardings",
-                new { boardingId = Model.BoardingId },
-                new { @class = "btn btn-success btn-sm" })
+                @Html.ActionLink(
+                    "Check Out",
+                    "CheckOut",
+                    "Boardings",
+                    new { boardingId = Model.BoardingId },
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 300px;"
+                    })
 
+                @Html.ActionLink(
+                    "Back to Search",
+                    "Search",
+                    "Boardings",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 300px;"
+                    })
+
+            </div>
+        }
+        else
+        {
+            <div class="d-flex justify-content-center">
+
+                @Html.ActionLink(
+                    "Back to Search",
+                    "Search",
+                    "Boardings",
+                    null,
+                    new
+                    {
+                        @class = "btn btn-secondary",
+                        style = "width: 300px;"
+                    })
+
+            </div>
         }
 
-        @Html.ActionLink(
-            "Back to Search",
-            "Search",
-            "Boardings",
-            null,
-            new { @class = "btn btn-secondary btn-sm ms-1" })
-
     </div>
+
 </div>

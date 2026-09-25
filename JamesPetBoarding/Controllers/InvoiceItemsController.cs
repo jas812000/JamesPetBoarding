@@ -3,9 +3,11 @@ using JamesPetBoarding.Models;
 using JamesPetBoarding.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 
@@ -658,7 +660,7 @@ namespace JamesPetBoarding.Controllers
 
             invoiceItemDelete.LineTotalDisplay = invoiceItem.LineTotal.ToString("C");
 
-            invoiceItemDelete.InvoiceStatusDisplay = invoiceItem.Invoice.InvoiceStatus.ToString();
+            invoiceItemDelete.InvoiceStatusDisplay = GetEnumDisplayName(invoiceItem.Invoice.InvoiceStatus);
 
             invoiceItemDelete.NotesDisplay = string.IsNullOrWhiteSpace(invoiceItem.Notes) 
                 ? "No Notes" 
@@ -786,6 +788,20 @@ namespace JamesPetBoarding.Controllers
                     Text = $"{x.ServiceName} - {x.Species} - {x.BasePrice:C}",
                 })
                 .ToList();
+        }
+
+
+        private string GetEnumDisplayName(Enum enumValue)
+        {
+            DisplayAttribute displayAttribute =
+                enumValue
+                    .GetType()
+                    .GetField(enumValue.ToString())
+                    .GetCustomAttribute<DisplayAttribute>();
+
+            return displayAttribute != null
+                ? displayAttribute.Name
+                : enumValue.ToString();
         }
 
 

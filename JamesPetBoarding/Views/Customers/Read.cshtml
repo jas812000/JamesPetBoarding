@@ -4,7 +4,7 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>View Customer Profile</h2>
     <p class="lead">
         View customer contact information, status, pets and emergency contacts.
@@ -13,85 +13,229 @@
 
 <div class="row g-3 justify-content-center">
 
-    <div class="col-md-4">
+    @* Customer ID / Customer Name / Active Status *@
+    <div class="col-auto" style="width: 360px;">
         <label class="form-label">Customer ID</label>
-        @Html.TextBoxFor(x => x.CustomerId, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CustomerId,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 360px;">
         <label class="form-label">Customer Name</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.CustomerNameDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    <div class="col-md-4">
-        <label class="form-label">Phone</label>
-        @Html.TextBoxFor(x => x.PhoneDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
-        <label class="form-label">Email</label>
-        @Html.TextBoxFor(x => x.EmailDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
-        <label class="form-label">Address</label>
-        @Html.TextBoxFor(x => x.AddressDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
-        <label class="form-label">City, State, Zip Code</label>
-        @Html.TextBoxFor(x => x.CityStateZipDisplay, new { @class = "form-control", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-8">
-        <label class="form-label">Notes</label>
-        @Html.TextAreaFor(x => x.NotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
-    </div>
-
-    <div class="col-md-4">
+    <div class="col-auto" style="width: 225px;">
         <label class="form-label">Active Status</label>
-        @Html.TextBoxFor(x => x.ActiveStatusDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+        @Html.TextBoxFor(
+            x => x.ActiveStatusDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
     </div>
 
-    @if (!Model.IsActive)
+    <div class="w-100"></div>
+
+    @* Phone / Email *@
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Phone</label>
+
+        @Html.TextBoxFor(
+            x => x.PhoneDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Email</label>
+
+        @Html.TextBoxFor(
+            x => x.EmailDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Address / City, State, Zip Code *@
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Address</label>
+
+        @Html.TextBoxFor(
+            x => x.AddressDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">City, State, Zip Code</label>
+
+        @Html.TextBoxFor(
+            x => x.CityStateZipDisplay,
+            new
+            {
+                @class = "form-control",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 600px;">
+        <label class="form-label">Notes</label>
+
+        @Html.TextAreaFor(
+            x => x.NotesDisplay,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                @readonly = "readonly",
+                style = "max-width: none;"
+            })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Latest Inactivation Information *@
+    @if (Model.InactivationDateDisplay != "Not Applicable")
     {
-        <div class="col-md-8">
-            <h4 class="mt-4">Deactivation Information</h4>
+        <div class="col-auto mt-4" style="width: 600px;">
+            <h4 class="mb-0">Inactivation Information</h4>
         </div>
 
-        <div class="col-md-4">
-            <label class="form-label">Inactivation Reason</label>
-            @Html.TextBoxFor(x => x.InactivationReasonDisplay, new { @class = "form-control", @readonly = "readonly" })
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 600px;">
+            <div class="row g-3">
+
+                <div class="col-6">
+                    <label class="form-label">
+                        Inactivation Reason
+                    </label>
+
+                    @Html.TextBoxFor(
+                        x => x.InactivationReasonDisplay,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly",
+                            style = "max-width: none;"
+                        })
+                </div>
+
+                <div class="col-6">
+                    <label class="form-label">
+                        Inactivation Date
+                    </label>
+
+                    @Html.TextBoxFor(
+                        x => x.InactivationDateDisplay,
+                        new
+                        {
+                            @class = "form-control",
+                            @readonly = "readonly",
+                            style = "max-width: none;"
+                        })
+                </div>
+
+            </div>
         </div>
 
-        <div class="col-md-4">
-            <label class="form-label">Inactivation Date</label>
-            @Html.TextBoxFor(x => x.InactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
-        </div>
+        <div class="w-100"></div>
 
-        <div class="col-md-8">
+        <div class="col-auto" style="width: 600px;">
             <label class="form-label">Inactivation Notes</label>
-            @Html.TextAreaFor(x => x.InactiveNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+            @Html.TextAreaFor(
+                x => x.InactiveNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "4",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
+
+        <div class="w-100"></div>
     }
 
+    @* Latest Reactivation Information *@
     @if (Model.ReactivationDateDisplay != "Not Applicable")
     {
-        <div class="col-md-8">
-            <h4 class="mt-4">Reactivation Information</h4>
+        <div class="col-auto mt-4" style="width: 600px;">
+            <h4 class="mb-0">Reactivation Information</h4>
         </div>
 
-        <div class="col-md-4">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 600px;">
             <label class="form-label">Reactivation Date</label>
-            @Html.TextBoxFor(x => x.ReactivationDateDisplay, new { @class = "form-control", @readonly = "readonly" })
+
+            @Html.TextBoxFor(
+                x => x.ReactivationDateDisplay,
+                new
+                {
+                    @class = "form-control",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
 
-        <div class="col-md-8">
+        <div class="w-100"></div>
+
+        <div class="col-auto" style="width: 600px;">
             <label class="form-label">Reactivation Notes</label>
-            @Html.TextAreaFor(x => x.ReactivationNotesDisplay, new { @class = "form-control", rows = "3", @readonly = "readonly" })
+
+            @Html.TextAreaFor(
+                x => x.ReactivationNotesDisplay,
+                new
+                {
+                    @class = "form-control",
+                    rows = "4",
+                    @readonly = "readonly",
+                    style = "max-width: none;"
+                })
         </div>
+
+        <div class="w-100"></div>
     }
 
+    @* Associated Pets *@
     <div class="col-md-10 mt-5">
         <h4>Associated Pets</h4>
 
@@ -105,10 +249,9 @@
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
+
             <tbody>
-
                 @if (Model.CustomerPets.Any())
-
                 {
                     foreach (var pet in Model.CustomerPets)
                     {
@@ -119,26 +262,49 @@
                             <td>@pet.RelationshipTypeDisplay</td>
                             <td>
                                 @Html.ActionLink(
-                                 "Read",
-                                 "Read",
-                                 "CustomerPets",
-                                 new { customerPetId = pet.CustomerPetId },
-                                 new { @class = "btn btn-primary btn-sm me-2" })
+                                    "Read",
+                                    "Read",
+                                    "CustomerPets",
+                                    new
+                                    {
+                                        customerPetId =
+                                            pet.CustomerPetId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-primary btn-sm me-2"
+                                    })
 
                                 @Html.ActionLink(
-                                 "Update",
-                                 "Update",
-                                 "CustomerPets",
-                                 new { customerPetId = pet.CustomerPetId },
-                                 new { @class = "btn btn-primary btn-sm me-2" })
+                                    "Update",
+                                    "Update",
+                                    "CustomerPets",
+                                    new
+                                    {
+                                        customerPetId =
+                                            pet.CustomerPetId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-primary btn-sm me-2"
+                                    })
 
                                 @Html.ActionLink(
-                                 "Disassociate",
-                                 "Delete",
-                                 "CustomerPets",
-                                 new { customerPetId = pet.CustomerPetId },
-                                 new { @class = "btn btn-danger btn-sm me-2" })
-
+                                    "Disassociate",
+                                    "Delete",
+                                    "CustomerPets",
+                                    new
+                                    {
+                                        customerPetId =
+                                            pet.CustomerPetId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-danger btn-sm"
+                                    })
                             </td>
                         </tr>
                     }
@@ -151,7 +317,6 @@
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
     </div>
@@ -165,6 +330,7 @@
             new { @class = "btn btn-success" })
     </div>
 
+    @* Emergency Contacts *@
     <div class="col-md-10 mt-4">
         <h4>Emergency Contacts</h4>
 
@@ -177,58 +343,98 @@
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
+
             <tbody>
                 @if (Model.EmergencyContacts.Any())
                 {
-                    foreach (var emergencyContact in Model.EmergencyContacts)
+                    foreach (var emergencyContact
+                        in Model.EmergencyContacts)
                     {
                         <tr>
+                            <td>
+                                @emergencyContact.FullNameDisplay
+                            </td>
 
-                            <td>@emergencyContact.FullNameDisplay</td>
-                            <td>@emergencyContact.RelationshipDisplay</td>
-                            <td>@emergencyContact.ActiveStatusDisplay</td>
+                            <td>
+                                @emergencyContact.RelationshipDisplay
+                            </td>
+
+                            <td>
+                                @emergencyContact.ActiveStatusDisplay
+                            </td>
+
                             <td>
                                 @Html.ActionLink(
-                                 "Read",
-                                 "Read",
-                                 "EmergencyContacts",
-                                 new { emergencyContactId = emergencyContact.EmergencyContactId },
-                                 new { @class = "btn btn-primary btn-sm me-2" })
+                                    "Read",
+                                    "Read",
+                                    "EmergencyContacts",
+                                    new
+                                    {
+                                        emergencyContactId =
+                                            emergencyContact
+                                                .EmergencyContactId
+                                    },
+                                    new
+                                    {
+                                        @class =
+                                            "btn btn-primary btn-sm me-2"
+                                    })
 
                                 @if (emergencyContact.IsActive)
                                 {
+                                    @Html.ActionLink(
+                                        "Update",
+                                        "Update",
+                                        "EmergencyContacts",
+                                        new
+                                        {
+                                            emergencyContactId =
+                                                emergencyContact
+                                                    .EmergencyContactId
+                                        },
+                                        new
+                                        {
+                                            @class =
+                                                "btn btn-primary btn-sm me-2"
+                                        })
 
                                     @Html.ActionLink(
-                                         "Update",
-                                         "Update",
-                                         "EmergencyContacts",
-                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
-                                         new { @class = "btn btn-primary btn-sm me-2" })
-
-
-                                    @Html.ActionLink(
-                                         "Deactivate",
-                                         "Delete",
-                                         "EmergencyContacts",
-                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
-                                         new { @class = "btn btn-danger btn-sm me-2" })
-
+                                        "Deactivate",
+                                        "Delete",
+                                        "EmergencyContacts",
+                                        new
+                                        {
+                                            emergencyContactId =
+                                                emergencyContact
+                                                    .EmergencyContactId
+                                        },
+                                        new
+                                        {
+                                            @class =
+                                                "btn btn-danger btn-sm"
+                                        })
                                 }
                                 else
                                 {
-
                                     @Html.ActionLink(
-                                         "Reactivate",
-                                         "Reactivate",
-                                         "EmergencyContacts",
-                                         new { emergencyContactId = emergencyContact.EmergencyContactId },
-                                         new { @class = "btn btn-success btn-sm me-2" })
-
+                                        "Reactivate",
+                                        "Reactivate",
+                                        "EmergencyContacts",
+                                        new
+                                        {
+                                            emergencyContactId =
+                                                emergencyContact
+                                                    .EmergencyContactId
+                                        },
+                                        new
+                                        {
+                                            @class =
+                                                "btn btn-success btn-sm"
+                                        })
                                 }
                             </td>
                         </tr>
                     }
-
                 }
                 else
                 {
@@ -238,10 +444,8 @@
                         </td>
                     </tr>
                 }
-
             </tbody>
         </table>
-
     </div>
 
     <div class="col-md-10 text-center mt-3">
@@ -253,39 +457,60 @@
             new { @class = "btn btn-success" })
     </div>
 
-    <div class="col-md-10 text-center mt-4">
-        @Html.ActionLink(
-            "Update Customer",
-            "Update",
-            "Customers",
-            new { customerId = Model.CustomerId },
-            new { @class = "btn btn-primary me-2" })
+    @* Customer Actions *@
+    <div class="col-md-12 mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @if (Model.IsActive)
-        {
             @Html.ActionLink(
-                "Deactivate Customer",
-                "Delete",
+                "Update Customer",
+                "Update",
                 "Customers",
                 new { customerId = Model.CustomerId },
-                new { @class = "btn btn-danger me-2" })
-        }
-        else
-        {
+                new
+                {
+                    @class = "btn btn-primary",
+                    style = "width: 260px;"
+                })
+
+            @if (Model.IsActive)
+            {
+                @Html.ActionLink(
+                    "Deactivate Customer",
+                    "Delete",
+                    "Customers",
+                    new { customerId = Model.CustomerId },
+                    new
+                    {
+                        @class = "btn btn-danger",
+                        style = "width: 260px;"
+                    })
+            }
+            else
+            {
+                @Html.ActionLink(
+                    "Reactivate Customer",
+                    "Reactivate",
+                    "Customers",
+                    new { customerId = Model.CustomerId },
+                    new
+                    {
+                        @class = "btn btn-success",
+                        style = "width: 260px;"
+                    })
+            }
+
             @Html.ActionLink(
-                "Reactivate Customer",
-                "Reactivate",
+                "Back to Customer Dashboard",
+                "Search",
                 "Customers",
-                new { customerId = Model.CustomerId },
-                new { @class = "btn btn-success me-2" })
-        }
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 260px;"
+                })
 
-        @Html.ActionLink(
-            "Back to Customer Dashboard",
-            "Index",
-            "Customers",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-
+        </div>
     </div>
+
 </div>

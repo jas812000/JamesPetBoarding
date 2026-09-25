@@ -1,8 +1,4 @@
-﻿using JamesPetBoarding.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System;
 
 namespace JamesPetBoarding.ViewModels
 {
@@ -29,5 +25,15 @@ namespace JamesPetBoarding.ViewModels
         public bool IsActive { get; set; }
 
         public string StatusDisplay { get; set; }
+
+        public string InactivationReasonDisplay { get; set; }
+
+        public string InactivationDateDisplay { get; set; }
+
+        public string InactivationNotesDisplay { get; set; }
+
+        public string ReactivationDateDisplay { get; set; }
+
+        public string ReactivationNotesDisplay { get; set; }
     }
 }

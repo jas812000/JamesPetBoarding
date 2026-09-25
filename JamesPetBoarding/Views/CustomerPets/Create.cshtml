@@ -1,52 +1,104 @@
 ﻿@model JamesPetBoarding.ViewModels.CustomerPetFormVM
 @{
-    ViewBag.Title = "Associate Pet";
+    ViewBag.Title = "Create Customer-Pet Relationship";
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
-    <h2>Create Customer-Pet Association</h2>
+    <h1>Paws &amp; Reservations, LLC</h1>
+    <h2>Create Customer-Pet Relationship</h2>
     <p class="lead">
         Associate an existing pet with a customer and define their relationship.
     </p>
 </div>
 
-@using (Html.BeginForm("Create", "CustomerPets", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "CustomerPets",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
-
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     @Html.HiddenFor(x => x.CustomerId)
-
     @Html.HiddenFor(x => x.CustomerPetId)
 
-    <div class="col-md-4">
-        <label class="form-label">Customer Name</label>
-        @Html.TextBoxFor(x => x.CustomerNameDisplay, new { @class = "form-control", @readonly = "readonly" })
+    <div class="col-auto" style="width: 650px;">
+        <div class="row g-3">
+
+            <div class="col-5">
+                <label class="form-label">Customer</label>
+
+                @Html.TextBoxFor(
+                    x => x.CustomerNameDisplay,
+                    new
+                    {
+                        @class = "form-control",
+                        @readonly = "readonly",
+                        style = "max-width: none;"
+                    })
+            </div>
+
+            <div class="col-4">
+                <label class="form-label">Pet</label>
+
+                @Html.DropDownListFor(
+                    x => x.PetId,
+                    Model.PetSelectList,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.PetId,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+            <div class="col-3">
+                <label class="form-label">Relationship</label>
+
+                @Html.EnumDropDownListFor(
+                    x => x.RelationshipType,
+                    "Select...",
+                    new
+                    {
+                        @class = "form-select",
+                        style = "max-width: none;"
+                    })
+
+                @Html.ValidationMessageFor(
+                    x => x.RelationshipType,
+                    "",
+                    new { @class = "text-danger" })
+            </div>
+
+        </div>
     </div>
 
-    <div class="col-md-2">
-        <label class="form-label">Relationship Type</label>
-        @Html.EnumDropDownListFor(x => x.RelationshipType, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.RelationshipType, "", new { @class = "text-danger" })
-    </div>
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-    <div class="col-md-2">
-        <label class="form-label">Select Pet</label>
-        @Html.DropDownListFor(x => x.PetId, Model.PetSelectList, "Select...", new { @class = "form-select" })
-        @Html.ValidationMessageFor(x => x.PetId, "", new { @class = "text-danger" })
-    </div>
+            <button type="submit"
+                    class="btn btn-success"
+                    style="width: 260px;">
+                Create Relationship
+            </button>
 
-    <div class="col-md-8 text-center mt-4">
-        <button type="submit" class="btn btn-success me-2">Associate Pet</button>
+            @Html.ActionLink(
+                "Cancel",
+                "Read",
+                "Customers",
+                new { customerId = Model.CustomerId },
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 260px;"
+                })
 
-        @Html.ActionLink(
-            "Cancel",
-            "Read",
-            "Customers",
-            new { customerId = Model.CustomerId },
-            new { @class = "btn btn-secondary ms-2" })
+        </div>
     </div>
 }

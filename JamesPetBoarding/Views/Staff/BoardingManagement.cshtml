@@ -29,8 +29,8 @@
 
     <div class="col-md-5">
         @Html.ActionLink(
-            "Check In / Check Out",
-            "Search",
+            "Check In Boardings",
+            "CheckInSearch",
             "Boardings",
             null,
             new { @class = "btn btn-primary w-100 py-4" })
@@ -38,8 +38,26 @@
 
     <div class="col-md-5">
         @Html.ActionLink(
-            "Cancel / No Show",
-            "Search",
+            "Check Out Boardings",
+            "CheckOutSearch",
+            "Boardings",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-5">
+        @Html.ActionLink(
+            "Cancel Boardings",
+            "CancelSearch",
+            "Boardings",
+            null,
+            new { @class = "btn btn-primary w-100 py-4" })
+    </div>
+
+    <div class="col-md-5">
+        @Html.ActionLink(
+            "Mark Boardings as No Show",
+            "NoShowSearch",
             "Boardings",
             null,
             new { @class = "btn btn-primary w-100 py-4" })
@@ -53,5 +71,9 @@
         "Index",
         "Dashboard",
         null,
-        new { @class = "btn btn-secondary" })
+        new
+        {
+            @class = "btn btn-secondary",
+            style = "width: 300px;"
+        })
 </div>

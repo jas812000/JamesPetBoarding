@@ -4,84 +4,87 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Create Invoice</h2>
     <p class="lead">
-        Select the customer, pet and optional boarding reservation to create a new invoice.
+        Select the customer, pet and optional boarding reservation
+        to create a new invoice.
     </p>
 </div>
 
-@using (Html.BeginForm("Create", "Invoices", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "Invoices",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
 
-    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(
+        false,
+        "",
+        new { @class = "text-danger" })
 
-    <div class="col-md-10">
-        <div class="row g-3">
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Customer</label>
 
-            <div class="col-md-4">
-                <label class="form-label">Customer</label>
+        @Html.DropDownListFor(
+            x => x.CustomerId,
+            Model.CustomerSelectList,
+            "Select Customer...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-                @Html.DropDownListFor(
-                    x => x.CustomerId,
-                    Model.CustomerSelectList,
-                    "Select Customer...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.CustomerId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Pet</label>
-
-                @Html.DropDownListFor(
-                    x => x.PetId,
-                    Model.PetSelectList,
-                    "Select Pet...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.PetId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-            <div class="col-md-4">
-                <label class="form-label">Boarding</label>
-
-                @Html.DropDownListFor(
-                    x => x.BoardingId,
-                    Model.BoardingSelectList,
-                    "Select Boarding Reservation (Optional)...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
-
-                @Html.ValidationMessageFor(
-                    x => x.BoardingId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
-
-        </div>
+        @Html.ValidationMessageFor(
+            x => x.CustomerId,
+            "",
+            new { @class = "text-danger" })
     </div>
 
-    <div class="col-md-10">
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Pet</label>
+
+        @Html.DropDownListFor(
+            x => x.PetId,
+            Model.PetSelectList,
+            "Select Pet...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.PetId,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-auto" style="width: 450px;">
+        <label class="form-label">Boarding</label>
+
+        @Html.DropDownListFor(
+            x => x.BoardingId,
+            Model.BoardingSelectList,
+            "Select Boarding Reservation (Optional)...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.BoardingId,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="w-100"></div>
+
+    <div class="col-auto" style="width: 1000px;">
         <label class="form-label">Notes</label>
 
         @Html.TextAreaFor(
@@ -100,22 +103,32 @@
             new { @class = "text-danger" })
     </div>
 
+    <div class="w-100"></div>
+
     <div class="col-12 text-center mt-4">
-        <button type="submit"
-                id="GenerateInvoiceButton"
-                class="btn btn-secondary me-2"
-                disabled>
-            Generate Invoice
-        </button>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
 
-        @Html.ActionLink(
-            "Back to Billing",
-            "Billing",
-            "Staff",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
+            <button type="submit"
+                    id="GenerateInvoiceButton"
+                    class="btn btn-secondary"
+                    style="width: 300px;"
+                    disabled>
+                Generate Invoice
+            </button>
+
+            @Html.ActionLink(
+                "Back to Billing",
+                "Billing",
+                "Staff",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
+
+        </div>
     </div>
-
 }
 
 @section Scripts
@@ -123,15 +136,60 @@
     <script>
         (function () {
 
-            var customer = document.getElementById("CustomerId");
-            var pet = document.getElementById("PetId");
+            var customer =
+                document.getElementById("CustomerId");
+
+            var pet =
+                document.getElementById("PetId");
+
+            var boarding =
+                document.getElementById("BoardingId");
+
             var generateButton =
-                document.getElementById("GenerateInvoiceButton");
+                document.getElementById(
+                    "GenerateInvoiceButton");
+
+            var petsUrl =
+                '@Url.Action("GetPetsByCustomer", "Invoices")';
+
+            var boardingsUrl =
+                '@Url.Action("GetBoardingsByCustomerAndPet", "Invoices")';
 
             function hasSelection(element) {
                 return element.value &&
                     element.value !==
                     "00000000-0000-0000-0000-000000000000";
+            }
+
+            function resetSelect(
+                element,
+                placeholder) {
+
+                element.innerHTML = "";
+
+                var option =
+                    document.createElement("option");
+
+                option.value = "";
+                option.textContent = placeholder;
+
+                element.appendChild(option);
+            }
+
+            function addOptions(
+                element,
+                items) {
+
+                items.forEach(function (item) {
+
+                    var option =
+                        document.createElement("option");
+
+                    option.value = item.Value;
+                    option.textContent = item.Text;
+
+                    element.appendChild(option);
+                });
             }
 
             function updateGenerateButton() {
@@ -153,11 +211,86 @@
 
             customer.addEventListener(
                 "change",
-                updateGenerateButton);
+                function () {
+
+                    resetSelect(
+                        pet,
+                        "Select Pet...");
+
+                    resetSelect(
+                        boarding,
+                        "Select Boarding Reservation (Optional)...");
+
+                    updateGenerateButton();
+
+                    if (!hasSelection(customer)) {
+                        return;
+                    }
+
+                    fetch(
+                        petsUrl +
+                        "?customerId=" +
+                        encodeURIComponent(customer.value))
+                        .then(function (response) {
+
+                            if (!response.ok) {
+                                throw new Error(
+                                    "Unable to load pets.");
+                            }
+
+                            return response.json();
+                        })
+                        .then(function (items) {
+                            addOptions(pet, items);
+                        })
+                        .catch(function () {
+                            resetSelect(
+                                pet,
+                                "Unable to load pets");
+                        });
+                });
 
             pet.addEventListener(
                 "change",
-                updateGenerateButton);
+                function () {
+
+                    resetSelect(
+                        boarding,
+                        "Select Boarding Reservation (Optional)...");
+
+                    updateGenerateButton();
+
+                    if (!hasSelection(customer) ||
+                        !hasSelection(pet)) {
+                        return;
+                    }
+
+                    fetch(
+                        boardingsUrl +
+                        "?customerId=" +
+                        encodeURIComponent(customer.value) +
+                        "&petId=" +
+                        encodeURIComponent(pet.value))
+                        .then(function (response) {
+
+                            if (!response.ok) {
+                                throw new Error(
+                                    "Unable to load boardings.");
+                            }
+
+                            return response.json();
+                        })
+                        .then(function (items) {
+                            addOptions(
+                                boarding,
+                                items);
+                        })
+                        .catch(function () {
+                            resetSelect(
+                                boarding,
+                                "Unable to load boardings");
+                        });
+                });
 
             updateGenerateButton();
 

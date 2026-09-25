@@ -27,7 +27,7 @@ namespace JamesPetBoarding.ViewModels
 
         public string WeightDisplay { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; }
 
         public string ActiveStatusDisplay { get; set; }
 

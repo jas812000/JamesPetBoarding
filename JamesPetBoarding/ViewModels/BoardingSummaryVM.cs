@@ -1,4 +1,4 @@
-﻿using JamesPetBoarding.Enums;
+using JamesPetBoarding.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +18,8 @@ namespace JamesPetBoarding.ViewModels
         public Guid PetId { get; set; }
 
         public string PetNameDisplay { get; set; }
+
+        public string SpeciesDisplay { get; set; }
 
         public Guid BoardingUnitId { get; set; }
 

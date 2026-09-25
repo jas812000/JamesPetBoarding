@@ -217,6 +217,7 @@ namespace JamesPetBoarding.Controllers
             PetDetailsVM petDetails = new PetDetailsVM();
 
             petDetails.PetId = pet.PetId;
+            petDetails.VetId = pet.VetId;
             petDetails.PetNameDisplay = pet.PetName;
             petDetails.SpeciesDisplay = GetEnumDisplayName(pet.Species);
             petDetails.BreedDisplay = pet.Breed;
@@ -339,6 +340,14 @@ namespace JamesPetBoarding.Controllers
                 return Content("Pet ID #" + petId + " does not exist.");
             }
 
+            if (!pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is inactive and cannot be updated.");
+            }
+
             PetFormVM petForm = new PetFormVM();
 
             petForm.PetId = pet.PetId;
@@ -373,6 +382,21 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Staff");
             }
 
+            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petForm.PetId);
+
+            if (pet == null)
+            {
+                return Content("Pet ID #" + petForm.PetId + " does not exist.");
+            }
+
+            if (!pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is inactive and cannot be updated.");
+            }
+
             if (!ModelState.IsValid)
             {
                 petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
@@ -396,13 +420,6 @@ namespace JamesPetBoarding.Controllers
                     petForm.VeterinarianSelectList = BuildVeterinarianSelectList();
                     return View(petForm);
                 }
-            }
-
-            PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petForm.PetId);
-
-            if (pet == null)
-            {
-                return Content("Pet ID #" + petForm.PetId + " does not exist.");
             }
 
             pet.VetId = petForm.VetId;
@@ -441,8 +458,16 @@ namespace JamesPetBoarding.Controllers
             PetModel pet = dbContext.Pets.FirstOrDefault(x => x.PetId == petId);
 
             if (pet == null)
-            { 
+            {
                 return Content("Pet ID #" + petId + " does not exist.");
+            }
+
+            if (!pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is already inactive.");
             }
 
             int age = DateTime.Today.Year - pet.BirthDate.Year;
@@ -499,6 +524,14 @@ namespace JamesPetBoarding.Controllers
             {
                 return Content("Pet ID #" + petDeactivate.PetId + " does not exist.");
 
+            }
+
+            if (!pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is already inactive.");
             }
 
             int age = DateTime.Today.Year - pet.BirthDate.Year;
@@ -573,6 +606,14 @@ namespace JamesPetBoarding.Controllers
                 return Content("Pet ID #" + petId + " does not exist.");
             }
 
+            if (pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is already active.");
+            }
+
             int age = DateTime.Today.Year - pet.BirthDate.Year;
             if (pet.BirthDate.Date > DateTime.Today.AddYears(-age))
             {
@@ -638,6 +679,14 @@ namespace JamesPetBoarding.Controllers
             if (pet == null)
             {
                 return Content("Pet ID #" + petReactivate.PetId + " does not exist.");
+            }
+
+            if (pet.IsActive)
+            {
+                return Content(
+                    "Pet ID #" +
+                    pet.PetId +
+                    " is already active.");
             }
 
             int age = DateTime.Today.Year - pet.BirthDate.Year;

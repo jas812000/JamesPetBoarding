@@ -4,99 +4,169 @@
 }
 
 <div class="text-center border-bottom pb-4 mb-4">
-    <h1> Paws &amp; Reservations, LLC</h1>
+    <h1>Paws &amp; Reservations, LLC</h1>
     <h2>Create Boarding</h2>
     <p class="lead">
         Enter boarding information to create a new boarding.
     </p>
 </div>
 
-@using (Html.BeginForm("Create", "Boardings", FormMethod.Post, new { @class = "row g-3 justify-content-center" }))
+@using (Html.BeginForm(
+    "Create",
+    "Boardings",
+    FormMethod.Post,
+    new { @class = "row g-3 justify-content-center" }))
 {
-
     @Html.AntiForgeryToken()
-
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
-    <div class="col-md-10">
-        <div class="row g-3">
+    @* Customer / Pet / Boarding Unit *@
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Customer</label>
 
-            <div class="col-md-4">
-                <label class="form-label">Customer</label>
+        @Html.DropDownListFor(
+            x => x.CustomerId,
+            Model.CustomerSelectList,
+            "Select Customer...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-                @Html.DropDownListFor(
-                    x => x.CustomerId,
-                    Model.CustomerSelectList,
-                    "Select Customer...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
+        @Html.ValidationMessageFor(
+            x => x.CustomerId,
+            "",
+            new { @class = "text-danger" })
+    </div>
 
-                @Html.ValidationMessageFor(
-                    x => x.CustomerId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
+    <div class="col-auto" style="width: 250px;">
+        <label class="form-label">Pet</label>
 
-            <div class="col-md-4">
-                <label class="form-label">Pet</label>
+        @Html.DropDownListFor(
+            x => x.PetId,
+            Model.PetSelectList,
+            "Select Pet...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-                @Html.DropDownListFor(
-                    x => x.PetId,
-                    Model.PetSelectList,
-                    "Select Pet...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
+        @Html.ValidationMessageFor(
+            x => x.PetId,
+            "",
+            new { @class = "text-danger" })
+    </div>
 
-                @Html.ValidationMessageFor(
-                    x => x.PetId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
+    <div class="col-auto" style="width: 350px;">
+        <label class="form-label">Boarding Unit</label>
 
-            <div class="col-md-4">
-                <label class="form-label">Boarding Unit</label>
+        @Html.DropDownListFor(
+            x => x.BoardingUnitId,
+            Model.BoardingUnitSelectList,
+            "Select Boarding Unit...",
+            new
+            {
+                @class = "form-select",
+                style = "max-width: none;"
+            })
 
-                @Html.DropDownListFor(
-                    x => x.BoardingUnitId,
-                    Model.BoardingUnitSelectList,
-                    "Select Boarding Unit...",
-                    new
-                    {
-                        @class = "form-select",
-                        style = "max-width: none;"
-                    })
+        @Html.ValidationMessageFor(
+            x => x.BoardingUnitId,
+            "",
+            new { @class = "text-danger" })
+    </div>
 
-                @Html.ValidationMessageFor(
-                    x => x.BoardingUnitId,
-                    "",
-                    new { @class = "text-danger" })
-            </div>
+    <div class="w-100"></div>
+
+    @* Start / End *@
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">Start Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.StartDateTime,
+            "{0:yyyy-MM-ddTHH:mm}",
+            new
+            {
+                @class = "form-control",
+                type = "datetime-local",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.StartDateTime,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="col-auto" style="width: 300px;">
+        <label class="form-label">End Date/Time</label>
+
+        @Html.TextBoxFor(
+            x => x.EndDateTime,
+            "{0:yyyy-MM-ddTHH:mm}",
+            new
+            {
+                @class = "form-control",
+                type = "datetime-local",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.EndDateTime,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="w-100"></div>
+
+    @* Notes *@
+    <div class="col-auto" style="width: 900px;">
+        <label class="form-label">Notes</label>
+
+        @Html.TextAreaFor(
+            x => x.Notes,
+            new
+            {
+                @class = "form-control",
+                rows = "4",
+                placeholder = "Enter notes",
+                style = "max-width: none;"
+            })
+
+        @Html.ValidationMessageFor(
+            x => x.Notes,
+            "",
+            new { @class = "text-danger" })
+    </div>
+
+    <div class="w-100"></div>
+
+    <div class="col-12 text-center mt-4">
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <button type="submit"
+                    id="CreateBoardingButton"
+                    class="btn btn-secondary"
+                    style="width: 300px;"
+                    disabled>
+                Create Boarding
+            </button>
+
+            @Html.ActionLink(
+                "Back to Boarding Management",
+                "BoardingManagement",
+                "Staff",
+                null,
+                new
+                {
+                    @class = "btn btn-secondary",
+                    style = "width: 300px;"
+                })
 
         </div>
     </div>
-
-    <div class="col-12 text-center mt-4">
-        <button type="submit"
-                id="CreateBoardingButton"
-                class="btn btn-secondary me-2"
-                disabled>
-            Create Boarding
-        </button>
-
-        @Html.ActionLink(
-            "Back to Boarding Management",
-            "BoardingManagement",
-            "Staff",
-            null,
-            new { @class = "btn btn-secondary ms-2" })
-    </div>
-
 }
 
 @section Scripts
@@ -104,16 +174,28 @@
     <script>
         (function () {
 
-            var customer = document.getElementById("CustomerId");
-            var pet = document.getElementById("PetId");
-            var boardingUnit = document.getElementById("BoardingUnitId");
-            var startDateTime = document.getElementById("StartDateTime");
-            var endDateTime = document.getElementById("EndDateTime");
-            var createButton = document.getElementById("CreateBoardingButton");
+            var customer =
+                document.getElementById("CustomerId");
+
+            var pet =
+                document.getElementById("PetId");
+
+            var boardingUnit =
+                document.getElementById("BoardingUnitId");
+
+            var startDateTime =
+                document.getElementById("StartDateTime");
+
+            var endDateTime =
+                document.getElementById("EndDateTime");
+
+            var createButton =
+                document.getElementById("CreateBoardingButton");
 
             function hasSelection(element) {
                 return element.value &&
-                    element.value !== "00000000-0000-0000-0000-000000000000";
+                    element.value !==
+                    "00000000-0000-0000-0000-000000000000";
             }
 
             function hasValidDate(element) {
@@ -141,11 +223,25 @@
                     !formIsComplete);
             }
 
-            customer.addEventListener("change", updateCreateButton);
-            pet.addEventListener("change", updateCreateButton);
-            boardingUnit.addEventListener("change", updateCreateButton);
-            startDateTime.addEventListener("input", updateCreateButton);
-            endDateTime.addEventListener("input", updateCreateButton);
+            customer.addEventListener(
+                "change",
+                updateCreateButton);
+
+            pet.addEventListener(
+                "change",
+                updateCreateButton);
+
+            boardingUnit.addEventListener(
+                "change",
+                updateCreateButton);
+
+            startDateTime.addEventListener(
+                "input",
+                updateCreateButton);
+
+            endDateTime.addEventListener(
+                "input",
+                updateCreateButton);
 
             updateCreateButton();
 
