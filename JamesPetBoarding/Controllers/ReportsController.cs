@@ -1949,10 +1949,6 @@ namespace JamesPetBoarding.Controllers
 
             revenueReport.RevenueReportRows = new List<RevenueReportRowVM>();
 
-            revenueReport.RevenueReportFilter.InvoiceStartDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-
-            revenueReport.RevenueReportFilter.InvoiceEndDate = DateTime.Today;
-
             return View(revenueReport);
 
         }
@@ -1972,7 +1968,10 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Reports");
             }
 
-            if (revenueReport.RevenueReportFilter.InvoiceEndDate < revenueReport.RevenueReportFilter.InvoiceStartDate)
+            if (revenueReport.RevenueReportFilter.InvoiceStartDate.HasValue &&
+                revenueReport.RevenueReportFilter.InvoiceEndDate.HasValue &&
+                revenueReport.RevenueReportFilter.InvoiceEndDate.Value <
+                revenueReport.RevenueReportFilter.InvoiceStartDate.Value)
             {
                 ModelState.AddModelError(
                     "RevenueReportFilter.InvoiceEndDate",
@@ -1988,9 +1987,9 @@ namespace JamesPetBoarding.Controllers
 
             revenueReport.HasSearched = true;
 
-            DateTime startDate = revenueReport.RevenueReportFilter.InvoiceStartDate.Date;
+            DateTime? startDate = revenueReport.RevenueReportFilter.InvoiceStartDate?.Date;
 
-            DateTime endDate = revenueReport.RevenueReportFilter.InvoiceEndDate.Date.AddDays(1);
+            DateTime? endDate = revenueReport.RevenueReportFilter.InvoiceEndDate?.Date.AddDays(1);
 
             List<InvoiceModel> invoices = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -1999,7 +1998,8 @@ namespace JamesPetBoarding.Controllers
                 .ToList();
 
             invoices = invoices
-                .Where(x => x.InvoiceDateTime >= startDate && x.InvoiceDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.InvoiceDateTime >= startDate.Value) &&
+                    (!endDate.HasValue || x.InvoiceDateTime < endDate.Value))
                 .ToList();
 
             if (revenueReport.RevenueReportFilter.InvoiceType.HasValue)
@@ -2153,7 +2153,10 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Reports");
             }
 
-            if (revenueReport.RevenueReportFilter.InvoiceEndDate < revenueReport.RevenueReportFilter.InvoiceStartDate)
+            if (revenueReport.RevenueReportFilter.InvoiceStartDate.HasValue &&
+                revenueReport.RevenueReportFilter.InvoiceEndDate.HasValue &&
+                revenueReport.RevenueReportFilter.InvoiceEndDate.Value <
+                revenueReport.RevenueReportFilter.InvoiceStartDate.Value)
             {
                 return RedirectToAction("RevenueReport");
             }
@@ -2163,9 +2166,9 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("RevenueReport");
             }
 
-            DateTime startDate = revenueReport.RevenueReportFilter.InvoiceStartDate.Date;
+            DateTime? startDate = revenueReport.RevenueReportFilter.InvoiceStartDate?.Date;
 
-            DateTime endDate = revenueReport.RevenueReportFilter.InvoiceEndDate.Date.AddDays(1);
+            DateTime? endDate = revenueReport.RevenueReportFilter.InvoiceEndDate?.Date.AddDays(1);
 
             List<InvoiceModel> invoices = dbContext.Invoices
                 .Include(x => x.Customer)
@@ -2174,7 +2177,8 @@ namespace JamesPetBoarding.Controllers
                 .ToList();
 
             invoices = invoices
-                .Where(x => x.InvoiceDateTime >= startDate && x.InvoiceDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.InvoiceDateTime >= startDate.Value) &&
+                    (!endDate.HasValue || x.InvoiceDateTime < endDate.Value))
                 .ToList();
 
             if (revenueReport.RevenueReportFilter.InvoiceType.HasValue)
@@ -2339,10 +2343,6 @@ namespace JamesPetBoarding.Controllers
 
             voidedTransactionsReport.VoidedTransactionsReportRows = new List<VoidedTransactionsReportRowVM>();
 
-            voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-
-            voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate = DateTime.Today;
-
             voidedTransactionsReport.EmployeeSelectList = BuildEmployeeSelectList(dbContext);
 
             return View(voidedTransactionsReport);
@@ -2366,8 +2366,10 @@ namespace JamesPetBoarding.Controllers
 
             voidedTransactionsReport.EmployeeSelectList = BuildEmployeeSelectList(dbContext);
 
-            if (voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate < 
-                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate)
+            if (voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.HasValue &&
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.HasValue &&
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.Value <
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.Value)
             {
                 ModelState.AddModelError(
                     "VoidedTransactionsReportFilter.VoidedEndDate",
@@ -2383,16 +2385,17 @@ namespace JamesPetBoarding.Controllers
 
             voidedTransactionsReport.HasSearched = true;
 
-            DateTime startDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.Date;
+            DateTime? startDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate?.Date;
 
-            DateTime endDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.Date.AddDays(1);
+            DateTime? endDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate?.Date.AddDays(1);
 
             List<InvoiceModel> voidedInvoices = dbContext.Invoices
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
                 .Include(x => x.VoidedByEmployee)
                 .Where(x => x.InvoiceStatus == InvoiceStatusEnum.Void)
-                .Where(x => x.VoidDateTime >= startDate && x.VoidDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.VoidDateTime >= startDate.Value) &&
+                            (!endDate.HasValue || x.VoidDateTime < endDate.Value))
                 .ToList();
 
             List<PaymentModel> voidedPayments = dbContext.Payments
@@ -2402,7 +2405,8 @@ namespace JamesPetBoarding.Controllers
                 .Include(x => x.ProcessedByEmployee)
                 .Include(x => x.VoidedByEmployee)
                 .Where(x => x.IsVoided)
-                .Where(x => x.VoidedDateTime >= startDate && x.VoidedDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.VoidedDateTime >= startDate.Value) &&
+                            (!endDate.HasValue || x.VoidedDateTime < endDate.Value))
                 .ToList();
 
             if (voidedTransactionsReport.VoidedTransactionsReportFilter.InvoiceType.HasValue)
@@ -2578,8 +2582,10 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("Index", "Reports");
             }
 
-            if (voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate < 
-                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate)
+            if (voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.HasValue &&
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.HasValue &&
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.Value <
+                voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.Value)
             {
                 return RedirectToAction("VoidedTransactionsReport");
             }
@@ -2589,16 +2595,17 @@ namespace JamesPetBoarding.Controllers
                 return RedirectToAction("VoidedTransactionsReport");
             }
 
-            DateTime startDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate.Date;
+            DateTime? startDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedStartDate?.Date;
 
-            DateTime endDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate.Date.AddDays(1);
+            DateTime? endDate = voidedTransactionsReport.VoidedTransactionsReportFilter.VoidedEndDate?.Date.AddDays(1);
 
             List<InvoiceModel> voidedInvoices = dbContext.Invoices
                 .Include(x => x.Customer)
                 .Include(x => x.Pet)
                 .Include(x => x.VoidedByEmployee)
                 .Where(x => x.InvoiceStatus == InvoiceStatusEnum.Void)
-                .Where(x => x.VoidDateTime >= startDate && x.VoidDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.VoidDateTime >= startDate.Value) &&
+                    (!endDate.HasValue || x.VoidDateTime < endDate.Value))
                 .ToList();
 
             List<PaymentModel> voidedPayments = dbContext.Payments
@@ -2608,7 +2615,8 @@ namespace JamesPetBoarding.Controllers
                 .Include(x => x.ProcessedByEmployee)
                 .Include(x => x.VoidedByEmployee)
                 .Where(x => x.IsVoided)
-                .Where(x => x.VoidedDateTime >= startDate && x.VoidedDateTime < endDate)
+                .Where(x => (!startDate.HasValue || x.VoidedDateTime >= startDate.Value) &&
+                    (!endDate.HasValue || x.VoidedDateTime < endDate.Value))
                 .ToList();
 
             if (voidedTransactionsReport.VoidedTransactionsReportFilter.InvoiceType.HasValue)

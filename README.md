@@ -515,7 +515,7 @@ Sensitive credentials should not be committed to source control. Review environm
 
 ## Documentation
 
-The [`docs` directory](docs/README.md) organizes supporting design material. Application screenshots, wireframes, and technical diagrams are still pending; the documentation indexes describe their planned locations. The [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents repeatable sample data, reset, and verification.
+The [`docs` directory](docs/README.md) organizes supporting design material. Selected application screenshots and wireframes are available in `docs/`; technical diagrams are planned. The [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents repeatable sample data, reset, and verification.
 
 ---
 
@@ -527,7 +527,7 @@ The primary application workflows are implemented, including customer and pet ma
 
 Recent completed work added email two-factor authentication, employee profile images, administrator-managed Our Team tiles, repeatable development seeding, linked invoice and payment selections, and consistent management-view formatting.
 
-Current work is focused on completing repository documentation and portfolio presentation. Screenshots, wireframes, and technical diagrams have not yet been added.
+Current work is focused on completing repository documentation and portfolio presentation. Selected screenshots and wireframes have been added; technical diagrams remain planned.
 
 ---
 
@@ -551,4 +551,8 @@ See the repository's [`LICENSE.md`](LICENSE.md) file for permitted uses of the s
 
 ## Design wireframes
 
-The [wireframe gallery](docs/wireframes/README.md) shows selected screens from the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots planned for `docs/screenshots/` will show the completed application.
+The [wireframe gallery](docs/wireframes/README.md) shows selected screens from the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots in `docs/screenshots/` show the completed application.
+
+## Application screenshots
+
+The [application screenshot gallery](docs/screenshots/README.md) shows the completed public pages, staff and admin dashboards, customer and pet records, boarding, billing, and reporting workflows. A [sample revenue report PDF](docs/screenshots/report-pdf.pdf) is also included.

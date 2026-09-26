@@ -607,10 +607,12 @@ namespace JamesPetBoarding.Services
                         RevenueReportFilterVM filter = report.RevenueReportFilter;
 
                         column.Item().Text(
-                            "Invoice Start Date: " + filter.InvoiceStartDate.ToString("MM/dd/yyyy"));
+                            "Invoice Start Date: " + (filter.InvoiceStartDate.HasValue
+                                ? filter.InvoiceStartDate.Value.ToString("MM/dd/yyyy") : "All"));
 
                         column.Item().Text(
-                            "Invoice End Date: " + filter.InvoiceEndDate.ToString("MM/dd/yyyy"));
+                            "Invoice End Date: " + (filter.InvoiceEndDate.HasValue
+                                ? filter.InvoiceEndDate.Value.ToString("MM/dd/yyyy") : "All"));
 
                         column.Item().Text(
                             "Invoice Type: " + (filter.InvoiceType.HasValue
@@ -728,10 +730,12 @@ namespace JamesPetBoarding.Services
                         VoidedTransactionsReportFilterVM filter = report.VoidedTransactionsReportFilter;
 
                         column.Item().Text(
-                            "Voided Start Date: " + filter.VoidedStartDate.ToString("MM/dd/yyyy"));
+                            "Voided Start Date: " + (filter.VoidedStartDate.HasValue
+                                ? filter.VoidedStartDate.Value.ToString("MM/dd/yyyy") : "All"));
 
                         column.Item().Text(
-                            "Voided End Date: " + filter.VoidedEndDate.ToString("MM/dd/yyyy"));
+                            "Voided End Date: " + (filter.VoidedEndDate.HasValue
+                                ? filter.VoidedEndDate.Value.ToString("MM/dd/yyyy") : "All"));
 
                         column.Item().Text(
                             "Invoice Type: " + (filter.InvoiceType.HasValue

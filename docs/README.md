@@ -14,20 +14,7 @@ See the [wireframe gallery](wireframes/README.md) for an index of the included i
 
 ### Screenshots
 
-The `screenshots` directory will contain selected screenshots of the completed application.
-
-Screenshots are intended to demonstrate important implemented workflows and user interfaces without requiring a reviewer to run the application locally.
-
-Planned screenshot coverage includes representative areas such as:
-
-- Public-facing pages
-- Staff and management dashboards
-- Customer and pet management
-- Boarding workflows
-- Invoicing and payment processing
-- Reporting and PDF export
-- Employee profile photos and the public Our Team page
-- Email security-code verification and account settings
+The [application screenshot gallery](screenshots/README.md) contains selected images of the completed application, organized by workflow. It also includes a [sample revenue report PDF](screenshots/report-pdf.pdf). These show the implemented interface; the [wireframes](wireframes/README.md) document its design stage.
 
 ### Diagrams
 
@@ -53,7 +40,9 @@ docs/
 │   ├── README.md
 │   └── 10 selected PNG wireframes
 ├── screenshots/
-│   └── [application screenshots]
+│   ├── README.md
+│   ├── [application screenshots]
+│   └── report-pdf.pdf
 └── diagrams/
     └── [technical and design diagrams]
 ```
@@ -71,4 +60,4 @@ Together, the root README and this documentation provide two levels of project i
 
 The core Paws & Reservations application is complete. The current documentation pass is focused on organizing and presenting the existing project for portfolio and technical review.
 
-Ten selected wireframes are now included in `wireframes/`. Application screenshots and technical diagrams are planned for a later documentation pass.
+Ten selected wireframes are included in `wireframes/`. Application screenshots and a sample revenue report PDF are included in `screenshots/`. Technical diagrams are planned for a later documentation pass.

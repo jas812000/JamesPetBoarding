@@ -301,7 +301,7 @@
                         @foreach (var invoiceItem in Model.InvoiceItems)
                         {
                             <tr>
-                                <td>@invoiceItem.Description</td>
+                                <td>@invoiceItem.DescriptionDisplay</td>
                                 <td>@invoiceItem.QuantityDisplay</td>
                                 <td>@invoiceItem.UnitPriceDisplay</td>
                                 <td>@invoiceItem.LineTotalDisplay</td>
