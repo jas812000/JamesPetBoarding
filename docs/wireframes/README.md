@@ -1,34 +1,16 @@
 # Wireframes
 
-This directory is reserved for wireframes created for the **Paws & Reservations** pet boarding management application.
+These wireframes document the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots planned for `docs/screenshots/` will show the completed application.
 
-## Purpose
+| Area | Wireframe |
+| --- | --- |
+| Dashboards | [Staff Dashboard](staff-dashboard.png) · [Admin Dashboard](admin-dashboard.png) |
+| Customers | [Customer Search](customer-search.png) · [Customer Profile](customer-profile.png) |
+| Pets | [Pet Search](pet-search.png) · [Pet Profile](pet-profile.png) |
+| Boarding | [Active Boardings](active-boardings.png) |
+| Billing | [Invoice Details](invoice-details.png) |
+| Reports | [Reports Dashboard](reports-dashboard.png) · [Revenue Report](revenue-report.png) |
 
-Wireframes will provide visual documentation of the application's planned page layouts, navigation, and major user workflows. They are intended to supplement the completed application and provide additional context about the design process.
+## Related documentation
 
-## Status
-
-**Wireframes are pending.**
-
-The application is complete, but the wireframes have not yet been prepared for inclusion in the repository. They will be added during the project's documentation and portfolio presentation work.
-
-## Planned Content
-
-Wireframes may be added for representative areas of the application, including:
-
-- Public-facing pages
-- Authentication, registration, and email security-code verification
-- Staff and management dashboards
-- Administrator management of the public Our Team page
-- Customer and pet management
-- Boarding workflows
-- Invoicing and payment processing, including linked customer, pet, boarding, and invoice selections
-- Reports
-
-As wireframes are added, this README will be updated with an index describing each artifact and the workflow or interface it represents.
-
-## Related Documentation
-
-See the parent [`docs/README.md`](../README.md) for the documentation overview.
-
-See the root [`README.md`](../../README.md) for the complete project overview, features, technology stack, setup instructions, and application status.
+See the [documentation overview](../README.md) and the [project README](../../README.md).

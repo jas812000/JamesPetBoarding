@@ -548,3 +548,7 @@ Potential improvements that do not affect the completed core application include
 Copyright © James Stevens.
 
 See the repository's [`LICENSE.md`](LICENSE.md) file for permitted uses of the source code.
+
+## Design wireframes
+
+The [wireframe gallery](docs/wireframes/README.md) shows selected screens from the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots planned for `docs/screenshots/` will show the completed application.
