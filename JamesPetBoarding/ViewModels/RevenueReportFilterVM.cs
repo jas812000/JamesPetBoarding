@@ -9,11 +9,9 @@ namespace JamesPetBoarding.ViewModels
 {
     public class RevenueReportFilterVM
     {
-        [Required]
-        public DateTime InvoiceStartDate { get; set; }
+        public DateTime? InvoiceStartDate { get; set; }
 
-        [Required]
-        public DateTime InvoiceEndDate { get; set; }
+        public DateTime? InvoiceEndDate { get; set; }
 
         public InvoiceTypeEnum? InvoiceType { get; set; }
 

@@ -1,6 +1,6 @@
 # Wireframes
 
-These wireframes document the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots planned for `docs/screenshots/` will show the completed application.
+These wireframes document the application's design stage. Some labels, layouts, and workflows changed during implementation; screenshots in `docs/screenshots/` show the completed application.
 
 | Area | Wireframe |
 | --- | --- |
