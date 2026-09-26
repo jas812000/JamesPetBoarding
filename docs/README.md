@@ -8,9 +8,9 @@ The root [`README.md`](../README.md) provides the primary project overview, tech
 
 ### Wireframes
 
-The [`wireframes`](wireframes/) directory is reserved for interface wireframes documenting important application pages and workflows.
+The [`wireframes`](wireframes/) directory contains ten selected interface wireframes documenting important application pages and workflows.
 
-The wireframes are pending and will be added as part of the project's documentation and portfolio presentation work. See the [`wireframes/README.md`](wireframes/README.md) file for the current wireframe plan and status.
+See the [wireframe gallery](wireframes/README.md) for an index of the included images and a note about design-stage differences.
 
 ### Screenshots
 
@@ -51,7 +51,7 @@ docs/
 ├── README.md
 ├── wireframes/
 │   ├── README.md
-│   └── [wireframe files]
+│   └── 10 selected PNG wireframes
 ├── screenshots/
 │   └── [application screenshots]
 └── diagrams/
@@ -71,4 +71,4 @@ Together, the root README and this documentation provide two levels of project i
 
 The core Paws & Reservations application is complete. The current documentation pass is focused on organizing and presenting the existing project for portfolio and technical review.
 
-Screenshots, wireframes, and diagrams are planned but are not yet present. Add each artifact to its directory, update the relevant index here or in `wireframes/README.md`, and link a small representative selection from the root README.
+Ten selected wireframes are now included in `wireframes/`. Application screenshots and technical diagrams are planned for a later documentation pass.
