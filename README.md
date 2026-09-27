@@ -515,7 +515,7 @@ Sensitive credentials should not be committed to source control. Review environm
 
 ## Documentation
 
-The [`docs` directory](docs/README.md) organizes supporting design material. Selected application screenshots and wireframes are available in `docs/`; technical diagrams are planned. The [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents repeatable sample data, reset, and verification.
+The [`docs` directory](docs/README.md) contains selected application screenshots, wireframes, and technical diagrams. The [database seeding guide](JamesPetBoarding/Scripts/Database/DatabaseSeeding-README.md) documents repeatable sample data, reset, and verification.
 
 ---
 
@@ -527,7 +527,7 @@ The primary application workflows are implemented, including customer and pet ma
 
 Recent completed work added email two-factor authentication, employee profile images, administrator-managed Our Team tiles, repeatable development seeding, linked invoice and payment selections, and consistent management-view formatting.
 
-Current work is focused on completing repository documentation and portfolio presentation. Selected screenshots and wireframes have been added; technical diagrams remain planned.
+Current work is focused on completing repository documentation and portfolio presentation. Selected screenshots, wireframes, and technical diagrams have been added.
 
 ---
 
@@ -556,3 +556,7 @@ The [wireframe gallery](docs/wireframes/README.md) shows selected screens from t
 ## Application screenshots
 
 The [application screenshot gallery](docs/screenshots/README.md) shows the completed public pages, staff and admin dashboards, customer and pet records, boarding, billing, and reporting workflows. A [sample revenue report PDF](docs/screenshots/report-pdf.pdf) is also included.
+
+## Technical diagrams
+
+The [technical diagram gallery](docs/diagrams/README.md) shows the application architecture, core data relationships, and boarding-to-payment workflow.

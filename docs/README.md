@@ -18,14 +18,11 @@ The [application screenshot gallery](screenshots/README.md) contains selected im
 
 ### Diagrams
 
-The `diagrams` directory will contain technical and design diagrams that help explain the application's structure and relationships.
+The [technical diagram gallery](diagrams/README.md) contains three diagrams:
 
-Planned diagrams may include:
-
-- Application architecture
-- Domain/entity relationships
-- Database relationships
-- Major business workflows, including linked invoice and payment selections
+- [Application Architecture](diagrams/application-architecture.png) — the application's main components and external services.
+- [Core Data Relationships](diagrams/core-data-relationships.png) — the main customer, pet, boarding, invoice, and payment relationships.
+- [Boarding to Payment Workflow](diagrams/boarding-payment-workflow.png) — the boarding lifecycle through invoicing and payment.
 
 ### Development Database Seeding
 
@@ -44,7 +41,8 @@ docs/
 │   ├── [application screenshots]
 │   └── report-pdf.pdf
 └── diagrams/
-    └── [technical and design diagrams]
+    ├── README.md
+    └── 3 technical PNG diagrams
 ```
 
 ## Purpose
@@ -58,6 +56,4 @@ Together, the root README and this documentation provide two levels of project i
 
 ## Project Status
 
-The core Paws & Reservations application is complete. The current documentation pass is focused on organizing and presenting the existing project for portfolio and technical review.
-
-Ten selected wireframes are included in `wireframes/`. Application screenshots and a sample revenue report PDF are included in `screenshots/`. Technical diagrams are planned for a later documentation pass.
+The core Paws & Reservations application is complete. Selected wireframes, application screenshots, a sample revenue report PDF, and three technical diagrams are included in this directory for portfolio and technical review.
