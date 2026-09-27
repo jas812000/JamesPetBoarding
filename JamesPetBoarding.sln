@@ -20,7 +20,48 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F751EEE8-3
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wireframes", "wireframes", "{19E21CAF-40A5-4CF1-8333-7F627FE2E2E0}"
 	ProjectSection(SolutionItems) = preProject
+		docs\wireframes\active-boardings.png = docs\wireframes\active-boardings.png
+		docs\wireframes\admin-dashboard.png = docs\wireframes\admin-dashboard.png
+		docs\wireframes\customer-profile.png = docs\wireframes\customer-profile.png
+		docs\wireframes\customer-search.png = docs\wireframes\customer-search.png
+		docs\wireframes\invoice-details.png = docs\wireframes\invoice-details.png
+		docs\wireframes\pet-profile.png = docs\wireframes\pet-profile.png
+		docs\wireframes\pet-search.png = docs\wireframes\pet-search.png
 		docs\wireframes\README.md = docs\wireframes\README.md
+		docs\wireframes\reports-dashboard.png = docs\wireframes\reports-dashboard.png
+		docs\wireframes\revenue-report.png = docs\wireframes\revenue-report.png
+		docs\wireframes\staff-dashboard.png = docs\wireframes\staff-dashboard.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "diagrams", "diagrams", "{766FB587-6A70-4678-A567-B10D2FCA13CA}"
+	ProjectSection(SolutionItems) = preProject
+		docs\diagrams\application-architecture.png = docs\diagrams\application-architecture.png
+		docs\diagrams\boarding-payment-workflow.png = docs\diagrams\boarding-payment-workflow.png
+		docs\diagrams\core-data-relationships.png = docs\diagrams\core-data-relationships.png
+		docs\diagrams\README.md = docs\diagrams\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "screenshots", "screenshots", "{67DF73DF-D423-492D-9FB2-A5EC618EF470}"
+	ProjectSection(SolutionItems) = preProject
+		docs\screenshots\active-boardings.png = docs\screenshots\active-boardings.png
+		docs\screenshots\admin-dashboard.png = docs\screenshots\admin-dashboard.png
+		docs\screenshots\boarding-details.png = docs\screenshots\boarding-details.png
+		docs\screenshots\customer-profile.png = docs\screenshots\customer-profile.png
+		docs\screenshots\customer-search.png = docs\screenshots\customer-search.png
+		docs\screenshots\home.png = docs\screenshots\home.png
+		docs\screenshots\invoice-details-1.png = docs\screenshots\invoice-details-1.png
+		docs\screenshots\our-team-1.png = docs\screenshots\our-team-1.png
+		docs\screenshots\our-team-2.png = docs\screenshots\our-team-2.png
+		docs\screenshots\payment-details.png = docs\screenshots\payment-details.png
+		docs\screenshots\pet-profile-1.png = docs\screenshots\pet-profile-1.png
+		docs\screenshots\pet-profile-2.png = docs\screenshots\pet-profile-2.png
+		docs\screenshots\pet-search.png = docs\screenshots\pet-search.png
+		docs\screenshots\README.md = docs\screenshots\README.md
+		docs\screenshots\report-pdf.pdf = docs\screenshots\report-pdf.pdf
+		docs\screenshots\reports-dashboard.png = docs\screenshots\reports-dashboard.png
+		docs\screenshots\revenue-report-1.png = docs\screenshots\revenue-report-1.png
+		docs\screenshots\revenue-report-2.png = docs\screenshots\revenue-report-2.png
+		docs\screenshots\staff-dashboard.png = docs\screenshots\staff-dashboard.png
 	EndProjectSection
 EndProject
 Global
@@ -44,6 +85,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F751EEE8-3047-475B-ABE4-DC39252BD29E} = {505CC100-3ADF-4103-8761-85C912F9F637}
 		{19E21CAF-40A5-4CF1-8333-7F627FE2E2E0} = {F751EEE8-3047-475B-ABE4-DC39252BD29E}
+		{766FB587-6A70-4678-A567-B10D2FCA13CA} = {F751EEE8-3047-475B-ABE4-DC39252BD29E}
+		{67DF73DF-D423-492D-9FB2-A5EC618EF470} = {F751EEE8-3047-475B-ABE4-DC39252BD29E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F1532FA8-A72F-49B5-8CC9-AFC91B67C5F7}
