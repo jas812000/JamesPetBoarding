@@ -18,3 +18,22 @@ select,
 textarea {
     max-width: 280px;
 }
+
+/* Sort controls on report result tables */
+.report-sort-button {
+    display: inline-block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-weight: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+.report-sort-button:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+.report-sort-indicator { white-space: nowrap; }

@@ -68,7 +68,7 @@
                             new { @class = "nav-link" })
                     </li>
                 </ul>
-                 @Html.Partial("_LoginPartial")
+                @Html.Partial("_LoginPartial")
             </div>
         </div>
     </nav>
@@ -83,6 +83,7 @@
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="@Url.Content("~/Scripts/report-table-sorting.js")"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
