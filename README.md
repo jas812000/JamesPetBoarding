@@ -323,7 +323,7 @@ Report areas include:
 - Voided transactions
 - Vaccine compliance
 
-Reports support subject-appropriate filters, and selected financial reports are restricted to authorized management users.
+Reports support subject-appropriate filters and sortable result tables. Selected financial reports are restricted to authorized management users.
 
 QuestPDF is used to generate server-side PDF reports with titles, timestamps, selected filters, summary statistics, detailed tables, financial totals, pagination, and landscape layouts where appropriate.
 
@@ -537,8 +537,6 @@ Potential improvements that do not affect the completed core application include
 
 - Add meaningful automated unit and integration test coverage
 - Add technical and architectural documentation
-- Add portfolio-quality application screenshots
-- Add workflow and architecture diagrams
 - Improve deployment portability beyond the current Windows/.NET Framework development environment
 
 ---
